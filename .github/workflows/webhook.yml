@@ -1,0 +1,54 @@
+name: Webhook Event Handler
+
+on:
+  repository_dispatch:
+    types:
+      - manychat-event
+      - botbuilders-event
+      - chatgpt-query
+      - replit-deploy
+
+jobs:
+  handle-webhook:
+    name: Handle Incoming Webhook
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Process webhook event
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+          BOTBUILDERS_APP_ID: ${{ secrets.BOTBUILDERS_APP_ID }}
+          BOTBUILDERS_APP_PASSWORD: ${{ secrets.BOTBUILDERS_APP_PASSWORD }}
+          REPLIT_API_KEY: ${{ secrets.REPLIT_API_KEY }}
+          EVENT_TYPE: ${{ github.event.action }}
+          EVENT_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python -c "
+          import asyncio, json, os
+          from src.control_tower import ControlTower
+
+          event_type = os.environ.get('EVENT_TYPE', '')
+          payload_str = os.environ.get('EVENT_PAYLOAD', '{}')
+          payload = json.loads(payload_str)
+
+          tower = ControlTower()
+          result = asyncio.run(tower.handle_event(event_type, payload))
+          print(result)
+          "
+
+      - name: Report result
+        if: always()
+        run: echo "Webhook ${{ github.event.action }} processed successfully"

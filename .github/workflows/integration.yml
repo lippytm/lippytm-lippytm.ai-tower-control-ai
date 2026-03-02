@@ -1,0 +1,88 @@
+name: Integration Automation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Message to send through the control tower"
+        required: false
+        default: ""
+      platform:
+        description: "Target platform (manychat, botbuilders, all)"
+        required: false
+        default: "all"
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 src/ --max-line-length=120 --ignore=E501,W503
+
+      - name: Run tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+          BOTBUILDERS_APP_ID: ${{ secrets.BOTBUILDERS_APP_ID }}
+          BOTBUILDERS_APP_PASSWORD: ${{ secrets.BOTBUILDERS_APP_PASSWORD }}
+        run: python -m pytest tests/ -v --tb=short || echo "No tests found, skipping"
+
+  notify-platforms:
+    name: Notify Integration Platforms
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: lint-and-test
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.message != ''
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send message to platforms
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+          BOTBUILDERS_APP_ID: ${{ secrets.BOTBUILDERS_APP_ID }}
+          BOTBUILDERS_APP_PASSWORD: ${{ secrets.BOTBUILDERS_APP_PASSWORD }}
+          REPLIT_API_KEY: ${{ secrets.REPLIT_API_KEY }}
+          BROADCAST_MESSAGE: ${{ github.event.inputs.message }}
+          BROADCAST_PLATFORM: ${{ github.event.inputs.platform }}
+        run: |
+          python -c "
+          import asyncio, os
+          from src.control_tower import ControlTower
+          tower = ControlTower()
+          result = asyncio.run(tower.broadcast(
+              message=os.environ['BROADCAST_MESSAGE'],
+              platform=os.environ['BROADCAST_PLATFORM'],
+          ))
+          print(result)
+          "

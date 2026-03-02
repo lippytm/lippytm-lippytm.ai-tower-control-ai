@@ -1,0 +1,29 @@
+# Integration configuration for the AI Tower Control Tower.
+# Copy this file and fill in your credentials as environment variables
+# (never commit secrets directly to source control).
+
+openai:
+  model: gpt-4o                       # Override with OPENAI_MODEL env var
+  # api_key: loaded from OPENAI_API_KEY env var
+
+github:
+  # token: loaded from GITHUB_TOKEN env var
+  repositories:
+    - lippytm/lippytm-lippytm.ai-tower-control-ai  # This repo
+
+manychat:
+  # api_key: loaded from MANYCHAT_API_KEY env var
+  default_flow_ns: ""                 # Optional: default ManyChat flow namespace
+
+botbuilders:
+  # app_id:       loaded from BOTBUILDERS_APP_ID env var
+  # app_password: loaded from BOTBUILDERS_APP_PASSWORD env var
+
+replit:
+  # api_key: loaded from REPLIT_API_KEY env var
+  default_repl_id: ""                 # Optional: default Repl ID to deploy
+
+webhook_server:
+  host: 0.0.0.0
+  port: 8000
+  # secret: loaded from WEBHOOK_SECRET env var (HMAC-SHA256 verification)
