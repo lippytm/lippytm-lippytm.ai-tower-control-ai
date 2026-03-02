@@ -1,0 +1,17 @@
+# Replit configuration for the AI Tower Control Tower
+run = "uvicorn src.webhook_server:app --host 0.0.0.0 --port 8000"
+entrypoint = "src/webhook_server.py"
+
+[env]
+PYTHONPATH = "."
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["sh", "-c", "uvicorn src.webhook_server:app --host 0.0.0.0 --port 8000"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8000
+externalPort = 80
