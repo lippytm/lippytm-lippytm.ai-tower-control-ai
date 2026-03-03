@@ -1,0 +1,77 @@
+name: Webhook Dispatcher
+
+on:
+  workflow_dispatch:
+    inputs:
+      event_type:
+        description: 'Webhook event type to dispatch (e.g. openai-sync, allbots-sync)'
+        required: true
+        type: string
+      payload:
+        description: 'JSON payload to include with the dispatch (optional)'
+        required: false
+        default: '{}'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    name: Dispatch webhook event
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate JSON payload
+        run: |
+          node -e "JSON.parse(process.argv[1])" "${{ inputs.payload }}" \
+            || (echo "::error::payload is not valid JSON" && exit 1)
+
+      - name: Dispatch event to AI Control Tower
+        env:
+          TOWER_API_URL: ${{ secrets.TOWER_API_URL }}
+          TOWER_CLIENT_ID: ${{ secrets.TOWER_CLIENT_ID }}
+          TOWER_CLIENT_SECRET: ${{ secrets.TOWER_CLIENT_SECRET }}
+        run: |
+          # Obtain a short-lived token
+          TOKEN=$(curl -s -X POST "${TOWER_API_URL}/api/auth/token" \
+            -H 'Content-Type: application/json' \
+            -d "{\"clientId\":\"${TOWER_CLIENT_ID}\",\"clientSecret\":\"${TOWER_CLIENT_SECRET}\"}" \
+            | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(0,'utf-8')).token)")
+
+          # Post the webhook event
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${TOWER_API_URL}/api/data/sync" \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -d '${{ inputs.payload }}')
+
+          echo "Response HTTP status: ${HTTP_STATUS}"
+          if [ "${HTTP_STATUS}" -lt 200 ] || [ "${HTTP_STATUS}" -ge 300 ]; then
+            echo "::error::Dispatch failed with HTTP ${HTTP_STATUS}"
+            exit 1
+          fi
+
+      - name: Fallback health check on dispatch failure
+        if: failure()
+        env:
+          TOWER_API_URL: ${{ secrets.TOWER_API_URL }}
+        run: |
+          echo "Primary dispatch failed. Checking tower health..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${TOWER_API_URL}/health" || echo "000")
+          echo "Tower health status: ${HTTP_STATUS}"
+          if [ "${HTTP_STATUS}" != "200" ]; then
+            echo "::warning::AI Control Tower appears to be unreachable (HTTP ${HTTP_STATUS}). Check TOWER_API_URL secret."
+          fi

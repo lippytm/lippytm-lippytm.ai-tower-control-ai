@@ -1,0 +1,83 @@
+name: Scheduled AI Model Evaluation
+
+on:
+  schedule:
+    # Run every day at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'OpenAI model to evaluate (leave blank to use OPENAI_MODEL env var)'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    name: Evaluate AI model health
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests to validate integration modules
+        run: npm test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NODE_ENV: test
+
+      - name: Probe OpenAI model availability
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ inputs.model || vars.OPENAI_MODEL || 'gpt-4o' }}
+        run: |
+          node - <<'EOF'
+          const https = require('https');
+          const apiKey = process.env.OPENAI_API_KEY;
+          if (!apiKey) {
+            console.log('OPENAI_API_KEY not configured – skipping live probe.');
+            process.exit(0);
+          }
+          const model = process.env.OPENAI_MODEL || 'gpt-4o';
+          const payload = JSON.stringify({
+            model,
+            messages: [{ role: 'user', content: 'ping' }],
+            max_tokens: 1,
+          });
+          const options = {
+            hostname: 'api.openai.com',
+            path: '/v1/chat/completions',
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(payload),
+            },
+          };
+          const req = https.request(options, (res) => {
+            console.log(`OpenAI /v1/chat/completions responded: HTTP ${res.statusCode} for model ${model}`);
+            if (res.statusCode >= 200 && res.statusCode < 300) {
+              console.log('Model probe successful.');
+            } else {
+              console.error(`::warning::Model probe returned HTTP ${res.statusCode}. Check quota or model availability.`);
+            }
+          });
+          req.on('error', (err) => {
+            console.error(`::warning::Model probe request failed: ${err.message}`);
+          });
+          req.write(payload);
+          req.end();
+          EOF
