@@ -147,8 +147,53 @@ Authorization: Bearer <jwt>
 
 ## Security
 
-* **JWT** - all protected endpoints require a signed Bearer token (HS256, configurable expiry).
+* **JWT** - all protected endpoints require a signed Bearer token (HS256, configurable expiry). Set `JWT_SECRET` to a randomly-generated string of at least 32 characters; the server will log a warning if it detects the default value.
 * **Helmet** - HTTP security headers (CSP, HSTS, etc.) on every response.
 * **Rate limiting** - global limiter (default 100 req/min) + strict limiter (10 req/min) on `/api/auth/token`.
-* **Input sanitization** - NUL bytes stripped and whitespace trimmed before forwarding user text to AI backends.
+* **Input sanitization** - NUL bytes and non-printable control characters stripped and whitespace trimmed before forwarding user text to AI backends.
+* **CORS** - configurable allowed-origin list via `CORS_ORIGINS` (defaults to `*` for development; restrict in production).
 * **Secrets via environment variables** - no credentials are hard-coded; see `.env.example`.
+
+---
+
+## Deployment
+
+### Replit
+
+1. Fork or import this repository on [Replit](https://replit.com).
+2. Open the **Secrets** tab and add all variables from `.env.example`.
+3. Set `NODE_ENV=production`.
+4. Click **Run**. The server auto-scales with Replit's infrastructure.
+
+### Docker / any container platform
+
+```bash
+docker build -t ai-tower-control .
+docker run -p 3000:3000 --env-file .env ai-tower-control
+```
+
+### GitHub Actions CI/CD
+
+The repository ships with two workflows under `.github/workflows/`:
+
+| Workflow | File | Trigger |
+|---|---|---|
+| CI (lint + test) | `ci.yml` | Push / PR to `main` |
+| Webhook dispatcher | `webhook.yml` | Manual (`workflow_dispatch`) |
+
+Configure the following repository secrets for the webhook workflow:
+
+| Secret | Description |
+|---|---|
+| `TOWER_API_URL` | Base URL of your deployed AI Control Tower |
+| `TOWER_CLIENT_ID` | `clientId` used to obtain an auth token |
+| `TOWER_CLIENT_SECRET` | `clientSecret` for the above client (≥ 8 chars) |
+
+### Onboarding a new integration
+
+1. Add connector environment variables to your `.env` (copy from `.env.example`).
+2. Create `src/connectors/<platform>.js` following the existing connector pattern.
+3. Register the connector name in `src/data-management/sync.js` → `CONNECTORS` array.
+4. Add route handlers in `src/routes/connectors.js`.
+5. Run `npm test` to validate everything still works.
+

@@ -6,6 +6,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const { v4: uuidv4 } = require('uuid');
 const logger = require('./logger');
 const routes = require('./routes/index');
 
@@ -15,7 +16,19 @@ const app = express();
 app.use(helmet());
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
-app.use(cors());
+// CORS_ORIGINS accepts a comma-separated list of allowed origins.
+// Leave unset (or set to *) to allow all origins (development only).
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
+  : '*';
+app.use(cors({ origin: corsOrigins }));
+
+// ── Request tracing ───────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  req.requestId = req.headers['x-request-id'] || uuidv4();
+  res.setHeader('X-Request-Id', req.requestId);
+  next();
+});
 
 // ── Body parsing ──────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '1mb' }));
@@ -55,9 +68,26 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 
 /* istanbul ignore next */
 if (require.main === module) {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     logger.info(`AI Control Tower listening on port ${PORT}`);
   });
+
+  // Graceful shutdown on SIGTERM / SIGINT (e.g. Docker stop, Ctrl-C)
+  function shutdown(signal) {
+    logger.info(`${signal} received – shutting down gracefully`);
+    server.close(() => {
+      logger.info('HTTP server closed');
+      process.exit(0);
+    });
+    // Force-exit after 10 seconds if connections are still open
+    setTimeout(() => {
+      logger.error('Forced shutdown after timeout');
+      process.exit(1);
+    }, 10_000).unref();
+  }
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 module.exports = app;

@@ -15,10 +15,11 @@ async function chat(messages, options = {}) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
 
+  const { model: modelOverride, ...restOptions } = options;
   const payload = {
-    model: options.model || DEFAULT_MODEL,
+    model: modelOverride || DEFAULT_MODEL,
     messages,
-    ...options,
+    ...restOptions,
   };
 
   logger.debug('OpenAI chat request', { model: payload.model, messageCount: messages.length });
