@@ -1,0 +1,59 @@
+name: Webhook Event Handler
+
+on:
+  repository_dispatch:
+    types:
+      - github-webhook
+      - factory-ai-webhook
+      - allbots-webhook
+      - swarm-trigger
+  workflow_dispatch:
+    inputs:
+      event_type:
+        description: "Event type to process (github-webhook | factory-ai-webhook | allbots-webhook | swarm-trigger)"
+        required: true
+        default: "github-webhook"
+      payload:
+        description: "JSON payload string for the event"
+        required: false
+        default: "{}"
+
+jobs:
+  handle-webhook:
+    name: Process Webhook Event
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests to verify system health
+        run: npm test
+        env:
+          JWT_SECRET: ci-test-secret-32chars-long-xxx
+          LOG_LEVEL: error
+
+      - name: Log event details
+        run: |
+          EVENT="${{ github.event_name }}"
+          if [ "$EVENT" = "repository_dispatch" ]; then
+            echo "Repository dispatch event: ${{ github.event.action }}"
+            echo "Client payload: ${{ toJson(github.event.client_payload) }}"
+          elif [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "Manual dispatch - event_type: ${{ github.event.inputs.event_type }}"
+            echo "Payload: ${{ github.event.inputs.payload }}"
+          fi
+
+      - name: Dispatch complete
+        run: echo "Webhook event processed successfully."
