@@ -2,6 +2,7 @@
 
 const axios = require('axios');
 const logger = require('../logger');
+const { withRetry } = require('../utils/retry');
 
 const DEFAULT_MODEL = process.env.OPENAI_MODEL || 'gpt-4o';
 
@@ -23,16 +24,20 @@ async function chat(messages, options = {}) {
 
   logger.debug('OpenAI chat request', { model: payload.model, messageCount: messages.length });
 
-  const response = await axios.post(
-    'https://api.openai.com/v1/chat/completions',
-    payload,
-    {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      timeout: 30_000,
-    }
+  const response = await withRetry(
+    () =>
+      axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          timeout: 30_000,
+        }
+      ),
+    { label: 'openai.chat' }
   );
 
   const choice = response.data.choices[0];
@@ -52,10 +57,14 @@ async function listModels() {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
 
-  const response = await axios.get('https://api.openai.com/v1/models', {
-    headers: { Authorization: `Bearer ${apiKey}` },
-    timeout: 15_000,
-  });
+  const response = await withRetry(
+    () =>
+      axios.get('https://api.openai.com/v1/models', {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        timeout: 15_000,
+      }),
+    { label: 'openai.listModels' }
+  );
   return response.data.data;
 }
 
