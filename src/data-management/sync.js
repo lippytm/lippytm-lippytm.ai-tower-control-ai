@@ -16,7 +16,7 @@ const syncJobs = new Map();
 /**
  * Supported connector names (used for validation).
  */
-const CONNECTORS = ['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot'];
+const CONNECTORS = ['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'swarm'];
 
 /**
  * Schedule a new data sync job between a source and target connector.

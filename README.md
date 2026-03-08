@@ -1,6 +1,6 @@
 # AI Tower Control
 
-An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, **Factory.ai**, **Replit**, and **GitHub Copilot**, with built-in cybersecurity and automated data-management capabilities.
+An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, **Factory.ai**, **Replit**, and **GitHub Copilot**, with built-in cybersecurity, automated data-management capabilities, and an **AI Generative Synthetic Intelligence Engine Swarms AgentsBots** extension.
 
 ---
 
@@ -15,6 +15,7 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 | **GitHub Copilot** | Trigger and monitor GitHub Actions workflows; query commits |
 | **Cybersecurity** | JWT authentication, Helmet security headers, per-route rate limiting, input sanitization |
 | **Data Management** | Schedule and track data-sync jobs between any pair of connectors |
+| **AgentsBots Swarms** | Create autonomous AgentBots, group them into swarms, broadcast messages, and self-heal stale agents |
 
 ---
 
@@ -30,6 +31,9 @@ src/
 │   ├── factory-ai.js            # Factory.ai connector
 │   ├── replit.js                # Replit connector
 │   └── github-copilot.js        # GitHub Copilot / Actions connector
+├── swarm/
+│   ├── agent.js                 # AgentBot lifecycle, config, maintenance log
+│   └── orchestrator.js          # Swarm orchestrator, membership, self-healing health-checks
 ├── security/
 │   ├── auth.js                  # JWT generation, verification, requireAuth middleware
 │   └── rateLimiter.js           # Strict rate limiter + input sanitization
@@ -39,7 +43,8 @@ src/
     ├── index.js                 # Route aggregator
     ├── auth.js                  # POST /api/auth/token
     ├── connectors.js            # /api/connectors/* endpoints
-    └── data.js                  # /api/data/* endpoints
+    ├── data.js                  # /api/data/* endpoints
+    └── swarm.js                 # /api/swarm/* endpoints
 tests/                           # Jest unit + integration tests
 ```
 
@@ -142,6 +147,94 @@ Authorization: Bearer <jwt>
 | `POST` | `/api/data/sync` | Schedule sync job |
 | `GET` | `/api/data/sync` | List all sync jobs |
 | `GET` | `/api/data/sync/:jobId` | Get job status |
+
+---
+
+### AgentsBots Swarms
+
+All `/api/swarm/*` endpoints require a Bearer token.
+
+#### AgentBot management
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/swarm/agents` | Create an AgentBot |
+| `GET` | `/api/swarm/agents` | List agents (filter by `swarmId` or `state`) |
+| `GET` | `/api/swarm/agents/:agentId` | Get agent details |
+| `PATCH` | `/api/swarm/agents/:agentId` | Update agent config (name, role, channels, metadata) |
+| `DELETE` | `/api/swarm/agents/:agentId` | Delete an agent |
+| `POST` | `/api/swarm/agents/:agentId/state` | Transition lifecycle state (`idle`\|`running`\|`paused`\|`failed`\|`terminated`) |
+| `GET` | `/api/swarm/agents/:agentId/maintenance-log` | View timestamped event log for the agent |
+
+**Supported channel types:** `openai`, `allbots`, `factory-ai`, `replit`, `github-copilot`, `internal`
+
+**Example – create a worker AgentBot:**
+
+```bash
+curl -X POST /api/swarm/agents \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "worker-1", "role": "worker", "channels": ["openai", "replit"]}'
+```
+
+#### Swarm management
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/swarm/swarms` | Create a swarm |
+| `GET` | `/api/swarm/swarms` | List all swarms |
+| `GET` | `/api/swarm/swarms/:swarmId` | Get swarm details |
+| `PATCH` | `/api/swarm/swarms/:swarmId` | Update swarm (name, description, scalingPolicy) |
+| `DELETE` | `/api/swarm/swarms/:swarmId` | Dissolve swarm (terminates all member agents) |
+| `POST` | `/api/swarm/swarms/:swarmId/agents` | Add an existing agent to the swarm |
+| `DELETE` | `/api/swarm/swarms/:swarmId/agents/:agentId` | Remove agent from swarm |
+| `POST` | `/api/swarm/swarms/:swarmId/start` | Start all idle/paused agents |
+| `POST` | `/api/swarm/swarms/:swarmId/pause` | Pause all running agents |
+| `POST` | `/api/swarm/swarms/:swarmId/broadcast` | Broadcast a message to all running agents |
+
+**Example – create a swarm, add an agent, and start it:**
+
+```bash
+# 1. Create swarm
+SWARM_ID=$(curl -sX POST /api/swarm/swarms \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "swarm-alpha"}' | jq -r .swarmId)
+
+# 2. Create agent
+AGENT_ID=$(curl -sX POST /api/swarm/agents \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "alpha-bot-1", "channels": ["openai"]}' | jq -r .agentId)
+
+# 3. Add agent to swarm
+curl -X POST /api/swarm/swarms/$SWARM_ID/agents \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d "{\"agentId\": \"$AGENT_ID\"}"
+
+# 4. Start all agents
+curl -X POST /api/swarm/swarms/$SWARM_ID/start \
+  -H "Authorization: Bearer <token>"
+```
+
+#### Self-healing
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/swarm/health-check` | Manually trigger a health-check cycle |
+
+The orchestrator automatically restarts agents whose heartbeat has gone stale (exceeds `SWARM_STALE_THRESHOLD_MS`, default 60 s). After `SWARM_MAX_AUTO_RESTARTS` (default 3) consecutive failures the agent is marked `failed` and requires manual intervention.
+
+The background loop fires every `SWARM_HEALTH_CHECK_INTERVAL_MS` (default 30 s) and is configurable via environment variables.
+
+#### Adding / removing AgentsBots – developer guide
+
+1. **Create** an AgentBot with `POST /api/swarm/agents` supplying a `name` and optionally `role`, `channels`, and `metadata`.
+2. **Register** it with a swarm via `POST /api/swarm/swarms/:swarmId/agents`.
+3. **Start** the swarm (or individual agent) using the `/start` and `/state` endpoints.
+4. **Monitor** health via `GET /api/swarm/agents/:agentId/maintenance-log` or trigger a manual `POST /api/swarm/health-check`.
+5. **Remove** cleanly with `DELETE /api/swarm/swarms/:swarmId/agents/:agentId` (keeps the agent record) or `DELETE /api/swarm/agents/:agentId` (permanent deletion).
 
 ---
 
