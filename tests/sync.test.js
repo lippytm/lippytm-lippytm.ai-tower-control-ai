@@ -13,6 +13,10 @@ describe('CONNECTORS list', () => {
     expect(CONNECTORS).toContain('factory-ai');
     expect(CONNECTORS).toContain('replit');
     expect(CONNECTORS).toContain('github-copilot');
+    expect(CONNECTORS).toContain('perplexity');
+    expect(CONNECTORS).toContain('botbuilders');
+    expect(CONNECTORS).toContain('manychat');
+    expect(CONNECTORS).toContain('kartra');
   });
 });
 

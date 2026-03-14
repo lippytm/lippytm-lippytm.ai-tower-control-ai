@@ -4,10 +4,14 @@ const router = require('express').Router();
 const { requireAuth } = require('../security/auth');
 const { sanitizeInput } = require('../security/rateLimiter');
 const openai = require('../connectors/openai');
+const perplexity = require('../connectors/perplexity');
 const allbots = require('../connectors/allbots');
 const factoryAi = require('../connectors/factory-ai');
 const replit = require('../connectors/replit');
 const githubCopilot = require('../connectors/github-copilot');
+const botbuilders = require('../connectors/botbuilders');
+const manychat = require('../connectors/manychat');
+const kartra = require('../connectors/kartra');
 
 // All connector routes require a valid JWT
 router.use(requireAuth);
@@ -217,6 +221,184 @@ router.get('/github-copilot/commit/:branch', async (req, res, next) => {
   try {
     const commit = await githubCopilot.getLatestCommit(req.params.branch);
     return res.json(commit);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── Perplexity ────────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/connectors/perplexity/chat
+ * Body: { messages: [{role, content}], model? }
+ */
+router.post('/perplexity/chat', async (req, res, next) => {
+  try {
+    const { messages, model } = req.body || {};
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'messages array is required' });
+    }
+    const sanitizedMessages = messages.map((m) => ({
+      role: m.role,
+      content: sanitizeInput(m.content),
+    }));
+    const result = await perplexity.chat(sanitizedMessages, model ? { model } : {});
+    return res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/perplexity/search
+ * Body: { query: string, model? }
+ */
+router.post('/perplexity/search', async (req, res, next) => {
+  try {
+    const { query, model } = req.body || {};
+    if (!query) return res.status(400).json({ error: 'query is required' });
+    const result = await perplexity.search(sanitizeInput(query), model ? { model } : {});
+    return res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── BotBuilders ───────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/connectors/botbuilders/bots
+ */
+router.get('/botbuilders/bots', async (_req, res, next) => {
+  try {
+    const bots = await botbuilders.listBots();
+    return res.json({ bots });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /api/connectors/botbuilders/bots/:botId
+ */
+router.get('/botbuilders/bots/:botId', async (req, res, next) => {
+  try {
+    const bot = await botbuilders.getBot(req.params.botId);
+    return res.json(bot);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/botbuilders/bots/:botId/messages
+ * Body: { message: string }
+ */
+router.post('/botbuilders/bots/:botId/messages', async (req, res, next) => {
+  try {
+    const { botId } = req.params;
+    const { message } = req.body || {};
+    if (!message) return res.status(400).json({ error: 'message is required' });
+    const result = await botbuilders.sendMessage(botId, sanitizeInput(message));
+    return res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── ManyChat ──────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/connectors/manychat/page
+ */
+router.get('/manychat/page', async (_req, res, next) => {
+  try {
+    const info = await manychat.getPageInfo();
+    return res.json(info);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /api/connectors/manychat/subscribers
+ * Query: { name: string }
+ */
+router.get('/manychat/subscribers', async (req, res, next) => {
+  try {
+    const { name } = req.query || {};
+    if (!name) return res.status(400).json({ error: 'name query parameter is required' });
+    const subscriber = await manychat.findSubscriber(sanitizeInput(name));
+    return res.json(subscriber);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/manychat/subscribers/:subscriberId/messages
+ * Body: { data: object }
+ */
+router.post('/manychat/subscribers/:subscriberId/messages', async (req, res, next) => {
+  try {
+    const { subscriberId } = req.params;
+    const { data } = req.body || {};
+    if (!data) return res.status(400).json({ error: 'data is required' });
+    // Sanitize any top-level string fields in the data payload
+    const sanitizedData = Object.fromEntries(
+      Object.entries(data).map(([k, v]) => [k, typeof v === 'string' ? sanitizeInput(v) : v])
+    );
+    const result = await manychat.sendMessage(subscriberId, sanitizedData);
+    return res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── Kartra ────────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/connectors/kartra/leads
+ * Query: { email: string }
+ */
+router.get('/kartra/leads', async (req, res, next) => {
+  try {
+    const { email } = req.query || {};
+    if (!email) return res.status(400).json({ error: 'email query parameter is required' });
+    const lead = await kartra.getLead(sanitizeInput(email));
+    return res.json(lead);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/kartra/leads
+ * Body: lead fields (first_name, last_name, email, etc.)
+ */
+router.post('/kartra/leads', async (req, res, next) => {
+  try {
+    const leadData = req.body;
+    if (!leadData || !leadData.email) return res.status(400).json({ error: 'email is required' });
+    // Sanitize all string fields in the lead data
+    const sanitizedLead = Object.fromEntries(
+      Object.entries(leadData).map(([k, v]) => [k, typeof v === 'string' ? sanitizeInput(v) : v])
+    );
+    const result = await kartra.addLead(sanitizedLead);
+    return res.status(201).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/kartra/leads/:email/sequences/:sequenceId
+ */
+router.post('/kartra/leads/:email/sequences/:sequenceId', async (req, res, next) => {
+  try {
+    const { email, sequenceId } = req.params;
+    const result = await kartra.subscribeLeadToSequence(email, sequenceId);
+    return res.json(result);
   } catch (err) {
     next(err);
   }
