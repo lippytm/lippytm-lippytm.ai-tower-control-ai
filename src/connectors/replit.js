@@ -41,14 +41,16 @@ async function createRepl(config) {
 }
 
 /**
- * Run (execute) a Repl by its ID.
+ * Run (execute) a Repl by its ID, optionally providing input content.
  * @param {string} replId
+ * @param {string} [content]  Optional input/prompt to pass to the Repl run.
  * @returns {Promise<object>}
  */
-async function runRepl(replId) {
+async function runRepl(replId, content) {
   logger.debug('Replit: runRepl', { replId });
   const client = getClient();
-  const response = await client.post(`/repls/${replId}/run`);
+  const body = content !== undefined ? { content } : undefined;
+  const response = await client.post(`/repls/${replId}/run`, body);
   return response.data;
 }
 
