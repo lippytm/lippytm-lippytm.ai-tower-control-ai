@@ -222,4 +222,111 @@ router.get('/github-copilot/commit/:branch', async (req, res, next) => {
   }
 });
 
+// ── ChatGPT Broadcast ─────────────────────────────────────────────────────────
+
+/**
+ * POST /api/connectors/chatgpt/broadcast
+ * Send a prompt to ChatGPT and distribute the response to all configured target platforms.
+ *
+ * Body:
+ * {
+ *   messages: [{role, content}],   // required – conversation messages for ChatGPT
+ *   model?: string,                // optional – override default OpenAI model
+ *   targets?: {
+ *     allbots?:      { botId: string },
+ *     "factory-ai"?: { pipelineId: string },
+ *     replit?:       { replId: string },
+ *     "github-copilot"?: { workflowId: string, ref: string, inputs?: object }
+ *   }
+ * }
+ *
+ * Response:
+ * {
+ *   chatgpt: { id, content, model, usage },
+ *   broadcast: {
+ *     allbots:        { status: "sent"|"skipped"|"error", result?, error? },
+ *     "factory-ai":   { status: "sent"|"skipped"|"error", result?, error? },
+ *     replit:         { status: "sent"|"skipped"|"error", result?, error? },
+ *     "github-copilot": { status: "sent"|"skipped"|"error", result?, error? }
+ *   }
+ * }
+ */
+router.post('/chatgpt/broadcast', async (req, res, next) => {
+  try {
+    const { messages, model, targets = {} } = req.body || {};
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'messages array is required' });
+    }
+
+    const sanitizedMessages = messages.map((m) => ({
+      role: m.role,
+      content: sanitizeInput(m.content),
+    }));
+
+    // 1. Get ChatGPT response
+    const chatgptResult = await openai.chat(sanitizedMessages, model ? { model } : {});
+    const chatgptContent = chatgptResult.content;
+
+    // 2. Broadcast to each configured target platform
+    const broadcastResults = {};
+
+    // AllBots
+    const allbotsTarget = targets.allbots;
+    if (allbotsTarget && allbotsTarget.botId) {
+      try {
+        const result = await allbots.sendMessage(allbotsTarget.botId, chatgptContent);
+        broadcastResults.allbots = { status: 'sent', result };
+      } catch (err) {
+        broadcastResults.allbots = { status: 'error', error: err.message };
+      }
+    } else {
+      broadcastResults.allbots = { status: 'skipped' };
+    }
+
+    // Factory.ai
+    const factoryTarget = targets['factory-ai'];
+    if (factoryTarget && factoryTarget.pipelineId) {
+      try {
+        const result = await factoryAi.runPipeline(factoryTarget.pipelineId, { prompt: chatgptContent });
+        broadcastResults['factory-ai'] = { status: 'sent', result };
+      } catch (err) {
+        broadcastResults['factory-ai'] = { status: 'error', error: err.message };
+      }
+    } else {
+      broadcastResults['factory-ai'] = { status: 'skipped' };
+    }
+
+    // Replit
+    const replitTarget = targets.replit;
+    if (replitTarget && replitTarget.replId) {
+      try {
+        const result = await replit.runRepl(replitTarget.replId, chatgptContent);
+        broadcastResults.replit = { status: 'sent', result };
+      } catch (err) {
+        broadcastResults.replit = { status: 'error', error: err.message };
+      }
+    } else {
+      broadcastResults.replit = { status: 'skipped' };
+    }
+
+    // GitHub Copilot
+    const copilotTarget = targets['github-copilot'];
+    if (copilotTarget && copilotTarget.workflowId && copilotTarget.ref) {
+      try {
+        const inputs = { ...(copilotTarget.inputs || {}), prompt: chatgptContent };
+        await githubCopilot.dispatchWorkflow(copilotTarget.workflowId, copilotTarget.ref, inputs);
+        broadcastResults['github-copilot'] = { status: 'sent' };
+      } catch (err) {
+        broadcastResults['github-copilot'] = { status: 'error', error: err.message };
+      }
+    } else {
+      broadcastResults['github-copilot'] = { status: 'skipped' };
+    }
+
+    return res.json({ chatgpt: chatgptResult, broadcast: broadcastResults });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
