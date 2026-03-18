@@ -6,7 +6,7 @@ const logger = require('../logger');
 function getClient() {
   const apiKey = process.env.FACTORY_AI_API_KEY;
   const baseURL = process.env.FACTORY_AI_BASE_URL || 'https://api.factory.ai';
-  if (!apiKey) throw new Error('FACTORY_AI_API_KEY is not configured');
+  if (!apiKey) {throw new Error('FACTORY_AI_API_KEY is not configured');}
   return axios.create({
     baseURL,
     headers: {

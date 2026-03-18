@@ -6,7 +6,7 @@ const logger = require('../logger');
 function getClient() {
   const apiKey = process.env.ALLBOTS_API_KEY;
   const baseURL = process.env.ALLBOTS_BASE_URL || 'https://api.allbots.com.ai';
-  if (!apiKey) throw new Error('ALLBOTS_API_KEY is not configured');
+  if (!apiKey) {throw new Error('ALLBOTS_API_KEY is not configured');}
   return axios.create({
     baseURL,
     headers: {
