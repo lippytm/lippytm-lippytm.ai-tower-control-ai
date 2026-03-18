@@ -13,8 +13,9 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 | **Factory.ai** | List pipelines, trigger runs, and monitor results |
 | **Replit** | List, create, and run Repls via the Replit API |
 | **GitHub Copilot** | Trigger and monitor GitHub Actions workflows; query commits |
-| **Cybersecurity** | JWT authentication, Helmet security headers, per-route rate limiting, input sanitization |
+| **Cybersecurity** | JWT authentication, Helmet security headers, per-route rate limiting, input sanitization, route param validation |
 | **Data Management** | Schedule and track data-sync jobs between any pair of connectors |
+| **Observability** | Request-ID correlation header, environment-aware structured logging |
 
 ---
 
@@ -23,7 +24,7 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 ```
 src/
 ├── server.js                    # Express application entry-point
-├── logger.js                    # Winston logger
+├── logger.js                    # Winston logger (JSON in prod, pretty in dev)
 ├── connectors/
 │   ├── openai.js                # ChatGPT / OpenAI connector
 │   ├── allbots.js               # AllBots.com.ai connector
@@ -32,7 +33,8 @@ src/
 │   └── github-copilot.js        # GitHub Copilot / Actions connector
 ├── security/
 │   ├── auth.js                  # JWT generation, verification, requireAuth middleware
-│   └── rateLimiter.js           # Strict rate limiter + input sanitization
+│   ├── rateLimiter.js           # Strict rate limiter, input sanitization, param validation
+│   └── requestId.js             # X-Request-Id correlation middleware
 ├── data-management/
 │   └── sync.js                  # Connector-agnostic data-sync job scheduler
 └── routes/
@@ -71,6 +73,13 @@ npm run dev      # development (nodemon)
 
 ```bash
 npm test
+```
+
+### 5. Lint
+
+```bash
+npm run lint        # check
+npm run lint:fix    # auto-fix
 ```
 
 ---
@@ -143,12 +152,29 @@ Authorization: Bearer <jwt>
 | `GET` | `/api/data/sync` | List all sync jobs |
 | `GET` | `/api/data/sync/:jobId` | Get job status |
 
+### Health
+
+```
+GET /health
+-> { "status": "ok", "service": "ai-tower-control", "version": "1.0.0",
+     "environment": "production", "uptimeSeconds": 42 }
+```
+
 ---
 
 ## Security
 
-* **JWT** - all protected endpoints require a signed Bearer token (HS256, configurable expiry).
-* **Helmet** - HTTP security headers (CSP, HSTS, etc.) on every response.
-* **Rate limiting** - global limiter (default 100 req/min) + strict limiter (10 req/min) on `/api/auth/token`.
-* **Input sanitization** - NUL bytes stripped and whitespace trimmed before forwarding user text to AI backends.
-* **Secrets via environment variables** - no credentials are hard-coded; see `.env.example`.
+* **JWT** – all protected endpoints require a signed Bearer token (HS256, configurable expiry). The server refuses to start in production if `JWT_SECRET` is the default `changeme`.
+* **Helmet** – HTTP security headers (CSP, HSTS, etc.) on every response.
+* **CORS** – restricted to origins listed in `CORS_ORIGIN`; all cross-origin requests are blocked when the variable is not set.
+* **Rate limiting** – global limiter (default 100 req/min) + strict limiter (10 req/min) on `/api/auth/token`.
+* **Input sanitization** – NUL bytes and ASCII control characters stripped, whitespace trimmed before forwarding user text to AI backends.
+* **Route parameter validation** – `botId`, `replId`, `pipelineId`, `runId`, `branch`, and `workflowId` are validated against an allowlist regex to prevent path traversal and injection attacks.
+* **Secrets via environment variables** – no credentials are hard-coded; see `.env.example`.
+
+## Observability
+
+* **Request-ID** – every request receives a unique `X-Request-Id` response header (UUID v4 generated server-side, or passed through from upstream). Use this to correlate log entries across services.
+* **Structured logging** – JSON in production, human-readable timestamped format in development. Log level controlled via `LOG_LEVEL` env var (defaults to `warn` in production, `info` in development).
+* **Graceful shutdown** – `SIGTERM` and `SIGINT` are handled: the server stops accepting new connections and waits for in-flight requests to complete before exiting. Configurable timeout via `SHUTDOWN_TIMEOUT_MS`.
+

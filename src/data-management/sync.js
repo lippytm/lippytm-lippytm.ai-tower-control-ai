@@ -62,7 +62,7 @@ function scheduleSync(source, target, options = {}) {
  */
 function getSyncJob(jobId) {
   const job = syncJobs.get(jobId);
-  if (!job) throw new Error(`Sync job not found: ${jobId}`);
+  if (!job) {throw new Error(`Sync job not found: ${jobId}`);}
   return job;
 }
 
@@ -82,7 +82,7 @@ function listSyncJobs() {
  */
 async function _processSync(jobId) {
   const job = syncJobs.get(jobId);
-  if (!job) return;
+  if (!job) {return;}
 
   _updateJob(jobId, { status: 'running', updatedAt: new Date().toISOString() });
   logger.info('Data sync job running', { jobId, source: job.source, target: job.target });
@@ -109,7 +109,7 @@ async function _processSync(jobId) {
 
 function _updateJob(jobId, fields) {
   const job = syncJobs.get(jobId);
-  if (job) syncJobs.set(jobId, { ...job, ...fields });
+  if (job) {syncJobs.set(jobId, { ...job, ...fields });}
 }
 
 function _simulateWork(ms) {

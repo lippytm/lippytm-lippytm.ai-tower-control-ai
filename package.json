@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "description": "AI Control Tower – connects ChatGPT/OpenAI with AllBots.com.ai, Factory.ai, Replit and GitHub Copilot with cybersecurity and automated data management",
   "main": "src/server.js",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "jest --runInBand --forceExit",
     "test:coverage": "jest --coverage --runInBand --forceExit",
-    "lint": "eslint src tests"
+    "lint": "eslint src tests",
+    "lint:fix": "eslint --fix src tests"
   },
   "keywords": [
     "ai",

@@ -2,7 +2,7 @@
 
 const router = require('express').Router();
 const { requireAuth } = require('../security/auth');
-const { sanitizeInput } = require('../security/rateLimiter');
+const { sanitizeInput, isSafeParam } = require('../security/rateLimiter');
 const openai = require('../connectors/openai');
 const allbots = require('../connectors/allbots');
 const factoryAi = require('../connectors/factory-ai');
@@ -68,8 +68,11 @@ router.get('/allbots/bots', async (_req, res, next) => {
 router.post('/allbots/bots/:botId/messages', async (req, res, next) => {
   try {
     const { botId } = req.params;
+    if (!isSafeParam(botId)) {
+      return res.status(400).json({ error: 'Invalid botId' });
+    }
     const { message } = req.body || {};
-    if (!message) return res.status(400).json({ error: 'message is required' });
+    if (!message) { return res.status(400).json({ error: 'message is required' }); }
     const result = await allbots.sendMessage(botId, sanitizeInput(message));
     return res.json(result);
   } catch (err) {
@@ -84,7 +87,7 @@ router.post('/allbots/bots/:botId/messages', async (req, res, next) => {
 router.post('/allbots/bots', async (req, res, next) => {
   try {
     const config = req.body;
-    if (!config || !config.name) return res.status(400).json({ error: 'name is required' });
+    if (!config || !config.name) { return res.status(400).json({ error: 'name is required' }); }
     const bot = await allbots.createBot(config);
     return res.status(201).json(bot);
   } catch (err) {
@@ -113,6 +116,9 @@ router.get('/factory-ai/pipelines', async (_req, res, next) => {
 router.post('/factory-ai/pipelines/:pipelineId/runs', async (req, res, next) => {
   try {
     const { pipelineId } = req.params;
+    if (!isSafeParam(pipelineId)) {
+      return res.status(400).json({ error: 'Invalid pipelineId' });
+    }
     const { inputs = {} } = req.body || {};
     const run = await factoryAi.runPipeline(pipelineId, inputs);
     return res.status(202).json(run);
@@ -127,6 +133,12 @@ router.post('/factory-ai/pipelines/:pipelineId/runs', async (req, res, next) => 
 router.get('/factory-ai/pipelines/:pipelineId/runs/:runId', async (req, res, next) => {
   try {
     const { pipelineId, runId } = req.params;
+    if (!isSafeParam(pipelineId)) {
+      return res.status(400).json({ error: 'Invalid pipelineId' });
+    }
+    if (!isSafeParam(runId)) {
+      return res.status(400).json({ error: 'Invalid runId' });
+    }
     const run = await factoryAi.getPipelineRun(pipelineId, runId);
     return res.json(run);
   } catch (err) {
@@ -158,8 +170,8 @@ router.post('/replit/repls', async (req, res, next) => {
     if (!title || !language) {
       return res.status(400).json({ error: 'title and language are required' });
     }
-    const repl = await replit.createRepl(req.body);
-    return res.status(201).json(repl);
+    const createdRepl = await replit.createRepl(req.body);
+    return res.status(201).json(createdRepl);
   } catch (err) {
     next(err);
   }
@@ -171,6 +183,9 @@ router.post('/replit/repls', async (req, res, next) => {
 router.post('/replit/repls/:replId/run', async (req, res, next) => {
   try {
     const { replId } = req.params;
+    if (!isSafeParam(replId)) {
+      return res.status(400).json({ error: 'Invalid replId' });
+    }
     const result = await replit.runRepl(replId);
     return res.json(result);
   } catch (err) {
@@ -203,6 +218,9 @@ router.post('/github-copilot/dispatch', async (req, res, next) => {
     if (!workflowId || !ref) {
       return res.status(400).json({ error: 'workflowId and ref are required' });
     }
+    if (!isSafeParam(workflowId)) {
+      return res.status(400).json({ error: 'Invalid workflowId' });
+    }
     await githubCopilot.dispatchWorkflow(workflowId, ref, inputs);
     return res.status(204).end();
   } catch (err) {
@@ -215,7 +233,11 @@ router.post('/github-copilot/dispatch', async (req, res, next) => {
  */
 router.get('/github-copilot/commit/:branch', async (req, res, next) => {
   try {
-    const commit = await githubCopilot.getLatestCommit(req.params.branch);
+    const { branch } = req.params;
+    if (!isSafeParam(branch)) {
+      return res.status(400).json({ error: 'Invalid branch name' });
+    }
+    const commit = await githubCopilot.getLatestCommit(branch);
     return res.json(commit);
   } catch (err) {
     next(err);
