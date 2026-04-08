@@ -1,6 +1,6 @@
 # AI Tower Control
 
-An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, **Factory.ai**, **Replit**, and **GitHub Copilot**, with built-in cybersecurity and automated data-management capabilities.
+An AI Control Tower that connects **ChatGPT / OpenAI**, **Perplexity AI**, **BotBuilders**, **ManyChat**, **Kartra**, **AllBots.com.ai**, **Factory.ai**, **Replit**, and **GitHub Copilot**, with built-in cybersecurity and automated data-management capabilities.
 
 ---
 
@@ -9,10 +9,14 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 | Feature | Description |
 |---|---|
 | **ChatGPT / OpenAI** | Chat completions and model listing via the OpenAI API |
+| **Perplexity AI** | AI-powered search and chat completions via the Perplexity API |
 | **AllBots.com.ai** | List, create, and message bots on AllBots.com.ai |
 | **Factory.ai** | List pipelines, trigger runs, and monitor results |
 | **Replit** | List, create, and run Repls via the Replit API |
 | **GitHub Copilot** | Trigger and monitor GitHub Actions workflows; query commits |
+| **BotBuilders** | List, inspect, and send messages to BotBuilders chatbots |
+| **ManyChat** | Manage subscribers and send messages via the ManyChat API |
+| **Kartra** | Manage leads and sequences via the Kartra API |
 | **Cybersecurity** | JWT authentication, Helmet security headers, per-route rate limiting, input sanitization |
 | **Data Management** | Schedule and track data-sync jobs between any pair of connectors |
 
@@ -26,10 +30,14 @@ src/
 ├── logger.js                    # Winston logger
 ├── connectors/
 │   ├── openai.js                # ChatGPT / OpenAI connector
+│   ├── perplexity.js            # Perplexity AI connector
 │   ├── allbots.js               # AllBots.com.ai connector
 │   ├── factory-ai.js            # Factory.ai connector
 │   ├── replit.js                # Replit connector
-│   └── github-copilot.js        # GitHub Copilot / Actions connector
+│   ├── github-copilot.js        # GitHub Copilot / Actions connector
+│   ├── botbuilders.js           # BotBuilders connector
+│   ├── manychat.js              # ManyChat connector
+│   └── kartra.js                # Kartra connector
 ├── security/
 │   ├── auth.js                  # JWT generation, verification, requireAuth middleware
 │   └── rateLimiter.js           # Strict rate limiter + input sanitization
@@ -102,6 +110,13 @@ Authorization: Bearer <jwt>
 | `POST` | `/api/connectors/openai/chat` | Chat completion |
 | `GET` | `/api/connectors/openai/models` | List models |
 
+### Perplexity AI
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/connectors/perplexity/chat` | Chat completion |
+| `POST` | `/api/connectors/perplexity/search` | AI-powered search query |
+
 ### AllBots.com.ai
 
 | Method | Path | Description |
@@ -133,6 +148,30 @@ Authorization: Bearer <jwt>
 | `GET` | `/api/connectors/github-copilot/runs` | List workflow runs |
 | `POST` | `/api/connectors/github-copilot/dispatch` | Dispatch workflow |
 | `GET` | `/api/connectors/github-copilot/commit/:branch` | Latest commit |
+
+### BotBuilders
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/connectors/botbuilders/bots` | List bots |
+| `GET` | `/api/connectors/botbuilders/bots/:botId` | Get bot details |
+| `POST` | `/api/connectors/botbuilders/bots/:botId/messages` | Send message to bot |
+
+### ManyChat
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/connectors/manychat/page` | Get page / account info |
+| `GET` | `/api/connectors/manychat/subscribers?name=` | Find subscriber by name |
+| `POST` | `/api/connectors/manychat/subscribers/:subscriberId/messages` | Send message to subscriber |
+
+### Kartra
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/connectors/kartra/leads?email=` | Get lead by email |
+| `POST` | `/api/connectors/kartra/leads` | Add a new lead |
+| `POST` | `/api/connectors/kartra/leads/:email/sequences/:sequenceId` | Subscribe lead to sequence |
 
 ### Data Management
 
