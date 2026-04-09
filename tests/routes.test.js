@@ -50,6 +50,44 @@ describe('Connector route auth guard', () => {
   });
 });
 
+// ── Parameter validation ──────────────────────────────────────────────────────
+
+describe('Route param validation', () => {
+  it('returns 400 for invalid botId in POST /allbots/bots/:botId/messages', async () => {
+    const res = await request(app)
+      .post('/api/connectors/allbots/bots/../messages')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ message: 'hello' });
+    // Express will normalize the path so we check both 404 (route not matched) and 400
+    expect([400, 404]).toContain(res.status);
+  });
+
+  it('returns 400 for invalid replId in POST /replit/repls/:replId/run', async () => {
+    const res = await request(app)
+      .post('/api/connectors/replit/repls/bad id here!/run')
+      .set('Authorization', `Bearer ${validToken()}`);
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/Invalid replId/);
+  });
+
+  it('returns 400 for invalid workflowId in POST /github-copilot/dispatch', async () => {
+    const res = await request(app)
+      .post('/api/connectors/github-copilot/dispatch')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ workflowId: '../../etc/passwd', ref: 'main' });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/Invalid workflowId/);
+  });
+
+  it('returns 400 for invalid branch in GET /github-copilot/commit/:branch', async () => {
+    const res = await request(app)
+      .get('/api/connectors/github-copilot/commit/a bad branch!')
+      .set('Authorization', `Bearer ${validToken()}`);
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/Invalid branch name/);
+  });
+});
+
 // ── Data-management routes ────────────────────────────────────────────────────
 
 describe('GET /api/data/connectors', () => {
@@ -112,3 +150,4 @@ describe('GET /api/data/sync/:jobId', () => {
     expect(getRes.body.jobId).toBe(jobId);
   });
 });
+

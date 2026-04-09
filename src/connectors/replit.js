@@ -6,7 +6,7 @@ const logger = require('../logger');
 function getClient() {
   const apiKey = process.env.REPLIT_API_KEY;
   const baseURL = process.env.REPLIT_BASE_URL || 'https://replit.com/api/v1';
-  if (!apiKey) throw new Error('REPLIT_API_KEY is not configured');
+  if (!apiKey) {throw new Error('REPLIT_API_KEY is not configured');}
   return axios.create({
     baseURL,
     headers: {

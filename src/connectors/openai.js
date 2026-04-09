@@ -13,7 +13,7 @@ const DEFAULT_MODEL = process.env.OPENAI_MODEL || 'gpt-4o';
  */
 async function chat(messages, options = {}) {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
+  if (!apiKey) {throw new Error('OPENAI_API_KEY is not configured');}
 
   const payload = {
     model: options.model || DEFAULT_MODEL,
@@ -50,7 +50,7 @@ async function chat(messages, options = {}) {
  */
 async function listModels() {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
+  if (!apiKey) {throw new Error('OPENAI_API_KEY is not configured');}
 
   const response = await axios.get('https://api.openai.com/v1/models', {
     headers: { Authorization: `Bearer ${apiKey}` },

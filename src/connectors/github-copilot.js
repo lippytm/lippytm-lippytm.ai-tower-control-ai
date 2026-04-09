@@ -5,7 +5,7 @@ const logger = require('../logger');
 
 function getClient() {
   const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('GITHUB_TOKEN is not configured');
+  if (!token) {throw new Error('GITHUB_TOKEN is not configured');}
   return axios.create({
     baseURL: 'https://api.github.com',
     headers: {
@@ -25,7 +25,7 @@ function getClient() {
 async function listWorkflowRuns(params = {}) {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
-  if (!owner || !repo) throw new Error('GITHUB_OWNER and GITHUB_REPO must be configured');
+  if (!owner || !repo) {throw new Error('GITHUB_OWNER and GITHUB_REPO must be configured');}
   logger.debug('GitHub Copilot: listWorkflowRuns', { owner, repo });
   const client = getClient();
   const response = await client.get(`/repos/${owner}/${repo}/actions/runs`, { params });
@@ -42,7 +42,7 @@ async function listWorkflowRuns(params = {}) {
 async function dispatchWorkflow(workflowId, ref, inputs = {}) {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
-  if (!owner || !repo) throw new Error('GITHUB_OWNER and GITHUB_REPO must be configured');
+  if (!owner || !repo) {throw new Error('GITHUB_OWNER and GITHUB_REPO must be configured');}
   logger.debug('GitHub Copilot: dispatchWorkflow', { owner, repo, workflowId, ref });
   const client = getClient();
   await client.post(`/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches`, {
@@ -59,7 +59,7 @@ async function dispatchWorkflow(workflowId, ref, inputs = {}) {
 async function getLatestCommit(branch = 'main') {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
-  if (!owner || !repo) throw new Error('GITHUB_OWNER and GITHUB_REPO must be configured');
+  if (!owner || !repo) {throw new Error('GITHUB_OWNER and GITHUB_REPO must be configured');}
   logger.debug('GitHub Copilot: getLatestCommit', { owner, repo, branch });
   const client = getClient();
   const response = await client.get(`/repos/${owner}/${repo}/commits/${branch}`);
