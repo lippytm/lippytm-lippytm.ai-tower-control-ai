@@ -1,8 +1,17 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
+const logger = require('../logger');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+
+/* istanbul ignore next */
+if (JWT_SECRET === 'changeme' || JWT_SECRET.length < 32) {
+  logger.warn(
+    'JWT_SECRET is weak or using the default value. ' +
+      'Set a strong secret (≥32 random characters) via the JWT_SECRET environment variable.'
+  );
+}
 
 /**
  * Generate a signed JWT for an API consumer.

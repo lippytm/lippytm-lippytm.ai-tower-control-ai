@@ -17,8 +17,13 @@ describe('sanitizeInput', () => {
     expect(sanitizeInput('hel\0lo')).toBe('hello');
   });
 
-  it('preserves newlines and tabs', () => {
-    expect(sanitizeInput('line1\nline2\ttabbed')).toBe('line1\nline2\ttabbed');
+  it('removes other non-printable control characters', () => {
+    // \x01 (SOH), \x08 (BS), \x0B (VT), \x1F (US) should be stripped
+    expect(sanitizeInput('\x01hello\x08world\x1F')).toBe('helloworld');
+  });
+
+  it('preserves newlines, carriage returns, and tabs', () => {
+    expect(sanitizeInput('line1\nline2\r\n\ttabbed')).toBe('line1\nline2\r\n\ttabbed');
   });
 
   it('passes through normal text unchanged', () => {
