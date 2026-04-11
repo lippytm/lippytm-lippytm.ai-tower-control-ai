@@ -9,6 +9,7 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 | Feature | Description |
 |---|---|
 | **ChatGPT / OpenAI** | Chat completions and model listing via the OpenAI API |
+| **ChatGPT Broadcast** | Send a ChatGPT prompt and distribute the response to all connected platforms in one request |
 | **AllBots.com.ai** | List, create, and message bots on AllBots.com.ai |
 | **Factory.ai** | List pipelines, trigger runs, and monitor results |
 | **Replit** | List, create, and run Repls via the Replit API |
@@ -101,6 +102,41 @@ Authorization: Bearer <jwt>
 |---|---|---|
 | `POST` | `/api/connectors/openai/chat` | Chat completion |
 | `GET` | `/api/connectors/openai/models` | List models |
+| `POST` | `/api/connectors/chatgpt/broadcast` | Send ChatGPT prompt and distribute response to all configured platforms |
+
+**Broadcast example:**
+
+```json
+POST /api/connectors/chatgpt/broadcast
+{
+  "messages": [{ "role": "user", "content": "Summarize today's deployment plan." }],
+  "model": "gpt-4o",
+  "targets": {
+    "allbots":        { "botId": "bot123" },
+    "factory-ai":     { "pipelineId": "pipe456" },
+    "replit":         { "replId": "repl789" },
+    "github-copilot": { "workflowId": "ci.yml", "ref": "main", "inputs": { "env": "production" } }
+  }
+}
+```
+
+Each target is optional. Omit a target key (or leave out `targets` entirely) to skip that platform.
+
+Response:
+```json
+{
+  "chatgpt": { "id": "...", "content": "...", "model": "gpt-4o", "usage": {} },
+  "broadcast": {
+    "allbots":        { "status": "sent", "result": {} },
+    "factory-ai":     { "status": "sent", "result": {} },
+    "replit":         { "status": "sent", "result": {} },
+    "github-copilot": { "status": "sent" }
+  }
+}
+```
+
+Possible `status` values per platform: `"sent"`, `"skipped"`, `"error"` (with an `"error"` field).
+
 
 ### AllBots.com.ai
 
