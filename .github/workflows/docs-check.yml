@@ -1,0 +1,21 @@
+name: Docs Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify core docs exist
+        run: |
+          test -f PROJECT_INDEX.md
+          test -f RUNBOOK.md
+          test -f TRUST_AND_COMPLIANCE.md
+          test -f AI_LEARNING_TRACKS.md
+          test -f docs/architecture/FLEET_STATUS.md
+      - name: List markdown files
+        run: find . -name "*.md" | sort
