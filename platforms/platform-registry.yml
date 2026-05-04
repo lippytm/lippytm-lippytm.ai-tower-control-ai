@@ -1,0 +1,83 @@
+# lippytm.ai Platform Registry
+
+platforms:
+  - id: github_control_tower
+    name: GitHub Control Tower
+    role: Source of truth for repos, agents, workflows, dashboards, support, products, and quality
+    status: active
+    risk_level: medium
+
+  - id: github_copilot
+    name: GitHub Copilot
+    role: AI coding autocomplete and repo editing support
+    status: active_guided
+    risk_level: medium
+
+  - id: chatgpt
+    name: ChatGPT
+    role: Strategy, planning, writing, review, prompt design, issue drafting
+    status: active
+    risk_level: medium
+
+  - id: twin
+    name: Twin
+    role: Autonomous agent and workflow layer
+    status: planned_active
+    builder_reference_link: https://build.twin.so/?ref=E7A31F7E
+    public_affiliate_link: https://twin.so?via=charles-lipshay
+    risk_level: medium
+
+  - id: manychat
+    name: ManyChat
+    role: Facebook, Instagram, and Messenger lead capture and follow-up
+    status: planned
+    risk_level: medium
+
+  - id: botbuilders
+    name: BotBuilders
+    role: Chatbot business system and offer path
+    status: planned
+    risk_level: medium
+
+  - id: getbizfunds
+    name: lippytmai.getbizfunds.com
+    role: Business/funding front door
+    status: planned_active
+    risk_level: high
+
+  - id: replit
+    name: Replit
+    role: Fast app prototypes and deployment experiments
+    status: planned
+    risk_level: medium
+
+  - id: base44
+    name: Base44
+    role: Website/app builder layer
+    status: planned
+    risk_level: medium
+
+  - id: myclaw
+    name: MyClaw
+    role: AI assistant/agent concept
+    status: planned
+    risk_level: medium
+
+  - id: openclaw
+    name: OpenClaw
+    role: AI assistant/agent concept
+    status: planned
+    risk_level: medium
+
+  - id: facebook_instagram_messenger
+    name: Facebook / Instagram / Messenger
+    role: Traffic, social, and conversation layer
+    status: planned
+    risk_level: medium
+
+rules:
+  - GitHub is source of truth
+  - keep secrets out of repositories
+  - document links and roles
+  - use human review for high-risk customer-facing actions
+  - build manual workflows before API/webhook automation
