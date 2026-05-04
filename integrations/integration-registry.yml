@@ -1,0 +1,64 @@
+# lippytm.ai Integration Registry
+
+integrations:
+  - id: github_to_copilot
+    name: GitHub to GitHub Copilot
+    status: active_guided
+    purpose: Use repo docs, issue templates, and Copilot instructions to guide autocomplete and AI coding.
+    source: GitHub Control Tower
+    destination: GitHub Copilot
+    risk_level: medium
+    human_review_required: true
+
+  - id: control_tower_to_twin
+    name: Control Tower to Twin
+    status: planned
+    purpose: Use Control Tower prompts, agent definitions, and workflows to build Twin agents.
+    source: GitHub Control Tower
+    destination: Twin
+    risk_level: medium
+    human_review_required: true
+
+  - id: manychat_to_lead_connector
+    name: ManyChat/BotBuilders to Lead Connector
+    status: planned
+    purpose: Route Messenger/Facebook/Instagram leads to lead classification and follow-up workflows.
+    source: ManyChat/BotBuilders
+    destination: Twin or ChatGPT Lead Connector
+    risk_level: medium
+    human_review_required: true
+
+  - id: lead_connector_to_getbizfunds
+    name: Lead Connector to GetBizFunds
+    status: planned
+    purpose: Route qualified business/funding inquiries to safe intake workflow.
+    source: Lead Connector
+    destination: lippytmai.getbizfunds.com
+    risk_level: high
+    human_review_required: true
+
+  - id: affiliate_promotion_to_social
+    name: Affiliate Promotion to Social Channels
+    status: planned
+    purpose: Draft affiliate and service promotion content for human review before posting.
+    source: Affiliate Promotion Workflow
+    destination: Facebook/Instagram/Messenger/website
+    risk_level: medium
+    human_review_required: true
+
+  - id: support_router_to_github_issues
+    name: Support Router to GitHub Issues
+    status: planned
+    purpose: Convert repeated support questions into GitHub issues, FAQs, and support docs.
+    source: Support Router Agent
+    destination: GitHub Issues
+    risk_level: medium
+    human_review_required: true
+
+rules:
+  - do_not_store_secret_values
+  - document_required_secret_names_only
+  - define_trigger_input_output_for_each_integration
+  - identify_customer_data_risk
+  - require_human_review_for_high_risk_integrations
+  - keep_manual_fallback_available
