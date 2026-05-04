@@ -1,0 +1,90 @@
+# lippytm.ai Fleet Repository Registry
+# Update this file as repos are modernized or added.
+
+repos:
+  - name: lippytm/lippytm-lippytm.ai-tower-control-ai
+    role: Control Tower and source of truth
+    status: active_buildout
+    priority: 1
+    next_action: Continue registries, workflows, dashboards, templates, and automation playbooks
+    risk_level: medium
+
+  - name: lippytm/lippytm.ai
+    role: Main lippytm.ai website/platform repo
+    status: planned
+    priority: 2
+    next_action: Apply repo modernization workflow
+    risk_level: medium
+
+  - name: lippytm/lippytmai.getbizfunds.com-
+    role: Business funding and services front door
+    status: planned
+    priority: 3
+    next_action: Apply funding intake and landing page workflows
+    risk_level: high
+
+  - name: lippytm/Chatlippytm.ai.Bots
+    role: Chatbot and AI bot system
+    status: planned
+    priority: 4
+    next_action: Apply chatbot intake and support workflows
+    risk_level: medium
+
+  - name: lippytm/Clawlippytm.ai.Bots
+    role: ClawBot and AI agent concept
+    status: planned
+    priority: 5
+    next_action: Apply repository growth prompt
+    risk_level: medium
+
+  - name: lippytm/MyClaw.lippytm.AI-
+    role: MyClaw integration and agent concept
+    status: planned
+    priority: 6
+    next_action: Define platform role and integration path
+    risk_level: medium
+
+  - name: lippytm/OpenClaw-lippytm.AI-
+    role: OpenClaw integration and agent concept
+    status: planned
+    priority: 7
+    next_action: Define platform role and integration path
+    risk_level: medium
+
+  - name: lippytm/Web3AI
+    role: Web3 and AI R&D
+    status: planned
+    priority: 8
+    next_action: Classify as R&D and productization candidate
+    risk_level: medium
+
+  - name: lippytm/AI-Time-Machines
+    role: Creative AI concept
+    status: planned
+    priority: 9
+    next_action: Apply creative development prompt
+    risk_level: low
+
+  - name: lippytm/AllBots.com
+    role: Bots product concept
+    status: planned
+    priority: 10
+    next_action: Apply productization prompt
+    risk_level: medium
+
+  - name: lippytm/Factory.ai
+    role: Factory and automation concept
+    status: planned
+    priority: 11
+    next_action: Align with AI Coding Factory blueprint
+    risk_level: medium
+
+standard_actions:
+  - run_autonomous_creative_development_prompt
+  - run_repo_modernization_workflow
+  - add_copilot_instructions
+  - add_quality_and_security_docs
+  - add_support_path
+  - add_productization_path
+  - create_next_3_issues
+  - update_dashboard_status
