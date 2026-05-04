@@ -1,0 +1,77 @@
+# Twin Platform Registry
+
+platform:
+  name: Twin
+  role: Autonomous agent and workflow layer for the lippytm.ai Business-of-Businesses network
+  status: planned_active
+  builder_reference_link: https://build.twin.so/?ref=E7A31F7E
+  public_affiliate_link: https://twin.so?via=charles-lipshay
+
+use_cases:
+  - lead intake
+  - business opportunity classification
+  - AI coding intake
+  - affiliate promotion
+  - support routing
+  - daily money actions
+  - repo growth recommendations
+  - content drafting
+  - follow-up drafting
+  - workflow automation planning
+
+connected_systems:
+  - GitHub Control Tower
+  - ChatGPT
+  - GitHub Copilot
+  - ManyChat
+  - BotBuilders
+  - lippytmai.getbizfunds.com
+  - Facebook
+  - Instagram
+  - Messenger
+  - Replit
+  - Base44
+  - MyClaw
+  - OpenClaw
+
+automation_boundaries:
+  safe_to_draft:
+    - lead summaries
+    - follow-up messages
+    - social posts
+    - support replies
+    - GitHub issue bodies
+    - workflow checklists
+    - repo improvement suggestions
+  human_review_required:
+    - customer-facing publication
+    - funding claims
+    - legal or tax claims
+    - investment or trading claims
+    - income claims
+    - payment workflows
+    - API credential handling
+    - customer data handling
+
+starter_agents:
+  - Business-of-Businesses Lead Connector
+  - AI Coding Intake Agent
+  - Affiliate Promotion Agent
+  - Support Router Agent
+  - Daily Money Action Agent
+  - Repository Growth Agent
+
+quality_rules:
+  - Quality is Job #1
+  - Do not commit secrets
+  - Do not paste secrets into prompts
+  - Avoid unsupported claims
+  - Keep humans in the loop for high-risk actions
+  - Prefer manual-first automation before API/webhook automation
+
+next_actions:
+  - Build first Twin Lead Connector manually
+  - Test with sample leads
+  - Build Daily Money Action Agent
+  - Build Affiliate Promotion Agent using public affiliate link
+  - Connect outputs back to GitHub issues and dashboards
