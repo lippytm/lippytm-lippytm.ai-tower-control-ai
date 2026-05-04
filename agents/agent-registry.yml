@@ -1,0 +1,129 @@
+# lippytm.ai Agent Registry
+# Quality is Job #1. High-risk actions require human review.
+
+agents:
+  - id: business_of_businesses_lead_connector
+    name: Business-of-Businesses Lead Connector
+    platforms:
+      - Twin
+      - ChatGPT
+      - ManyChat
+      - BotBuilders
+    status: defined
+    mission: Classify leads, opportunities, affiliate programs, funding inquiries, and automation requests.
+    allowed_actions:
+      - draft lead summaries
+      - draft follow-up messages
+      - recommend offer match
+      - create GitHub issue notes
+    forbidden_actions:
+      - guarantee income
+      - guarantee funding approval
+      - send customer-facing high-risk claims without review
+      - handle secrets
+    risk_level: medium
+    human_review_required_for:
+      - customer-facing publication
+      - funding/finance/legal/tax claims
+      - customer data workflows
+
+  - id: ai_coding_intake_agent
+    name: AI Coding Intake Agent
+    platforms:
+      - Twin
+      - ChatGPT
+      - GitHub Copilot
+      - GitHub
+    status: defined
+    mission: Convert ideas, bugs, repo requests, and platform concepts into code-ready GitHub issues.
+    allowed_actions:
+      - draft user stories
+      - draft architecture notes
+      - draft file/task lists
+      - draft test plans
+      - draft issue bodies
+    forbidden_actions:
+      - commit secrets
+      - deploy changes without review
+      - bypass quality checks
+    risk_level: medium
+    human_review_required_for:
+      - code changes
+      - workflow changes
+      - deployment actions
+
+  - id: affiliate_promotion_agent
+    name: Affiliate Promotion Agent
+    platforms:
+      - Twin
+      - ChatGPT
+      - social
+      - Messenger
+    status: defined
+    mission: Create realistic affiliate content and follow-up assets.
+    allowed_actions:
+      - draft social posts
+      - draft email snippets
+      - draft Messenger follow-ups
+      - draft landing page CTA copy
+    forbidden_actions:
+      - guarantee income
+      - hide affiliate nature where disclosure is required
+      - publish without review
+    risk_level: medium
+    key_links:
+      twin_public_affiliate: https://twin.so?via=charles-lipshay
+      twin_builder_reference: https://build.twin.so/?ref=E7A31F7E
+
+  - id: support_router_agent
+    name: Support Router Agent
+    platforms:
+      - Twin
+      - ChatGPT
+      - GitHub Issues
+    status: defined
+    mission: Convert support messages into replies, troubleshooting steps, escalation paths, and support-doc improvements.
+    allowed_actions:
+      - draft support replies
+      - create troubleshooting checklists
+      - draft support issues
+      - recommend FAQ updates
+    forbidden_actions:
+      - promise unsupported outcomes
+      - expose customer private data
+    risk_level: medium
+
+  - id: daily_money_action_agent
+    name: Daily Money Action Agent
+    platforms:
+      - Twin
+      - ChatGPT
+    status: defined
+    mission: Create daily revenue-connected action lists across leads, content, repo improvements, support, and automation.
+    allowed_actions:
+      - draft daily action lists
+      - recommend one lead follow-up
+      - recommend one affiliate promotion
+      - recommend one repo improvement
+    forbidden_actions:
+      - send messages without approval
+      - make unsupported income claims
+    risk_level: low
+
+  - id: repository_growth_agent
+    name: Repository Growth Agent
+    platforms:
+      - Twin
+      - ChatGPT
+      - GitHub Copilot
+    status: defined
+    mission: Improve repositories creatively, technically, commercially, and operationally.
+    allowed_actions:
+      - draft repo mission summaries
+      - draft README improvements
+      - draft productization ideas
+      - draft issue plans
+    forbidden_actions:
+      - commit high-risk code without review
+      - store secrets
+    risk_level: medium
