@@ -1,0 +1,58 @@
+# lippytm.ai Workflow Registry
+
+workflows:
+  - id: daily_money_actions
+    name: Daily Money Actions
+    file: workflows/daily-money-actions.md
+    status: active_draft
+    purpose: Connect leads, affiliate promotion, content, repo improvements, support, products, quality, and dashboards.
+    risk_level: low
+
+  - id: ai_coding_intake
+    name: AI Coding Intake
+    file: workflows/ai-coding-intake.md
+    status: active_draft
+    purpose: Convert ideas into code-ready GitHub issues with tasks, tests, RiskGate, support, and monetization notes.
+    risk_level: medium
+
+  - id: affiliate_promotion
+    name: Affiliate Promotion
+    file: workflows/affiliate-promotion.md
+    status: active_draft
+    purpose: Turn affiliate links and service offers into ethical, reviewable content and follow-up.
+    risk_level: medium
+
+  - id: repo_modernization
+    name: Repo Modernization
+    file: workflows/repo-modernization.md
+    status: active_draft
+    purpose: Upgrade each repo into an AI-ready, Copilot-ready, support-ready, product-ready asset.
+    risk_level: medium
+
+  - id: support_routing
+    name: Support Routing
+    file: workflows/support-routing.md
+    status: active_draft
+    purpose: Route customer, technical, chatbot, automation, funding, affiliate, and repo questions into clear support actions.
+    risk_level: medium
+
+  - id: funding_intake
+    name: Funding Intake
+    file: workflows/funding-intake.md
+    status: active_draft
+    purpose: Organize funding inquiries safely without unsupported guarantees.
+    risk_level: high
+
+  - id: manychat_botbuilders_intake
+    name: ManyChat and BotBuilders Intake
+    file: workflows/manychat-botbuilders-intake.md
+    status: active_draft
+    purpose: Capture and classify leads from Facebook, Instagram, Messenger, ManyChat, and BotBuilders.
+    risk_level: medium
+
+standard_review_rules:
+  - no_secrets
+  - no_unsupported_claims
+  - human_review_for_high_risk
+  - update_dashboard_when_workflow_changes
+  - update_support_docs_when_customer_impact_exists
