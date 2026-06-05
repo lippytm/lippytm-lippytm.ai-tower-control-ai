@@ -11,6 +11,7 @@ permissions:
 jobs:
   dependency-review:
     name: Review dependency changes
+    if: ${{ vars.ENABLE_DEPENDENCY_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

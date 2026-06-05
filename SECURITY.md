@@ -73,3 +73,9 @@ Human review required for:
 - `security/SECRETS_POLICY.md`
 - `quality/definition-of-done.md`
 - `.github/PULL_REQUEST_TEMPLATE.md`
+
+## GitHub Actions dependency review prerequisite
+
+The `Dependency Review` workflow runs only when repository variable `ENABLE_DEPENDENCY_REVIEW` is set to `true`.
+
+Enable GitHub Dependency Graph first, then set the variable to re-enable the workflow.
