@@ -26,8 +26,8 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/Clawlippytm.Bots | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Clawlippytm.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Base44- | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/Factory.ai | missing | missing | planned | Add language library entry next |
-| lippytm/lippytm.ai | missing | missing | planned | Add after Factory.ai |
+| lippytm/Factory.ai | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/lippytm.ai | missing | missing | planned | Add language library entry next |
 
 ## Completed Starter Files
 
@@ -61,9 +61,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### Factory.ai
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/Factory.ai`
+`lippytm/lippytm.ai`
 
 ## Principle
 
