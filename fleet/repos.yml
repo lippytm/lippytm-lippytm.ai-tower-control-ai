@@ -1,90 +1,286 @@
 # lippytm.ai Fleet Repository Registry
-# Update this file as repos are modernized or added.
+# Prompt #11 fleet registry for the Life / Business of Businesses / Systems of Systems repo network.
+# Expand this file until it includes all 30+ active repositories.
 
 repos:
   - name: lippytm/lippytm-lippytm.ai-tower-control-ai
+    lane: control-tower
     role: Control Tower and source of truth
     status: active_buildout
     priority: 1
-    next_action: Continue registries, workflows, dashboards, templates, and automation playbooks
-    risk_level: medium
+    default_branch: main
+    visibility: public
+    slack_namespace: bos
+    claude_code: planned
+    qa_status: required
+    risk_level: high
+    revenue_relevance: direct
+    next_action: Build Prompt #11 MVP docs, routing, QA, RiskGate, and dashboards.
 
   - name: lippytm/lippytm.ai
+    lane: main-platform
     role: Main lippytm.ai website/platform repo
     status: planned
     priority: 2
-    next_action: Apply repo modernization workflow
+    default_branch: unknown
+    visibility: unknown
+    slack_namespace: platform
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: direct
+    next_action: Apply repo modernization workflow.
 
   - name: lippytm/lippytmai.getbizfunds.com-
+    lane: funding
     role: Business funding and services front door
     status: planned
     priority: 3
-    next_action: Apply funding intake and landing page workflows
+    default_branch: unknown
+    visibility: unknown
+    slack_namespace: funding
+    claude_code: planned
+    qa_status: required
     risk_level: high
+    revenue_relevance: direct
+    next_action: Apply funding intake and landing page workflows.
 
   - name: lippytm/Chatlippytm.ai.Bots
+    lane: chat-bots
     role: Chatbot and AI bot system
     status: planned
     priority: 4
-    next_action: Apply chatbot intake and support workflows
+    default_branch: main
+    visibility: public
+    slack_namespace: chatbots
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: direct
+    next_action: Connect to Prompt #11 communications layer.
 
   - name: lippytm/Clawlippytm.ai.Bots
+    lane: claude-bots
     role: ClawBot and AI agent concept
     status: planned
     priority: 5
-    next_action: Apply repository growth prompt
+    default_branch: unknown
+    visibility: unknown
+    slack_namespace: claw
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: indirect
+    next_action: Apply repository growth prompt.
 
-  - name: lippytm/MyClaw.lippytm.AI-
-    role: MyClaw integration and agent concept
+  - name: lippytm/Clawlippytm.Bots
+    lane: claude-bots
+    role: Claude coding and bot-assistant repo
     status: planned
     priority: 6
-    next_action: Define platform role and integration path
+    default_branch: main
+    visibility: public
+    slack_namespace: claw
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: indirect
+    next_action: Define Claude coding and bot-assistant role.
 
-  - name: lippytm/OpenClaw-lippytm.AI-
-    role: OpenClaw integration and agent concept
+  - name: lippytm/MyClaw.lippytm.AI-
+    lane: claude-bots
+    role: MyClaw integration and agent concept
     status: planned
     priority: 7
-    next_action: Define platform role and integration path
+    default_branch: main
+    visibility: public
+    slack_namespace: myclaw
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: indirect
+    next_action: Add project profile and Claude Code protocol.
 
-  - name: lippytm/Web3AI
-    role: Web3 and AI R&D
+  - name: lippytm/OpenClaw-lippytm.AI-
+    lane: claude-bots
+    role: OpenClaw integration and agent concept
     status: planned
     priority: 8
-    next_action: Classify as R&D and productization candidate
+    default_branch: unknown
+    visibility: unknown
+    slack_namespace: openclaw
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: indirect
+    next_action: Define platform role and integration path.
 
-  - name: lippytm/AI-Time-Machines
-    role: Creative AI concept
+  - name: lippytm/Web3AI
+    lane: web3
+    role: Web3 and AI R&D
     status: planned
     priority: 9
-    next_action: Apply creative development prompt
-    risk_level: low
+    default_branch: main
+    visibility: public
+    slack_namespace: web3
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Add project profile and README health check.
 
-  - name: lippytm/AllBots.com
-    role: Bots product concept
+  - name: lippytm/AI-Time-Machines
+    lane: creative-tech
+    role: Creative AI concept
     status: planned
     priority: 10
-    next_action: Apply productization prompt
-    risk_level: medium
+    default_branch: unknown
+    visibility: unknown
+    slack_namespace: time-machines
+    claude_code: planned
+    qa_status: required
+    risk_level: low
+    revenue_relevance: indirect
+    next_action: Apply creative development prompt.
 
-  - name: lippytm/Factory.ai
-    role: Factory and automation concept
+  - name: lippytm/AllBots.com
+    lane: bots
+    role: Bots product concept
     status: planned
     priority: 11
-    next_action: Align with AI Coding Factory blueprint
+    default_branch: main
+    visibility: public
+    slack_namespace: bots
+    claude_code: planned
+    qa_status: required
     risk_level: medium
+    revenue_relevance: direct
+    next_action: Define bot product purpose and automation roadmap.
 
-standard_actions:
-  - run_autonomous_creative_development_prompt
-  - run_repo_modernization_workflow
-  - add_copilot_instructions
-  - add_quality_and_security_docs
-  - add_support_path
-  - add_productization_path
-  - create_next_3_issues
-  - update_dashboard_status
+  - name: lippytm/Factory.ai
+    lane: ai-factory
+    role: Factory and automation concept
+    status: planned
+    priority: 12
+    default_branch: unknown
+    visibility: unknown
+    slack_namespace: factory
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: direct
+    next_action: Align with AI Coding Factory blueprint.
+
+  - name: lippytm/AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites-
+    lane: infrastructure
+    role: AI DevOps, synthetic intelligence, agents, web3, and websites
+    status: planned
+    priority: 13
+    default_branch: main
+    visibility: public
+    slack_namespace: devops
+    claude_code: planned
+    qa_status: required
+    risk_level: high
+    revenue_relevance: indirect
+    next_action: Convert into reusable AI DevOps node kit.
+
+  - name: lippytm/Base44-
+    lane: app-builder
+    role: Base44 app builder workspace
+    status: planned
+    priority: 14
+    default_branch: main
+    visibility: public
+    slack_namespace: base44
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Add README and project architecture map.
+
+  - name: lippytm/ClawBase44.ai.Bots
+    lane: base44-bots
+    role: Claw and Base44 bot integration
+    status: planned
+    priority: 15
+    default_branch: main
+    visibility: public
+    slack_namespace: clawbase44
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Clarify Base44 integration purpose.
+
+  - name: lippytm/Transparency-Logic-Time-Machine-Bots-
+    lane: transparency-bots
+    role: Transparency, logic, and time machine bots
+    status: planned
+    priority: 16
+    default_branch: master
+    visibility: public
+    slack_namespace: transparency
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Add Prompt #11 project profile.
+
+  - name: lippytm/balletcrypto.github.io
+    lane: website
+    role: Website and crypto-related publishing surface
+    status: planned
+    priority: 17
+    default_branch: master
+    visibility: public
+    slack_namespace: web
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Audit website purpose, build status, and revenue role.
+
+  - name: lippytm/gatsby-starter-blog
+    lane: publishing
+    role: Blog and publishing starter
+    status: planned
+    priority: 18
+    default_branch: master
+    visibility: public
+    slack_namespace: publishing
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Decide whether to keep, archive, or convert into publishing hub.
+
+  - name: lippytm/The-Encyclopedia-of-Law-Civilian-Law-Military-Law-Business-Law-AI-Law.-
+    lane: education
+    role: Educational law encyclopedia concept
+    status: planned
+    priority: 19
+    default_branch: main
+    visibility: public
+    slack_namespace: education
+    claude_code: planned
+    qa_status: required
+    risk_level: high
+    revenue_relevance: indirect
+    next_action: Add disclaimers and educational scope boundaries.
+
+  - name: lippytm/zenith-tasks
+    lane: tasks
+    role: Private task system
+    status: planned
+    priority: 20
+    default_branch: main
+    visibility: private
+    slack_namespace: tasks
+    claude_code: planned
+    qa_status: required
+    risk_level: medium
+    revenue_relevance: indirect
+    next_action: Connect to task lifecycle after privacy review.
+
+# Backlog: add remaining repos until the registry covers the full 30+ repo fleet.
