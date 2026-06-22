@@ -2,7 +2,7 @@
 
 Prompt #11 is the operating layer for the lippytm.AI Life / Business of Businesses / Systems of Systems portfolio.
 
-It turns ideas, code requests, business tasks, documentation tasks, AI swarm tasks, and development opportunities into structured GitHub work that can be planned, implemented, reviewed, approved, and improved.
+It turns ideas, code requests, business tasks, documentation tasks, AI swarm tasks, and development opportunities into structured GitHub work that can be planned, implemented, reviewed, approved, improved, and evolved.
 
 ## Core Operating Law
 
@@ -20,6 +20,7 @@ Prompt #11 connects:
 - Claude Code as the scoped implementation layer.
 - GitHub Actions as the QA, reporting, routing, and fleet pulse layer.
 - RiskGate as the approval and protection layer.
+- Self-improvement loops as the continuous improvement layer.
 
 ## What Prompt #11 Does
 
@@ -35,6 +36,22 @@ Prompt #11 should help the Control Tower:
 8. Require human approval for meaningful changes.
 9. Update dashboards and documentation.
 10. Feed results back into the next improvement loop.
+11. Propose safer, clearer, faster ways to operate based on real evidence.
+12. Turn repeated friction into documented systems and reusable workflows.
+
+## Self-Improvement Layer
+
+Prompt #11 improves itself through a controlled cycle:
+
+```text
+Observe -> Diagnose -> Propose -> Prioritize -> Route -> Validate -> Document -> Repeat.
+```
+
+Self-improvement should come from evidence such as blocked tasks, workflow failures, unclear docs, oversized PRs, repeated manual steps, missing QA, or revenue tasks that are not moving.
+
+The system may propose improvements, but meaningful changes still require GitHub records, QA, RiskGate review, and human owner approval where appropriate.
+
+See: `prompt-11/SELF_IMPROVEMENT_LOOP.md`.
 
 ## Permanent Doctrine
 
@@ -51,7 +68,7 @@ Every business improvement funds the next evolution.
 
 ## MVP Goal
 
-The first Prompt #11 MVP is working when a Slack or ChatGPT idea can become a GitHub issue, receive labels and acceptance criteria, be routed to ChatGPT or Claude Code, move through QA and RiskGate, and update the Control Tower dashboard.
+The first Prompt #11 MVP is working when a Slack or ChatGPT idea can become a GitHub issue, receive labels and acceptance criteria, be routed to ChatGPT or Claude Code, move through QA and RiskGate, update the Control Tower dashboard, and produce a next recommended improvement.
 
 ## First Build Sprint
 
@@ -63,3 +80,5 @@ The first Prompt #11 MVP is working when a Slack or ChatGPT idea can become a Gi
 - Create a Claude Code issue protocol.
 - Create QA and RiskGate workflow skeletons.
 - Seed the fleet registry with the first 30+ repositories.
+- Add the self-improvement loop.
+- Track weekly improvement questions and daily micro-loop actions.
