@@ -2,7 +2,7 @@
 
 Prompt #11 is the operating layer for the lippytm.AI Life / Business of Businesses / Systems of Systems portfolio.
 
-It turns ideas, code requests, business tasks, documentation tasks, AI swarm tasks, and development opportunities into structured GitHub work that can be planned, implemented, reviewed, approved, improved, and evolved.
+It turns ideas, code requests, business tasks, documentation tasks, AI swarm tasks, and development opportunities into structured GitHub work that can be planned, implemented, reviewed, approved, improved, healed, and evolved.
 
 ## Core Operating Law
 
@@ -21,6 +21,8 @@ Prompt #11 connects:
 - GitHub Actions as the QA, reporting, routing, and fleet pulse layer.
 - RiskGate as the approval and protection layer.
 - Self-improvement loops as the continuous improvement layer.
+- Self-healing protocols as the safe recovery layer.
+- Operational self-awareness as the state, limit, risk, and next-action visibility layer.
 
 ## What Prompt #11 Does
 
@@ -38,6 +40,8 @@ Prompt #11 should help the Control Tower:
 10. Feed results back into the next improvement loop.
 11. Propose safer, clearer, faster ways to operate based on real evidence.
 12. Turn repeated friction into documented systems and reusable workflows.
+13. Detect common failures and propose safe recovery tasks.
+14. Report known state, missing information, risks, blockers, confidence, and next actions.
 
 ## Self-Improvement Layer
 
@@ -53,6 +57,30 @@ The system may propose improvements, but meaningful changes still require GitHub
 
 See: `prompt-11/SELF_IMPROVEMENT_LOOP.md`.
 
+## Self-Healing Layer
+
+Prompt #11 self-healing means safe recovery from known operational failures.
+
+```text
+Detect -> Classify -> Contain -> Propose Fix -> Validate -> Document -> Prevent Recurrence.
+```
+
+Self-healing can detect failed workflows, missing required files, stale tasks, missing QA, missing RiskGate, repo registry drift, broken docs, and unclear ownership. It does not bypass human approval, secrets safety, deployment review, QA, or RiskGate.
+
+See: `prompt-11/SELF_HEALING_PROTOCOL.md`.
+
+## Operational Self-Awareness Layer
+
+Prompt #11 self-awareness is operational awareness, not consciousness.
+
+```text
+Know the state -> Know the limits -> Know the risks -> Know the owner -> Know the next action.
+```
+
+It means the Control Tower should report what it knows, what it does not know, what evidence supports a recommendation, what risks exist, who owns the decision, and what the smallest safe next step is.
+
+See: `prompt-11/SELF_AWARENESS_PROTOCOL.md`.
+
 ## Permanent Doctrine
 
 ```text
@@ -64,11 +92,13 @@ Every workflow produces data.
 Every data point improves the swarm.
 Every swarm improves the business.
 Every business improvement funds the next evolution.
+Every failure becomes a healing opportunity.
+Every uncertainty becomes an awareness report.
 ```
 
 ## MVP Goal
 
-The first Prompt #11 MVP is working when a Slack or ChatGPT idea can become a GitHub issue, receive labels and acceptance criteria, be routed to ChatGPT or Claude Code, move through QA and RiskGate, update the Control Tower dashboard, and produce a next recommended improvement.
+The first Prompt #11 MVP is working when a Slack or ChatGPT idea can become a GitHub issue, receive labels and acceptance criteria, be routed to ChatGPT or Claude Code, move through QA and RiskGate, update the Control Tower dashboard, produce a next recommended improvement, identify failures that need healing, and report its own known state and limits.
 
 ## First Build Sprint
 
@@ -81,4 +111,6 @@ The first Prompt #11 MVP is working when a Slack or ChatGPT idea can become a Gi
 - Create QA and RiskGate workflow skeletons.
 - Seed the fleet registry with the first 30+ repositories.
 - Add the self-improvement loop.
+- Add the self-healing protocol.
+- Add the operational self-awareness protocol.
 - Track weekly improvement questions and daily micro-loop actions.
