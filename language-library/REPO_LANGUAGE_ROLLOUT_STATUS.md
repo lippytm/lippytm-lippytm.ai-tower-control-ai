@@ -33,7 +33,7 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/ClawBase44.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/AI-Time-Machines | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/balletcrypto.github.io | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/gatsby-starter-blog | missing | missing | planned | Add language library entry next |
+| lippytm/gatsby-starter-blog | started | started | planned | Inspect actual repo stack and update profiles |
 
 ## Completed Starter Files
 
@@ -102,9 +102,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### gatsby-starter-blog
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/gatsby-starter-blog`
+Expand the next repo batch from the GitHub fleet list.
 
 ## Principle
 
