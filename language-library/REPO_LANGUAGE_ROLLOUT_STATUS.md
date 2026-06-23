@@ -34,6 +34,10 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/AI-Time-Machines | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/balletcrypto.github.io | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/gatsby-starter-blog | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Transparency-Logic-Time-Machine-Bots- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Time-Machines-Builders- | missing | missing | planned | Add language library entry next |
+| lippytm/AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites- | missing | missing | planned | Add after Time-Machines-Builders |
+| lippytm/The-Encyclopedia-of-Everything-Applied-ChatAIBots | missing | missing | planned | Add after AI Full Stack repo |
 
 ## Completed Starter Files
 
@@ -107,9 +111,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### Transparency-Logic-Time-Machine-Bots-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-Expand the next repo batch from the GitHub fleet list.
+`lippytm/Time-Machines-Builders-`
 
 ## Principle
 
