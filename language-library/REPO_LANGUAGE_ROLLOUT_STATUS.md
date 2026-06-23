@@ -40,7 +40,9 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/The-Encyclopedia-of-Everything-Applied-ChatAIBots | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks- | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration- | missing | missing | planned | Add language library entry next |
+| lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/zenith-tasks | missing | missing | planned | Add language library entry next |
+| lippytm/superagent-app | missing | missing | planned | Add after zenith-tasks |
 
 ## Completed Starter Files
 
@@ -144,9 +146,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration-`
+`lippytm/zenith-tasks`
 
 ## Principle
 
