@@ -21,7 +21,7 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | Repo | Language Library | Stack Profile | CRM Link | Next Action |
 |---|---|---|---|---|
 | lippytm/Web3AI | started | needs-review | planned | Validate backend, frontend, contracts, sandboxes, and security workflows |
-| lippytm/AllBots.com | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/AllBots.com | started | needs-review | planned | Inspect full file tree before assigning concrete programming stack |
 | lippytm/Chatlippytm.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Clawlippytm.Bots | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Clawlippytm.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
@@ -56,6 +56,7 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
+- stack profile enriched from README evidence
 
 ### Chatlippytm.ai.Bots
 
@@ -164,7 +165,7 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 
 ## Next Target
 
-`lippytm/AllBots.com` stack profile enrichment.
+`lippytm/Chatlippytm.ai.Bots` stack profile enrichment.
 
 ## Principle
 
