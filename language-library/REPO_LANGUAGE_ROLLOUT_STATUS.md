@@ -38,8 +38,8 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/Time-Machines-Builders- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/The-Encyclopedia-of-Everything-Applied-ChatAIBots | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency- | missing | missing | planned | Add language library entry next |
-| lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks- | missing | missing | planned | Add after Evolutionary Evolutions repo |
+| lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks- | missing | missing | planned | Add language library entry next |
 | lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration- | missing | missing | planned | Add after AI Intergalactic repo |
 
 ## Completed Starter Files
@@ -134,9 +134,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### Evolutionary-Evolutions-Social-Multimedia-Networks-Agency-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency-`
+`lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks-`
 
 ## Principle
 
