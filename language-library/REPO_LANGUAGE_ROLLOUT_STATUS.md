@@ -28,8 +28,8 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/Base44- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Factory.ai | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/lippytm.ai | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/AllBots.com.ai | missing | missing | planned | Add language library entry next |
-| lippytm/OpenClaw-lippytm.AI- | missing | missing | planned | Add after AllBots.com.ai |
+| lippytm/AllBots.com.ai | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/OpenClaw-lippytm.AI- | missing | missing | planned | Add language library entry next |
 | lippytm/ClawBase44.ai.Bots | missing | missing | planned | Add after OpenClaw |
 | lippytm/AI-Time-Machines | missing | missing | planned | Add after ClawBase44 |
 | lippytm/balletcrypto.github.io | missing | missing | planned | Add after AI-Time-Machines |
@@ -77,9 +77,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### AllBots.com.ai
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/AllBots.com.ai`
+`lippytm/OpenClaw-lippytm.AI-`
 
 ## Principle
 
