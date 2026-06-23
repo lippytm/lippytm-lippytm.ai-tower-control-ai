@@ -31,8 +31,8 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/AllBots.com.ai | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/OpenClaw-lippytm.AI- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/ClawBase44.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/AI-Time-Machines | missing | missing | planned | Add language library entry next |
-| lippytm/balletcrypto.github.io | missing | missing | planned | Add after AI-Time-Machines |
+| lippytm/AI-Time-Machines | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/balletcrypto.github.io | missing | missing | planned | Add language library entry next |
 | lippytm/gatsby-starter-blog | missing | missing | planned | Add after balletcrypto |
 
 ## Completed Starter Files
@@ -92,9 +92,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### AI-Time-Machines
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/AI-Time-Machines`
+`lippytm/balletcrypto.github.io`
 
 ## Principle
 
