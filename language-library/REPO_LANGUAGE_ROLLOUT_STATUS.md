@@ -41,8 +41,8 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 | lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration- | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/zenith-tasks | missing | missing | planned | Add language library entry next |
-| lippytm/superagent-app | missing | missing | planned | Add after zenith-tasks |
+| lippytm/zenith-tasks | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/superagent-app | missing | missing | planned | Add language library entry next |
 
 ## Completed Starter Files
 
@@ -151,9 +151,14 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
 
+### zenith-tasks
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
 ## Next Target
 
-`lippytm/zenith-tasks`
+`lippytm/superagent-app`
 
 ## Principle
 
