@@ -8,6 +8,10 @@ This file tracks the step-by-step rollout of the Computer Languages Library and 
 One repo -> language library entry -> stack profile -> review -> next repo.
 ```
 
+## Separation Rule
+
+`lippytm/Chatlippytm.ai.Bots` is the active target. It must remain separate from all Claw/Clawlippytm/OpenClaw/ClawBase44 repositories. Do not merge this repo's profile, evidence trail, workflow plan, CRM path, or Prompt #11 review status with any Claw repo.
+
 ## Status Values
 
 - missing
@@ -22,15 +26,15 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 |---|---|---|---|---|
 | lippytm/Web3AI | started | needs-review | planned | Validate backend, frontend, contracts, sandboxes, and security workflows |
 | lippytm/AllBots.com | started | needs-review | planned | Inspect full file tree before assigning concrete programming stack |
-| lippytm/Chatlippytm.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/Clawlippytm.Bots | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/Clawlippytm.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Chatlippytm.ai.Bots | started | needs-review | planned | Continue Chatlippytm-only validation: CLI, tests, config, workflows, and automation safety boundaries |
+| lippytm/Clawlippytm.Bots | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
+| lippytm/Clawlippytm.ai.Bots | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
 | lippytm/Base44- | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/Factory.ai | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/lippytm.ai | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/AllBots.com.ai | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/OpenClaw-lippytm.AI- | started | started | planned | Inspect actual repo stack and update profiles |
-| lippytm/ClawBase44.ai.Bots | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/OpenClaw-lippytm.AI- | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
+| lippytm/ClawBase44.ai.Bots | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
 | lippytm/AI-Time-Machines | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/balletcrypto.github.io | started | started | planned | Inspect actual repo stack and update profiles |
 | lippytm/gatsby-starter-blog | started | started | planned | Inspect actual repo stack and update profiles |
@@ -62,16 +66,21 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
+- stack profile enriched from README and requirements evidence
+- active Chatlippytm-only validation target
+- must remain separate from Clawlippytm.Bots, Clawlippytm.ai.Bots, OpenClaw-lippytm.AI-, and ClawBase44.ai.Bots
 
 ### Clawlippytm.Bots
 
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots
 
 ### Clawlippytm.ai.Bots
 
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots and not Clawlippytm.Bots
 
 ### Base44-
 
@@ -97,11 +106,13 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots
 
 ### ClawBase44.ai.Bots
 
 - `PROMPT_11_LANGUAGE_LIBRARY.md`
 - `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots
 
 ### AI-Time-Machines
 
@@ -165,7 +176,7 @@ One repo -> language library entry -> stack profile -> review -> next repo.
 
 ## Next Target
 
-`lippytm/Chatlippytm.ai.Bots` stack profile enrichment.
+`lippytm/Chatlippytm.ai.Bots` validation and improvement only.
 
 ## Principle
 
