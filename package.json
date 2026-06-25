@@ -8,7 +8,8 @@
     "dev": "nodemon src/server.js",
     "test": "jest --runInBand --forceExit",
     "test:coverage": "jest --coverage --runInBand --forceExit",
-    "lint": "eslint src tests"
+    "lint": "eslint src tests",
+    "spellcheck": "cspell ."
   },
   "keywords": [
     "ai",
@@ -35,9 +36,10 @@
     "winston": "^3.12.0"
   },
   "devDependencies": {
+    "cspell": "^8.17.4",
+    "eslint": "^8.57.0",
     "jest": "^29.7.0",
-    "supertest": "^6.3.4",
-    "eslint": "^8.57.0"
+    "supertest": "^6.3.4"
   },
   "jest": {
     "testEnvironment": "node",
