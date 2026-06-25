@@ -1,34 +1,68 @@
-# Quality
+# Quality Gate Standards
 
 Quality is Job #1 for the lippytm.ai Control Tower.
 
 This repo guides AI coding, autocomplete automations, agents, workflows, dashboards, support systems, marketing assets, integrations, and fleet-wide repo modernization. Every asset should be clear, useful, reviewable, safe, and connected to a practical next action.
 
-## Quality principles
+## Required Checks
 
-- Clarity before complexity
-- Docs before deep automation
-- Manual workflow before API/webhook integration
-- Issues before major changes
-- Small, reviewable updates
-- No secrets in repos or prompts
-- Human review for high-risk actions
-- Support path for customer-facing work
-- Dashboard updates for meaningful changes
+Before merging meaningful changes, confirm:
 
-## Universal quality checklist
+- `npm ci` succeeds.
+- `npm run lint` succeeds.
+- `npm test` succeeds.
+- `npm run test:coverage` succeeds for code changes.
+- New or changed behavior has tests when practical.
+- README or docs are updated when setup, routes, environment variables, or workflows change.
 
-- [ ] Purpose is clear
-- [ ] Audience or user is clear
-- [ ] Inputs and outputs are clear where relevant
-- [ ] Risk level is identified
-- [ ] No secrets are included
-- [ ] No unsupported income, funding, legal, tax, investment, trading, medical, or guaranteed outcome claims are included
-- [ ] Human review boundary is clear
-- [ ] Support or fallback path is included when useful
-- [ ] Dashboard or registry is updated when relevant
+## Quality Principles
 
-## Autocomplete quality rules
+- Clarity before complexity.
+- Docs before deep automation.
+- Manual workflow before API/webhook integration.
+- Issues before major changes.
+- Small, reviewable updates.
+- No secrets in repos or prompts.
+- Human review for high-risk actions.
+- Support path for customer-facing work.
+- Dashboard updates for meaningful changes.
+
+## Universal Quality Checklist
+
+- [ ] Purpose is clear.
+- [ ] Audience or user is clear.
+- [ ] Inputs and outputs are clear where relevant.
+- [ ] Risk level is identified.
+- [ ] No secrets are included.
+- [ ] No unsupported income, funding, legal, tax, investment, trading, medical, or guaranteed outcome claims are included.
+- [ ] Human review boundary is clear.
+- [ ] Support or fallback path is included when useful.
+- [ ] Dashboard or registry is updated when relevant.
+
+## RiskGate Checklist
+
+Use this before production deployment or any change involving credentials, automation, external APIs, user data, public endpoints, payments, business funding, customer data, or physical-world operations.
+
+- What changed?
+- What could break?
+- What data or credentials are touched?
+- What user-facing behavior changes?
+- What rollback path exists?
+- What test proves the change works?
+- What security control prevents misuse?
+- Who gives final human approval?
+
+## Agent Mode Workflow
+
+1. AI proposes the change.
+2. RiskGate evaluates the risk.
+3. Human owner approves the plan.
+4. Implementation happens on a branch.
+5. CI verifies lint/tests/security.
+6. PR review checks business, security, docs, and deployment impact.
+7. Merge only after the system is safer, clearer, or more useful than before.
+
+## Autocomplete Quality Rules
 
 Copilot, ChatGPT, Twin, and future agents should prefer completions that create:
 
@@ -51,7 +85,7 @@ They should avoid completions that create:
 - customer data exposure
 - unclear financial/legal/funding promises
 
-## Review levels
+## Review Levels
 
 ### Low risk
 
@@ -70,3 +104,17 @@ Funding, finance, legal, tax, investment, trading, customer data, payments, bill
 Secrets exposure, unauthorized access, private data leak, payment credential exposure, unsafe physical-world actions.
 
 High and critical risk work requires human review before execution or publication.
+
+## Separation Standard
+
+This repository may connect real business systems, educational materials, experimental R&D, and creative projects. Do not blur categories. Use explicit labels when content crosses domains:
+
+- REAL BUSINESS
+- EDUCATIONAL
+- DOCUMENTARY / COMMENTARY
+- FICTION / SATIRE
+- EXPERIMENTAL R&D
+- ADVERTISEMENT / OFFER
+- AFFILIATE / PARTNER MENTION
+
+Creative connection is allowed. Category confusion is not.
