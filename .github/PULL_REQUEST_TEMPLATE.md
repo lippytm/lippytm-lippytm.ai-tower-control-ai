@@ -29,9 +29,10 @@ Link related issue, workflow, dashboard, registry, product, support doc, or auto
 - [ ] Inputs/outputs are clear where relevant
 - [ ] `npm ci` reviewed or run locally when dependencies changed
 - [ ] `npm run lint` reviewed or run locally when code changed
+- [ ] `npm run spellcheck` reviewed or run locally when docs, comments, prompts, workflows, JSON, YAML, or Markdown changed
 - [ ] `npm test` reviewed or run locally when code changed
 - [ ] `npm run test:coverage` reviewed or run locally when code changed
-- [ ] Documentation updated if setup, routes, environment variables, or workflows changed
+- [ ] Documentation updated if setup, routes, environment variables, spellcheck dictionary, or workflows changed
 - [ ] Dashboard or registry updated if relevant
 
 ## RiskGate
