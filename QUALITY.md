@@ -14,7 +14,7 @@ Before merging meaningful changes, confirm:
 - `npm test` succeeds.
 - `npm run test:coverage` succeeds for code changes.
 - New or changed behavior has tests when practical.
-- README or docs are updated when setup, routes, environment variables, spellcheck dictionary, or workflows change.
+- README or docs are updated when setup, routes, environment variables, spellcheck dictionary, ChatGPT content standards, or workflows change.
 
 ## Spellcheck Standard
 
@@ -24,6 +24,24 @@ Spellcheck is part of the system-wide quality gate.
 - Add valid project-specific names to `cspell.json` instead of weakening the check globally.
 - Correct misspellings when they are real mistakes.
 - Keep brand names, repo names, bot names, and ecosystem terms explicit in the dictionary.
+
+## ChatGPT Spellcheck Standard
+
+Everything created for, by, or about ChatGPT must pass the spellcheck gate before becoming reusable system material.
+
+This includes:
+
+- ChatGPT prompts.
+- System prompts and agent instructions.
+- Bot scripts and chatbot copy.
+- README sections that mention ChatGPT or OpenAI.
+- API examples involving ChatGPT or OpenAI.
+- Markdown documentation.
+- YAML workflows that route ChatGPT-related automation.
+- JSON configuration files for ChatGPT, bots, swarms, prompts, and connectors.
+- Marketing, support, onboarding, and educational content generated with ChatGPT.
+
+Use `docs/CHATGPT_SPELLCHECK_STANDARD.md` as the detailed rulebook.
 
 ## Quality Principles
 
@@ -48,6 +66,7 @@ Spellcheck is part of the system-wide quality gate.
 - [ ] Human review boundary is clear.
 - [ ] Support or fallback path is included when useful.
 - [ ] Spellcheck has passed or dictionary updates are documented.
+- [ ] ChatGPT-related content follows `docs/CHATGPT_SPELLCHECK_STANDARD.md` when relevant.
 - [ ] Dashboard or registry is updated when relevant.
 
 ## RiskGate Checklist
