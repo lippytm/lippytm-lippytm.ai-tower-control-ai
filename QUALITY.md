@@ -10,10 +10,20 @@ Before merging meaningful changes, confirm:
 
 - `npm ci` succeeds.
 - `npm run lint` succeeds.
+- `npm run spellcheck` succeeds.
 - `npm test` succeeds.
 - `npm run test:coverage` succeeds for code changes.
 - New or changed behavior has tests when practical.
-- README or docs are updated when setup, routes, environment variables, or workflows change.
+- README or docs are updated when setup, routes, environment variables, spellcheck dictionary, or workflows change.
+
+## Spellcheck Standard
+
+Spellcheck is part of the system-wide quality gate.
+
+- Use `npm run spellcheck` before merging docs, code comments, prompts, workflows, markdown, YAML, or JSON updates.
+- Add valid project-specific names to `cspell.json` instead of weakening the check globally.
+- Correct misspellings when they are real mistakes.
+- Keep brand names, repo names, bot names, and ecosystem terms explicit in the dictionary.
 
 ## Quality Principles
 
@@ -37,6 +47,7 @@ Before merging meaningful changes, confirm:
 - [ ] No unsupported income, funding, legal, tax, investment, trading, medical, or guaranteed outcome claims are included.
 - [ ] Human review boundary is clear.
 - [ ] Support or fallback path is included when useful.
+- [ ] Spellcheck has passed or dictionary updates are documented.
 - [ ] Dashboard or registry is updated when relevant.
 
 ## RiskGate Checklist
@@ -58,7 +69,7 @@ Use this before production deployment or any change involving credentials, autom
 2. RiskGate evaluates the risk.
 3. Human owner approves the plan.
 4. Implementation happens on a branch.
-5. CI verifies lint/tests/security.
+5. CI verifies lint, spellcheck, tests, and security.
 6. PR review checks business, security, docs, and deployment impact.
 7. Merge only after the system is safer, clearer, or more useful than before.
 
