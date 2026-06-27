@@ -84,8 +84,15 @@ Status: planned
 
 ## Phase 7: Automation and API Integrations
 
-Status: future
+Status: in progress
 
+- [x] Add Hermes Agent as active platform (platforms/hermes.yml)
+- [x] Add Hermes connector (src/connectors/hermes.js)
+- [x] Add Hermes routes to Tower API
+- [x] Register Hermes as swarm channel type
+- [x] Add Hermes broadcast target to ChatGPT broadcast endpoint
+- [x] Add nightly Hermes scheduled workflow (.github/workflows/hermes-scheduled.yml)
+- [x] Document Hermes integration (integrations/hermes-agent.md)
 - [ ] Only automate after manual workflow is proven
 - [ ] Define API/webhook input/output contracts
 - [ ] Add credential-name-only docs

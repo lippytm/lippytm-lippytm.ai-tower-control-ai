@@ -69,6 +69,16 @@ platforms:
     status: planned
     risk_level: medium
 
+  - id: hermes_agent
+    name: Hermes Agent
+    role: Self-improving agent runtime with learning loop, cron scheduler, multi-platform gateway, and subagent delegation
+    vendor: NousResearch
+    license: MIT
+    source: https://github.com/NousResearch/hermes-agent
+    status: active
+    risk_level: medium
+    notes: Model-agnostic. Fallback to OpenAI/Twin. Human review required for customer-facing outputs.
+
   - id: facebook_instagram_messenger
     name: Facebook / Instagram / Messenger
     role: Traffic, social, and conversation layer

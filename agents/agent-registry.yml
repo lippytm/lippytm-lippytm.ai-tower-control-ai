@@ -127,3 +127,37 @@ agents:
       - commit high-risk code without review
       - store secrets
     risk_level: medium
+
+  - id: hermes_runtime_agent
+    name: Hermes Runtime Agent
+    platforms:
+      - Hermes
+      - Twin
+      - GitHub Copilot
+    status: defined
+    mission: >
+      Act as the autonomous execution and learning layer for Tower workflows.
+      Runs scheduled tasks, executes skill chains, delegates subagents, and relays
+      results back to the Control Tower API.
+    allowed_actions:
+      - run scheduled tasks
+      - execute skill chains
+      - delegate subagents for parallel workstreams
+      - relay results to Tower API
+      - search cross-session memory
+      - consolidate nightly summaries and audit reports
+    forbidden_actions:
+      - commit secrets
+      - deploy changes without human review
+      - send customer-facing messages without approval
+      - handle payment or billing directly
+      - make unsupported income or funding claims
+    risk_level: medium
+    human_review_required_for:
+      - customer-facing publication
+      - funding or legal claims
+      - any automated workflow touching customer data
+    fallback:
+      - Direct OpenAI/Twin calls via existing Tower connectors
+      - Manual ChatGPT workflow via Control Tower prompts
+    reference: https://github.com/NousResearch/hermes-agent

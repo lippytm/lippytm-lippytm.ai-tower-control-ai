@@ -1,0 +1,54 @@
+name: Hermes Scheduled Automations
+
+on:
+  schedule:
+    # Nightly at 2:00 AM UTC — summary, audit, and memory consolidation
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      skill:
+        description: 'Hermes skill to run (default: nightly-summary)'
+        required: false
+        default: nightly-summary
+      delivery:
+        description: 'Delivery channel (e.g. internal, telegram, discord)'
+        required: false
+        default: internal
+
+jobs:
+  hermes-nightly:
+    name: Run Hermes Nightly Tasks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtain Tower auth token
+        id: auth
+        run: |
+          TOKEN=$(curl -sf -X POST "${{ secrets.TOWER_API_URL }}/api/auth/token" \
+            -H "Content-Type: application/json" \
+            -d "{\"clientId\":\"${{ secrets.TOWER_CLIENT_ID }}\",\"clientSecret\":\"${{ secrets.TOWER_CLIENT_SECRET }}\"}" \
+            | jq -r '.token')
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Run nightly summary skill
+        run: |
+          SKILL="${{ github.event.inputs.skill || 'nightly-summary' }}"
+          DELIVERY="${{ github.event.inputs.delivery || 'internal' }}"
+          curl -sf -X POST "${{ secrets.TOWER_API_URL }}/api/connectors/hermes/run" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"skill\":\"${SKILL}\",\"input\":\"Run the scheduled ${SKILL} for the Control Tower.\",\"options\":{\"delivery\":\"${DELIVERY}\"}}"
+
+      - name: Run nightly audit skill
+        run: |
+          curl -sf -X POST "${{ secrets.TOWER_API_URL }}/api/connectors/hermes/run" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"skill\":\"repo-audit\",\"input\":\"Audit the lippytm.ai Control Tower for quality, security, and workflow gaps.\",\"options\":{\"delivery\":\"internal\"}}"
+
+      - name: Trigger memory consolidation
+        run: |
+          curl -sf -X POST "${{ secrets.TOWER_API_URL }}/api/connectors/hermes/run" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"skill\":\"memory-consolidate\",\"options\":{\"delivery\":\"internal\"}}"
