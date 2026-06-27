@@ -170,7 +170,7 @@ Every repeated support issue should become:
 
 **Reconnect steps:**
 1. Restart the Hermes gateway: `hermes gateway` (or restart the Docker container)
-2. Verify it's live: `curl $HERMES_API_URL/api/skills -H "Authorization: Authorization: Bearer ${HERMES_API_KEY}"`
+2. Verify it's live: `curl $HERMES_API_URL/api/skills -H "Authorization: Bearer ${HERMES_API_KEY}"`
 3. Retry the failing Tower request
 4. If still failing, fall back to direct OpenAI via `POST /api/connectors/openai/chat`
 

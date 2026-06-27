@@ -12,10 +12,10 @@ const validToken = () => generateToken({ clientId: 'test', role: 'api-consumer' 
 // ── Hermes connector unit tests ───────────────────────────────────────────────
 
 describe('Hermes connector – getClient', () => {
-  it('throws when HERMES_API_KEY is not set', () => {
+  it('throws when HERMES_API_KEY is not set', async () => {
     const original = process.env.HERMES_API_KEY;
     delete process.env.HERMES_API_KEY;
-    expect(() => hermes.runSkill('test-skill')).rejects.toThrow('HERMES_API_KEY is not configured');
+    await expect(() => hermes.runSkill('test-skill')).rejects.toThrow('HERMES_API_KEY is not configured');
     process.env.HERMES_API_KEY = original;
   });
 });

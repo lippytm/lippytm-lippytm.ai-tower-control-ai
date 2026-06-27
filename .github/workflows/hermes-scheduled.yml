@@ -15,6 +15,9 @@ on:
         required: false
         default: internal
 
+permissions:
+  contents: read
+
 jobs:
   hermes-nightly:
     name: Run Hermes Nightly Tasks

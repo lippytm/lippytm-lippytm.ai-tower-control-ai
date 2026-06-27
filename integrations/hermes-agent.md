@@ -56,7 +56,7 @@ HERMES_API_KEY=your_hermes_api_key     # API key configured in hermes setup
 ### 4. Verify the connection
 
 ```bash
-curl -H "Authorization: ******" \
+curl -H "Authorization: Bearer $HERMES_API_KEY" \
   http://localhost:8000/api/skills
 ```
 
@@ -64,7 +64,7 @@ curl -H "Authorization: ******" \
 
 ## Control Tower Endpoints
 
-All endpoints require a valid Tower ****** (`POST /api/auth/token`).
+All endpoints require a valid Tower JWT ****** (`POST /api/auth/token`).
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -167,7 +167,7 @@ Hermes is registered as a valid AgentBot channel type (`hermes`) alongside `open
 
 ```bash
 curl -X POST /api/swarm/agents \
-  -H "Authorization: ******" \
+  -H "Authorization: Bearer $TOWER_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"name": "hermes-worker", "role": "worker", "channels": ["hermes", "openai"]}'
 ```
