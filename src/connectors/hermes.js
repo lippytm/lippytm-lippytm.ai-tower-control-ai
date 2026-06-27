@@ -73,4 +73,31 @@ async function searchMemory(query, options = {}) {
   return response.data;
 }
 
-module.exports = { runSkill, listSkills, scheduleAutomation, searchMemory };
+/**
+ * Run a Hermes skill across a list of repositories in parallel.
+ * Each repo is passed to the skill as `options.repo`; all other options are forwarded.
+ * Returns an array of per-repo results: { repo, status: 'ok'|'error', result?, error? }.
+ *
+ * @param {string} skill  Name of the skill to execute.
+ * @param {string[]} repos  Array of repository names (e.g. ["lippytm/lippytm.ai"]).
+ * @param {string} [input]  Optional input/prompt passed to every skill invocation.
+ * @param {object} [options]  Additional parameters forwarded to every invocation.
+ * @returns {Promise<Array<{repo: string, status: string, result?: object, error?: string}>>}
+ */
+async function runFleetSkill(skill, repos, input, options = {}) {
+  if (!Array.isArray(repos) || repos.length === 0) {
+    throw new Error('repos must be a non-empty array');
+  }
+  logger.debug('Hermes: runFleetSkill', { skill, repoCount: repos.length });
+  const results = await Promise.allSettled(
+    repos.map((repo) => module.exports.runSkill(skill, input, { ...options, repo }))
+  );
+  return results.map((outcome, i) => {
+    if (outcome.status === 'fulfilled') {
+      return { repo: repos[i], status: 'ok', result: outcome.value };
+    }
+    return { repo: repos[i], status: 'error', error: outcome.reason?.message || String(outcome.reason) };
+  });
+}
+
+module.exports = { runSkill, listSkills, scheduleAutomation, searchMemory, runFleetSkill };

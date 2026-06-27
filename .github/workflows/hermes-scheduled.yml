@@ -55,3 +55,21 @@ jobs:
             -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
             -H "Content-Type: application/json" \
             -d "{\"skill\":\"memory-consolidate\",\"options\":{\"delivery\":\"internal\"}}"
+
+      - name: Run fleet audit across all repositories
+        run: |
+          curl -sf -X POST "${{ secrets.TOWER_API_URL }}/api/connectors/hermes/fleet/run" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "skill": "repo-audit",
+              "repos": [
+                "lippytm/lippytm-lippytm.ai-tower-control-ai",
+                "lippytm/lippytm.ai",
+                "lippytm/MyClaw.lippytm.AI-",
+                "lippytm/lippytmai.getbizfunds.com-",
+                "lippytm/Web3AI"
+              ],
+              "input": "Audit this repository for quality, security, and workflow gaps.",
+              "options": {"delivery": "internal"}
+            }'

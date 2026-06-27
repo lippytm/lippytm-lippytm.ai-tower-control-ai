@@ -72,6 +72,38 @@ All endpoints require a valid Tower JWT ****** (`POST /api/auth/token`).
 | `GET` | `/api/connectors/hermes/skills` | List available skills |
 | `POST` | `/api/connectors/hermes/schedule` | Create a cron automation |
 | `GET` | `/api/connectors/hermes/memory/search` | Search cross-session memory |
+| `POST` | `/api/connectors/hermes/fleet/run` | Run a skill across all fleet repositories |
+
+### Run a skill across all fleet repositories (Prompt #11 Engine)
+
+```json
+POST /api/connectors/hermes/fleet/run
+{
+  "skill": "repo-audit",
+  "repos": [
+    "lippytm/lippytm-lippytm.ai-tower-control-ai",
+    "lippytm/lippytm.ai",
+    "lippytm/MyClaw.lippytm.AI-",
+    "lippytm/lippytmai.getbizfunds.com-",
+    "lippytm/Web3AI"
+  ],
+  "input": "Audit this repository for quality, security, and workflow gaps.",
+  "options": { "delivery": "internal" }
+}
+```
+
+Response:
+```json
+{
+  "skill": "repo-audit",
+  "results": [
+    { "repo": "lippytm/lippytm.ai", "status": "ok", "result": { "status": "completed" } },
+    { "repo": "lippytm/Web3AI", "status": "error", "error": "gateway timeout" }
+  ]
+}
+```
+
+Errors in individual repos are captured per-repo and do not abort the rest of the fleet run.
 
 ### Run a skill
 

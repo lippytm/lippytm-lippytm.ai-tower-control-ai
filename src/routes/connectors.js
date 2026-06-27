@@ -285,6 +285,30 @@ router.get('/hermes/memory/search', async (req, res, next) => {
   }
 });
 
+/**
+ * POST /api/connectors/hermes/fleet/run
+ * Run a Hermes skill across a list of fleet repositories in parallel.
+ * Body: { skill: string, repos: string[], input?: string, options?: object }
+ */
+router.post('/hermes/fleet/run', async (req, res, next) => {
+  try {
+    const { skill, repos, input, options } = req.body || {};
+    if (!skill) return res.status(400).json({ error: 'skill is required' });
+    if (!Array.isArray(repos) || repos.length === 0) {
+      return res.status(400).json({ error: 'repos must be a non-empty array' });
+    }
+    const results = await hermes.runFleetSkill(
+      skill,
+      repos,
+      input !== undefined ? sanitizeInput(input) : undefined,
+      options
+    );
+    return res.json({ skill, results });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ── ChatGPT Broadcast ─────────────────────────────────────────────────────────
 
 /**

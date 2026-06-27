@@ -259,3 +259,130 @@ describe('POST /api/data/sync – hermes connector', () => {
     expect(res.body.target).toBe('hermes');
   });
 });
+
+
+// ── Hermes connector: runFleetSkill ─────────────────────────────────────────────────────────────────────────────────
+
+describe('Hermes connector – runFleetSkill', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('throws when repos is empty', async () => {
+    process.env.HERMES_API_KEY = 'test-key';
+    await expect(hermes.runFleetSkill('repo-audit', [])).rejects.toThrow('repos must be a non-empty array');
+    delete process.env.HERMES_API_KEY;
+  });
+
+  it('throws when repos is not an array', async () => {
+    process.env.HERMES_API_KEY = 'test-key';
+    await expect(hermes.runFleetSkill('repo-audit', null)).rejects.toThrow('repos must be a non-empty array');
+    delete process.env.HERMES_API_KEY;
+  });
+
+  it('returns ok results for each successful repo', async () => {
+    process.env.HERMES_API_KEY = 'test-key';
+    jest.spyOn(hermes, 'runSkill').mockResolvedValue({ status: 'completed', output: 'audit done' });
+
+    const repos = ['lippytm/lippytm.ai', 'lippytm/Web3AI'];
+    const results = await hermes.runFleetSkill('repo-audit', repos, 'Audit this repo.');
+
+    expect(results).toHaveLength(2);
+    expect(results[0]).toEqual({ repo: 'lippytm/lippytm.ai', status: 'ok', result: { status: 'completed', output: 'audit done' } });
+    expect(results[1]).toEqual({ repo: 'lippytm/Web3AI', status: 'ok', result: { status: 'completed', output: 'audit done' } });
+    delete process.env.HERMES_API_KEY;
+  });
+
+  it('returns error status for failed repos without aborting others', async () => {
+    process.env.HERMES_API_KEY = 'test-key';
+    jest.spyOn(hermes, 'runSkill')
+      .mockResolvedValueOnce({ status: 'completed' })
+      .mockRejectedValueOnce(new Error('gateway timeout'));
+
+    const repos = ['lippytm/lippytm.ai', 'lippytm/Web3AI'];
+    const results = await hermes.runFleetSkill('repo-audit', repos);
+
+    expect(results[0].status).toBe('ok');
+    expect(results[1].status).toBe('error');
+    expect(results[1].error).toMatch(/gateway timeout/);
+    delete process.env.HERMES_API_KEY;
+  });
+});
+
+// ── POST /api/connectors/hermes/fleet/run ─────────────────────────────────────────────────
+
+describe('POST /api/connectors/hermes/fleet/run', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('returns 401 without token', async () => {
+    const res = await request(app)
+      .post('/api/connectors/hermes/fleet/run')
+      .send({ skill: 'repo-audit', repos: ['lippytm/lippytm.ai'] });
+    expect(res.status).toBe(401);
+  });
+
+  it('returns 400 when skill is missing', async () => {
+    const res = await request(app)
+      .post('/api/connectors/hermes/fleet/run')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ repos: ['lippytm/lippytm.ai'] });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/skill is required/);
+  });
+
+  it('returns 400 when repos is missing', async () => {
+    const res = await request(app)
+      .post('/api/connectors/hermes/fleet/run')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ skill: 'repo-audit' });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/repos must be a non-empty array/);
+  });
+
+  it('returns 400 when repos is an empty array', async () => {
+    const res = await request(app)
+      .post('/api/connectors/hermes/fleet/run')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ skill: 'repo-audit', repos: [] });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/repos must be a non-empty array/);
+  });
+
+  it('runs a skill across fleet repos and returns per-repo results', async () => {
+    jest.spyOn(hermes, 'runFleetSkill').mockResolvedValue([
+      { repo: 'lippytm/lippytm.ai', status: 'ok', result: { status: 'completed' } },
+      { repo: 'lippytm/Web3AI', status: 'ok', result: { status: 'completed' } },
+    ]);
+
+    const res = await request(app)
+      .post('/api/connectors/hermes/fleet/run')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ skill: 'repo-audit', repos: ['lippytm/lippytm.ai', 'lippytm/Web3AI'], input: 'Audit now.' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.skill).toBe('repo-audit');
+    expect(res.body.results).toHaveLength(2);
+    expect(res.body.results[0].status).toBe('ok');
+    expect(hermes.runFleetSkill).toHaveBeenCalledWith(
+      'repo-audit',
+      ['lippytm/lippytm.ai', 'lippytm/Web3AI'],
+      'Audit now.',
+      undefined
+    );
+  });
+
+  it('returns partial errors without failing the whole request', async () => {
+    jest.spyOn(hermes, 'runFleetSkill').mockResolvedValue([
+      { repo: 'lippytm/lippytm.ai', status: 'ok', result: { status: 'completed' } },
+      { repo: 'lippytm/Web3AI', status: 'error', error: 'gateway timeout' },
+    ]);
+
+    const res = await request(app)
+      .post('/api/connectors/hermes/fleet/run')
+      .set('Authorization', `Bearer ${validToken()}`)
+      .send({ skill: 'repo-audit', repos: ['lippytm/lippytm.ai', 'lippytm/Web3AI'] });
+
+    expect(res.status).toBe(200);
+    expect(res.body.results[0].status).toBe('ok');
+    expect(res.body.results[1].status).toBe('error');
+    expect(res.body.results[1].error).toMatch(/gateway timeout/);
+  });
+});
