@@ -288,6 +288,25 @@ These require review before execution or publication:
 
 ---
 
+## 10. Fleet Rollout Workflow
+
+For each repository:
+
+```text
+1. Read current README and repo purpose.
+2. Run Universal Autonomous Creative Development Prompt.
+3. Create or update repo mission.
+4. Create or update README.
+5. Add Copilot instructions.
+6. Add QUALITY and SECURITY docs.
+7. Add docs/architecture.md and docs/business-model.md.
+8. Open 3 issues:
+   - creative expansion
+   - AI coding upgrade
+   - productization/monetization path
+9. Add repo to Control Tower fleet dashboard.
+10. Add next action to FLEET_STATUS.md.
+```
 ## 11. Hermes Fleet Repository Integration Engine
 
 ```text
@@ -339,22 +358,4 @@ Rules:
 - Errors in one repo must not abort the entire fleet run.
 - Human review is required before publishing fleet audit results externally.
 - Quality is Job #1.
-```
-
-For each repository:
-
-```text
-1. Read current README and repo purpose.
-2. Run Universal Autonomous Creative Development Prompt.
-3. Create or update repo mission.
-4. Create or update README.
-5. Add Copilot instructions.
-6. Add QUALITY and SECURITY docs.
-7. Add docs/architecture.md and docs/business-model.md.
-8. Open 3 issues:
-   - creative expansion
-   - AI coding upgrade
-   - productization/monetization path
-9. Add repo to Control Tower fleet dashboard.
-10. Add next action to FLEET_STATUS.md.
 ```
