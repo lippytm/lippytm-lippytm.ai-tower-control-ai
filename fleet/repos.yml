@@ -1,83 +1,367 @@
 # lippytm.ai Fleet Repository Registry
 # Update this file as repos are modernized or added.
+# Auto-checked nightly by fleet-pulse.yml and fleet-status-update.yml.
 
 repos:
   - name: lippytm/lippytm-lippytm.ai-tower-control-ai
     role: Control Tower and source of truth
+    lane: control-tower
     status: active_buildout
     priority: 1
+    automation: true
+    qa: true
+    slack_channel: "#control-tower"
+    claude_code: true
     next_action: Continue registries, workflows, dashboards, templates, and automation playbooks
     risk_level: medium
 
   - name: lippytm/lippytm.ai
     role: Main lippytm.ai website/platform repo
+    lane: website
     status: planned
     priority: 2
-    next_action: Apply repo modernization workflow
+    automation: false
+    qa: false
+    slack_channel: "#website"
+    claude_code: false
+    next_action: Apply repo modernization workflow and node kit
     risk_level: medium
 
   - name: lippytm/lippytmai.getbizfunds.com-
     role: Business funding and services front door
+    lane: revenue
     status: planned
     priority: 3
+    automation: false
+    qa: false
+    slack_channel: "#biz-funds"
+    claude_code: false
     next_action: Apply funding intake and landing page workflows
     risk_level: high
 
   - name: lippytm/Chatlippytm.ai.Bots
     role: Chatbot and AI bot system
+    lane: bots
     status: planned
     priority: 4
+    automation: false
+    qa: false
+    slack_channel: "#chatbots"
+    claude_code: false
     next_action: Apply chatbot intake and support workflows
     risk_level: medium
 
   - name: lippytm/Clawlippytm.ai.Bots
     role: ClawBot and AI agent concept
+    lane: bots
     status: planned
     priority: 5
-    next_action: Apply repository growth prompt
+    automation: false
+    qa: false
+    slack_channel: "#clawbots"
+    claude_code: false
+    next_action: Apply repository growth prompt and node kit
     risk_level: medium
 
   - name: lippytm/MyClaw.lippytm.AI-
     role: MyClaw integration and agent concept
+    lane: integration
     status: planned
     priority: 6
+    automation: false
+    qa: false
+    slack_channel: "#myclaw"
+    claude_code: false
     next_action: Define platform role and integration path
     risk_level: medium
 
   - name: lippytm/OpenClaw-lippytm.AI-
     role: OpenClaw integration and agent concept
+    lane: integration
     status: planned
     priority: 7
+    automation: false
+    qa: false
+    slack_channel: "#openclaw"
+    claude_code: false
     next_action: Define platform role and integration path
     risk_level: medium
 
   - name: lippytm/Web3AI
     role: Web3 and AI R&D
+    lane: rd
     status: planned
     priority: 8
+    automation: false
+    qa: false
+    slack_channel: "#web3-ai"
+    claude_code: false
     next_action: Classify as R&D and productization candidate
     risk_level: medium
 
   - name: lippytm/AI-Time-Machines
-    role: Creative AI concept
+    role: Creative AI concept — time machine storytelling
+    lane: creative
     status: planned
     priority: 9
+    automation: false
+    qa: false
+    slack_channel: "#creative"
+    claude_code: false
     next_action: Apply creative development prompt
     risk_level: low
 
   - name: lippytm/AllBots.com
-    role: Bots product concept
+    role: Bots product concept and directory
+    lane: product
     status: planned
     priority: 10
+    automation: false
+    qa: false
+    slack_channel: "#allbots"
+    claude_code: false
     next_action: Apply productization prompt
     risk_level: medium
 
   - name: lippytm/Factory.ai
     role: Factory and automation concept
+    lane: automation
     status: planned
     priority: 11
+    automation: false
+    qa: false
+    slack_channel: "#factory"
+    claude_code: false
     next_action: Align with AI Coding Factory blueprint
     risk_level: medium
+
+  - name: lippytm/Transparency-Logic-Time-Machine-Bots-
+    role: Logic and transparency bots
+    lane: bots
+    status: planned
+    priority: 12
+    automation: false
+    qa: false
+    slack_channel: "#transparency"
+    claude_code: false
+    next_action: Apply node kit and bot workflow
+    risk_level: medium
+
+  - name: lippytm/balletcrypto.github.io
+    role: Ballet crypto website
+    lane: website
+    status: planned
+    priority: 13
+    automation: false
+    qa: false
+    slack_channel: "#sites"
+    claude_code: false
+    next_action: Apply node kit and modernization workflow
+    risk_level: low
+
+  - name: lippytm/The-Encyclopedia-of-Law-Civilian-Law-Military-Law-Business-Law-AI-Law.-
+    role: Legal AI encyclopedia and docs
+    lane: docs
+    status: planned
+    priority: 14
+    automation: false
+    qa: false
+    slack_channel: "#legal-ai"
+    claude_code: false
+    next_action: Apply docs workflow and agent-task issue template
+    risk_level: medium
+
+  - name: lippytm/AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites-
+    role: Full-stack AI DevOps and synthetic intelligence
+    lane: devops
+    status: planned
+    priority: 15
+    automation: false
+    qa: false
+    slack_channel: "#devops"
+    claude_code: false
+    next_action: Apply CI workflow and node kit
+    risk_level: medium
+
+  - name: lippytm/gatsby-starter-blog
+    role: Gatsby blog starter — content and marketing
+    lane: website
+    status: planned
+    priority: 16
+    automation: false
+    qa: false
+    slack_channel: "#sites"
+    claude_code: false
+    next_action: Classify and apply modernization workflow
+    risk_level: low
+
+  - name: lippytm/Base44-
+    role: Base44 integration and productization
+    lane: integration
+    status: planned
+    priority: 17
+    automation: false
+    qa: false
+    slack_channel: "#base44"
+    claude_code: false
+    next_action: Apply productization prompt and integration path
+    risk_level: medium
+
+  - name: lippytm/zenith-tasks
+    role: Zenith task management system
+    lane: productivity
+    status: planned
+    priority: 18
+    automation: false
+    qa: false
+    slack_channel: "#tasks"
+    claude_code: false
+    next_action: Apply task workflow and node kit
+    risk_level: low
+
+  - name: lippytm/ClawBase44.ai.Bots
+    role: ClawBase44 AI bot system
+    lane: bots
+    status: planned
+    priority: 19
+    automation: false
+    qa: false
+    slack_channel: "#clawbots"
+    claude_code: false
+    next_action: Apply bot workflow and node kit
+    risk_level: medium
+
+  - name: lippytm/AI-Clone-of-Charles-Earl-Lipshay-lippytm-lippytm.AI-lippytmai-
+    role: AI Clone identity hub — synced from fleet/clone/
+    lane: ai-identity
+    status: active_sync
+    priority: 20
+    automation: true
+    qa: false
+    slack_channel: "#clone"
+    claude_code: true
+    next_action: Maintain via sync-to-clone.yml — no direct edits
+    risk_level: medium
+
+  - name: lippytm/MARVIN
+    role: MARVIN multi-agent swarm system
+    lane: agents
+    status: planned
+    priority: 21
+    automation: false
+    qa: false
+    slack_channel: "#marvin"
+    claude_code: false
+    next_action: Align with MARVIN_SWARM.md and apply agent workflow
+    risk_level: medium
+
+  - name: lippytm/CryptoSteampunk
+    role: CryptoSteampunk creative universe
+    lane: creative
+    status: planned
+    priority: 22
+    automation: false
+    qa: false
+    slack_channel: "#creative"
+    claude_code: false
+    next_action: Align with CRYPTOSTEAMPUNK_UNIVERSE.md
+    risk_level: low
+
+  - name: lippytm/trading-bots
+    role: Trading bot system — requires critical risk approval
+    lane: trading
+    status: planned
+    priority: 23
+    automation: false
+    qa: false
+    slack_channel: "#trading"
+    claude_code: false
+    next_action: Apply safety gate and risk: critical workflow — human approval always required
+    risk_level: critical
+
+  - name: lippytm/earn-while-you-learn
+    role: Earn While You Learn education platform
+    lane: education
+    status: planned
+    priority: 24
+    automation: false
+    qa: false
+    slack_channel: "#education"
+    claude_code: false
+    next_action: Apply education workflow and curriculum templates
+    risk_level: low
+
+  - name: lippytm/ai-coding-factory
+    role: AI coding factory and automation pipeline
+    lane: automation
+    status: planned
+    priority: 25
+    automation: false
+    qa: false
+    slack_channel: "#ai-coding"
+    claude_code: false
+    next_action: Align with AI Coding Factory blueprint
+    risk_level: medium
+
+  - name: lippytm/cybersecurity-layer
+    role: Personal cybersecurity tools and connection layer
+    lane: security
+    status: planned
+    priority: 26
+    automation: false
+    qa: false
+    slack_channel: "#security"
+    claude_code: false
+    next_action: Apply security workflow and SECURITY.md
+    risk_level: high
+
+  - name: lippytm/biz-funds-intake
+    role: Business funding intake and lead capture
+    lane: revenue
+    status: planned
+    priority: 27
+    automation: false
+    qa: false
+    slack_channel: "#biz-funds"
+    claude_code: false
+    next_action: Apply intake workflow and compliance review
+    risk_level: high
+
+  - name: lippytm/sandbox-toolkit
+    role: Sandbox and support toolkit architecture
+    lane: support
+    status: planned
+    priority: 28
+    automation: false
+    qa: false
+    slack_channel: "#sandbox"
+    claude_code: false
+    next_action: Align with SANDBOX_AND_SUPPORT_TOOLKIT_ARCHITECTURE.md
+    risk_level: low
+
+  - name: lippytm/quantum-leap
+    role: Quantum Leap expansion roadmap and assets
+    lane: strategy
+    status: planned
+    priority: 29
+    automation: false
+    qa: false
+    slack_channel: "#expansion"
+    claude_code: false
+    next_action: Apply expansion blueprint and roadmap templates
+    risk_level: medium
+
+  - name: lippytm/civilization-blueprint
+    role: Civilization Blueprint — long-horizon strategy
+    lane: strategy
+    status: planned
+    priority: 30
+    automation: false
+    qa: false
+    slack_channel: "#strategy"
+    claude_code: false
+    next_action: Apply docs workflow and blueprint templates
+    risk_level: low
 
 standard_actions:
   - run_autonomous_creative_development_prompt
@@ -88,3 +372,8 @@ standard_actions:
   - add_productization_path
   - create_next_3_issues
   - update_dashboard_status
+  - apply_node_kit
+  - register_slack_channel
+  - set_risk_label
+  - enable_fleet_pulse
+  - enable_quality_gate

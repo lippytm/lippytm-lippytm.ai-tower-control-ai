@@ -1,0 +1,117 @@
+name: Agent Task
+description: Submit a task for GitHub Copilot or Claude Code to handle
+title: "[AGENT TASK] "
+labels:
+  - agent-task
+  - risk:low
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Agent Task Request
+
+        Use this template to submit a task for **GitHub Copilot** or **Claude Code** to handle.
+
+        The agent will **propose a plan or PR**. You review and approve before anything is merged.
+
+        > **Reminder:** High and critical risk tasks require @lippytm written approval before execution.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Task summary
+      description: One sentence — what should the agent do?
+      placeholder: "Add a Zapier webhook connector to the Control Tower"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: repo
+    attributes:
+      label: Target repository
+      description: Which repo should this task be applied to?
+      options:
+        - lippytm-lippytm.ai-tower-control-ai (Control Tower)
+        - lippytm.ai
+        - lippytmai.getbizfunds.com-
+        - Chatlippytm.ai.Bots
+        - MyClaw.lippytm.AI-
+        - Web3AI
+        - AllBots.com
+        - Factory.ai
+        - Other (specify in details)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      description: What is the risk level of this task? (see RISK_GATE.md)
+      options:
+        - "low — docs, templates, Markdown only"
+        - "medium — new automation or API call"
+        - "high — live deployment or external integration"
+        - "critical — payments, customer data, legal claims"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Project lane
+      options:
+        - Control Tower
+        - Revenue
+        - Bots
+        - Integration
+        - R&D
+        - Creative
+        - Product
+        - Automation
+        - DevOps
+        - AI Identity
+        - Agents
+        - Education
+        - Support
+        - Strategy
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Task details
+      description: What exactly should the agent do? Include inputs, outputs, and constraints.
+      placeholder: |
+        - Add a new connector file at src/connectors/zapier.js
+        - Expose POST /api/connectors/zapier/trigger
+        - Use ZAPIER_WEBHOOK_URL from environment variables
+        - Add tests in tests/connectors/zapier.test.js
+    validations:
+      required: true
+
+  - type: textarea
+    id: definition_of_done
+    attributes:
+      label: Definition of done
+      description: How will we know this task is complete?
+      placeholder: |
+        - [ ] Connector file created and tested
+        - [ ] Route registered
+        - [ ] .env.example updated with ZAPIER_WEBHOOK_URL placeholder
+        - [ ] FLEET_STATUS.md updated
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: riskgate
+    attributes:
+      label: RiskGate checklist
+      options:
+        - label: No hardcoded secrets or credentials in the proposed changes
+          required: true
+        - label: No guaranteed-outcome claims (income, funding, legal, investment, medical)
+          required: true
+        - label: High/critical risk tasks will NOT be executed without @lippytm approval
+          required: true

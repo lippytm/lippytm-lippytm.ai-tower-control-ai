@@ -1,0 +1,145 @@
+name: Quality Gate
+
+# Autonomous quality gate for all pull requests.
+# Checks documentation, security, compliance, and risk labels.
+# Blocks merge if critical quality issues are found.
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        id: changed
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD" 2>/dev/null || git diff --name-only HEAD~1 HEAD)
+          echo "Changed files:"
+          echo "$CHANGED"
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          # Check categories
+          HAS_WORKFLOW=$(echo "$CHANGED" | grep -c '^\.github/workflows/' || true)
+          HAS_SRC=$(echo "$CHANGED" | grep -c '^src/' || true)
+          HAS_DOCS=$(echo "$CHANGED" | grep -c '\.md$' || true)
+          HAS_FLEET=$(echo "$CHANGED" | grep -c '^fleet/' || true)
+          echo "has_workflow=$HAS_WORKFLOW" >> "$GITHUB_OUTPUT"
+          echo "has_src=$HAS_SRC" >> "$GITHUB_OUTPUT"
+          echo "has_docs=$HAS_DOCS" >> "$GITHUB_OUTPUT"
+          echo "has_fleet=$HAS_FLEET" >> "$GITHUB_OUTPUT"
+
+      - name: Secret scan (no hardcoded credentials)
+        run: |
+          echo "=== Secret Scan ==="
+          PATTERNS=(
+            'password\s*=\s*["\047][^"\047]{4,}'
+            'api_key\s*=\s*["\047][^"\047]{8,}'
+            'secret\s*=\s*["\047][^"\047]{8,}'
+            'token\s*=\s*["\047][^"\047]{8,}'
+            'sk-[a-zA-Z0-9]{20,}'
+            'ghp_[a-zA-Z0-9]{36}'
+          )
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            HITS=$(grep -rniE "$pattern" \
+              --include="*.js" --include="*.ts" --include="*.json" \
+              --include="*.yml" --include="*.yaml" --include="*.env" \
+              --exclude-dir=node_modules --exclude-dir=.git \
+              . 2>/dev/null || true)
+            if [ -n "$HITS" ]; then
+              echo "::error::Potential secret detected matching pattern: $pattern"
+              echo "$HITS"
+              FOUND=$((FOUND + 1))
+            fi
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            echo "✓ No hardcoded secrets detected."
+          else
+            echo "::error::$FOUND potential secret pattern(s) found. Remove before merging."
+            exit 1
+          fi
+
+      - name: Compliance language check
+        run: |
+          echo "=== Compliance Check ==="
+          # Flag guaranteed-outcome language in Markdown files
+          PATTERNS=(
+            'guaranteed.*income'
+            'guaranteed.*funding'
+            'guaranteed.*approval'
+            'guaranteed.*profit'
+            'guaranteed.*return'
+            'guaranteed.*result'
+          )
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            HITS=$(grep -rniE "$pattern" --include="*.md" . 2>/dev/null | \
+              grep -v 'no guaranteed\|without.*guaranteed\|not.*guaranteed\|never.*guaranteed' || true)
+            if [ -n "$HITS" ]; then
+              echo "::warning::Compliance flag — review language matching: $pattern"
+              echo "$HITS"
+              FOUND=$((FOUND + 1))
+            fi
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            echo "✓ No unqualified guarantee language detected."
+          else
+            echo "::warning::$FOUND compliance pattern(s) flagged. Ensure disclaimer is present."
+          fi
+
+      - name: Check RISK_GATE.md exists
+        run: |
+          if [ -f "RISK_GATE.md" ]; then
+            echo "✓ RISK_GATE.md present."
+          else
+            echo "::warning::RISK_GATE.md is missing from this repository."
+          fi
+
+      - name: Check QUALITY.md exists
+        run: |
+          if [ -f "QUALITY.md" ]; then
+            echo "✓ QUALITY.md present."
+          else
+            echo "::warning::QUALITY.md is missing from this repository."
+          fi
+
+      - name: Node.js lint and test (if src/ changed)
+        if: steps.changed.outputs.has_src != '0'
+        run: |
+          if [ -f "package.json" ]; then
+            echo "=== Running npm ci + lint + test ==="
+            npm ci --prefer-offline
+            npm run lint --if-present
+            npm test --if-present
+          else
+            echo "No package.json found — skipping Node.js checks."
+          fi
+
+      - name: Quality gate summary
+        run: |
+          echo "=== Quality Gate Summary ==="
+          echo "PR: #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }}"
+          echo "Branch: ${{ github.head_ref }} → ${{ github.base_ref }}"
+          echo "Changed files: workflow=${{ steps.changed.outputs.has_workflow }}, src=${{ steps.changed.outputs.has_src }}, docs=${{ steps.changed.outputs.has_docs }}, fleet=${{ steps.changed.outputs.has_fleet }}"
+          echo "Quality gate passed."
