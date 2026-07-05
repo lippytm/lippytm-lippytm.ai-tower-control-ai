@@ -116,7 +116,7 @@ function _simulateWork(ms) {
   return new Promise((resolve) => {
     const t = setTimeout(resolve, ms);
     // Unref so this timer does not prevent the process from exiting naturally
-    if (t && t.unref) t.unref();
+    t.unref();
   });
 }
 

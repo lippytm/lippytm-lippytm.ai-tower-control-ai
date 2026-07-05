@@ -64,7 +64,7 @@ curl -H "Authorization: Bearer $HERMES_API_KEY" \
 
 ## Control Tower Endpoints
 
-All endpoints require a valid Tower JWT ****** (`POST /api/auth/token`).
+All endpoints require a valid Tower JWT token (`POST /api/auth/token`).
 
 | Method | Path | Description |
 |--------|------|-------------|
