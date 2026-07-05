@@ -22,22 +22,26 @@ Status: active
 
 ## Phase 2: Core Documentation Upgrade
 
-Status: active next
+Status: complete
 
-- [ ] Add top-level QUALITY.md
-- [ ] Add top-level SECURITY.md
-- [ ] Add CONTRIBUTING.md
-- [ ] Add docs/architecture.md
-- [ ] Add docs/runbook.md
-- [ ] Add docs/business-model.md
-- [ ] Add docs/integrations.md
-- [ ] Add docs/support-playbook.md
-- [ ] Add docs/autocomplete-automation-system.md
+- [x] Add top-level QUALITY.md
+- [x] Add top-level SECURITY.md
+- [x] Add CONTRIBUTING.md
+- [x] Add docs/architecture.md
+- [x] Add docs/runbook.md
+- [x] Add docs/business-model.md
+- [x] Add docs/integrations.md
+- [x] Add docs/support-playbook.md
+- [x] Add docs/autocomplete-automation-system.md
 
 ## Phase 3: Workflow Expansion
 
-Status: planned
+Status: active
 
+- [x] Add fleet/BEST_PRACTICES.md — lane-specific canonical guide for all 31 repos
+- [x] Add templates/repo/ — reusable repo standard files for fleet modernization
+- [x] Add templates/lanes/ — per-lane checklists (15 lanes)
+- [x] Update workflows/repo-modernization.md to reference templates
 - [ ] Add workflow tests/checklists
 - [ ] Add lead follow-up workflow
 - [ ] Add customer onboarding workflow

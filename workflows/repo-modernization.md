@@ -39,20 +39,28 @@ Run this workflow when:
 
 ## Standard files to add or improve
 
-- [ ] README.md
-- [ ] ROADMAP.md
-- [ ] QUALITY.md
-- [ ] SECURITY.md
-- [ ] CONTRIBUTING.md
+Use the templates in `templates/repo/` for ready-to-copy versions of each file below.
+
+- [ ] README.md — copy from `templates/repo/README-template.md`
+- [ ] ROADMAP.md — copy from `templates/repo/ROADMAP-template.md`
+- [ ] QUALITY.md — copy from `templates/repo/QUALITY-template.md`
+- [ ] SECURITY.md — copy from `templates/repo/SECURITY-template.md`
+- [ ] CONTRIBUTING.md — copy from `templates/repo/CONTRIBUTING-template.md`
 - [ ] docs/architecture.md
 - [ ] docs/runbook.md
 - [ ] docs/business-model.md
 - [ ] docs/integrations.md
 - [ ] docs/support-playbook.md
-- [ ] .github/copilot-instructions.md
-- [ ] .github/ISSUE_TEMPLATE/feature_request.md
-- [ ] .github/ISSUE_TEMPLATE/bug_report.md
-- [ ] .github/PULL_REQUEST_TEMPLATE.md
+- [ ] .github/copilot-instructions.md — copy from `templates/repo/copilot-instructions-template.md`
+- [ ] .github/ISSUE_TEMPLATE/feature_request.md — copy from `templates/repo/issue-templates/feature_request-template.md`
+- [ ] .github/ISSUE_TEMPLATE/bug_report.md — copy from `templates/repo/issue-templates/bug_report-template.md`
+- [ ] .github/PULL_REQUEST_TEMPLATE.md — copy from `templates/repo/PULL_REQUEST_TEMPLATE-template.md`
+- [ ] .github/dependabot.yml — copy from `templates/repo/dependabot-template.yml`
+- [ ] .github/workflows/ci.yml — copy from `templates/repo/workflows/ci-template.yml`
+- [ ] .github/workflows/codeql.yml — copy from `templates/repo/workflows/codeql-template.yml`
+- [ ] .github/workflows/quality-gate.yml — copy from `templates/repo/workflows/quality-gate-template.yml`
+
+After applying the base templates, apply the lane-specific checklist from `templates/lanes/`.
 
 ## Prompt
 
@@ -108,4 +116,17 @@ Keep the result practical, modular, and reviewable. Quality is Job #1.
 - [ ] Quality and security expectations are clear
 - [ ] Support path is clear
 - [ ] Productization path is identified
+- [ ] CI, CodeQL, and quality gate workflows enabled
+- [ ] Dependabot enabled
+- [ ] Lane-specific checklist from `templates/lanes/` applied
+- [ ] Registered in `fleet/repos.yml` and `fleet/FLEET_STATUS.md`
 - [ ] Next 3 issues are created or drafted
+
+## Reference templates
+
+| Resource | Location |
+|---|---|
+| Repo standard templates | `templates/repo/` |
+| Lane-specific checklists | `templates/lanes/` |
+| Fleet best practices | `fleet/BEST_PRACTICES.md` |
+| Definition of Done | `quality/definition-of-done.md` |
