@@ -363,6 +363,18 @@ repos:
     next_action: Apply docs workflow and blueprint templates
     risk_level: low
 
+  - name: lippytm/docs
+    role: lippytm.ai documentation site and knowledge base
+    lane: docs
+    status: planned
+    priority: 31
+    automation: false
+    qa: false
+    slack_channel: "#docs"
+    claude_code: false
+    next_action: Apply docs workflow and node kit
+    risk_level: low
+
 standard_actions:
   - run_autonomous_creative_development_prompt
   - run_repo_modernization_workflow

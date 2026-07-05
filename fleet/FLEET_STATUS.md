@@ -6,10 +6,10 @@
 
 | Metric | Value |
 |---|---|
-| Total repos registered | 30+ |
+| Total repos registered | 31 |
 | Active buildout | 1 |
 | Planned / queued | 29+ |
-| Automation enabled | 1 |
+| Automation enabled | 2 |
 | QA passing | 1 |
 
 ---
@@ -48,6 +48,7 @@
 | lippytm/sandbox-toolkit | Sandbox and support tools | 28 | 🟡 Planned | ❌ | ❌ | Apply sandbox workflow |
 | lippytm/quantum-leap | Quantum leap expansion | 29 | 🟡 Planned | ❌ | ❌ | Apply expansion blueprint |
 | lippytm/civilization-blueprint | Civilization blueprint | 30 | 🟡 Planned | ❌ | ❌ | Apply docs workflow |
+| lippytm/docs | Documentation site and knowledge base | 31 | 🟡 Planned | ❌ | ❌ | Apply docs workflow and node kit |
 
 ---
 

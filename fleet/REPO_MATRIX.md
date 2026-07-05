@@ -36,6 +36,7 @@
 | 28 | sandbox-toolkit | Support | low | Planned | Planned | #sandbox | P28 | ❌ |
 | 29 | quantum-leap | Expansion | medium | Planned | Planned | #expansion | P29 | ❌ |
 | 30 | civilization-blueprint | Strategy | low | Planned | Planned | #strategy | P30 | ❌ |
+| 31 | [docs](https://github.com/lippytm/docs) | Docs | low | Planned | Planned | #docs | P31 | ❌ |
 
 ---
 
