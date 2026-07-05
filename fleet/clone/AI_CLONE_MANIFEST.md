@@ -8,6 +8,25 @@
 
 ---
 
+## Two-Way Connection Model
+
+```
+AI Clone  ──────────────────────────────────────────────────────→  All 31 Repos
+  (knows about, documents, and defines every repo)         (CLONE_CONNECTION.md)
+
+All 31 Repos  ──────────────────────────────────────────────────→  AI Clone
+  (each carries CLONE_CONNECTION.md linking back)     (manifested in Clone README)
+```
+
+| Workflow | Direction | What it does |
+|---------|-----------|-------------|
+| `sync-to-clone.yml` | Control Tower → Clone repo | Pushes README, manifest, persona, Copilot instructions |
+| `sync-clone-to-all-repos.yml` | Control Tower → All 31 repos | Pushes `CLONE_CONNECTION.md` to every repo |
+
+Both workflows use the same `CLONE_REPO_PAT` secret.
+
+---
+
 ## How to Read This Manifest
 
 | Column | Meaning |
@@ -122,5 +141,5 @@
 ---
 
 *Last updated: 2026-07-05*
-*Maintained by: AI Clone Sync Workflow (`sync-to-clone.yml`)*
+*Maintained by: AI Clone Sync Workflows (`sync-to-clone.yml` · `sync-clone-to-all-repos.yml`)*
 *Owner: Charles Earl Lipshay (@lippytm)*
