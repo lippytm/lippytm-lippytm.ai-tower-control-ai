@@ -113,7 +113,11 @@ function _updateJob(jobId, fields) {
 }
 
 function _simulateWork(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    const t = setTimeout(resolve, ms);
+    // Unref so this timer does not prevent the process from exiting naturally
+    if (t && t.unref) t.unref();
+  });
 }
 
 module.exports = { scheduleSync, getSyncJob, listSyncJobs, CONNECTORS, _resetJobsForTests: () => syncJobs.clear() };

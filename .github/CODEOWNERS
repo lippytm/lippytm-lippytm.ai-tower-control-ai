@@ -1,0 +1,22 @@
+# CODEOWNERS — auto-request reviews for critical paths
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default: all changes require review by repo owner
+*                               @lippytm
+
+# Security-sensitive code — always requires owner review
+src/security/                   @lippytm
+.github/workflows/              @lippytm
+.github/CODEOWNERS              @lippytm
+.env.example                    @lippytm
+SECURITY.md                     @lippytm
+TRUST_AND_COMPLIANCE.md         @lippytm
+RISK_GATE.md                    @lippytm
+
+# Fleet and agent definitions
+fleet/                          @lippytm
+agents/                         @lippytm
+
+# Core application source
+src/                            @lippytm
+tests/                          @lippytm

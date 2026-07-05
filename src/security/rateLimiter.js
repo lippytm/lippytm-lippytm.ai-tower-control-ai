@@ -27,6 +27,7 @@ function createStrictLimiter(options = {}) {
 function sanitizeInput(input) {
   if (typeof input !== 'string') return '';
   // Strip NUL bytes and C0/C1 control characters except \t (0x09), \n (0x0A), \r (0x0D)
+  // eslint-disable-next-line no-control-regex
   return input.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, '').trim();
 }
 

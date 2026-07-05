@@ -73,7 +73,7 @@ if (require.main === module) {
   });
 
   // Graceful shutdown on SIGTERM / SIGINT (e.g. Docker stop, Ctrl-C)
-  function shutdown(signal) {
+  const shutdown = (signal) => {
     logger.info(`${signal} received – shutting down gracefully`);
     server.close(() => {
       logger.info('HTTP server closed');
@@ -84,7 +84,7 @@ if (require.main === module) {
       logger.error('Forced shutdown after timeout');
       process.exit(1);
     }, 10_000).unref();
-  }
+  };
 
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('SIGINT', () => shutdown('SIGINT'));

@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+  extends: ['eslint:recommended'],
   env: {
     node: true,
     es2020: true,
@@ -22,4 +23,13 @@ module.exports = {
     // Warn on console – acceptable in a server logger context so keep as warn
     'no-console': 'warn',
   },
+  overrides: [
+    {
+      // Jest test files — expose jest globals
+      files: ['tests/**/*.test.js'],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 };
