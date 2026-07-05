@@ -161,3 +161,78 @@ agents:
       - Direct OpenAI/Twin calls via existing Tower connectors
       - Manual ChatGPT workflow via Control Tower prompts
     reference: https://github.com/NousResearch/hermes-agent
+
+  - id: ai_clone
+    name: AI Clone of Charles Earl Lipshay
+    emoji: 🧬
+    platforms:
+      - GitHub
+      - ChatGPT
+      - GitHub Copilot
+      - Twin
+      - ManyChat
+      - BotBuilders
+    status: active
+    mission: >
+      Serve as the published identity hub for the lippytm.ai empire, connecting and
+      documenting all 31 repositories, defining the Clone persona, and providing AI
+      agents and collaborators with the context they need to act as or for the Clone.
+    connected_repos:
+      - lippytm/lippytm-lippytm.ai-tower-control-ai
+      - lippytm/AI-Clone-of-Charles-Earl-Lipshay-lippytm-lippytm.AI-lippytmai-
+      - lippytm/lippytm.ai
+      - lippytm/AI-Time-Machines
+      - lippytm/Factory.ai
+      - lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration-
+      - lippytm/Hermes-AI-Hermes
+      - lippytm/Prompt-11-
+      - lippytm/AllBots.com
+      - lippytm/AllBots.com.ai
+      - lippytm/Chatlippytm.ai.Bots
+      - lippytm/ClawBase44.ai.Bots
+      - lippytm/Clawlippytm.Bots
+      - lippytm/Clawlippytm.ai.Bots
+      - lippytm/Web3AI
+      - lippytm/AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites-
+      - lippytm/Transparency-Logic-Time-Machine-Bots-
+      - lippytm/Time-Machines-Builders-
+      - lippytm/MyClaw.lippytm.AI-
+      - lippytm/OpenClaw-lippytm.AI-
+      - lippytm/Base44-
+      - lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency-
+      - lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks-
+      - lippytm/The-Encyclopedia-of-Everything-Applied-ChatAIBots
+      - lippytm/The-Encyclopedia-of-Law-Civilian-Law-Military-Law-Business-Law-AI-Law.-
+      - lippytm/Quantum-Questions-of-the-Many-Worlds-Universes-of-Reruns-
+      - lippytm/lippytmai.getbizfunds.com-
+      - lippytm/lippytmai.zo.computer-
+      - lippytm/http-famous.ai-fpr-charles92
+      - lippytm/gatsby-starter-blog
+      - lippytm/docs
+    allowed_actions:
+      - draft repo mission summaries and registry entries
+      - draft GitHub issue bodies and task checklists
+      - draft AI agent prompts and persona files
+      - draft affiliate content and social posts (with risk disclosure)
+      - draft support scripts and FAQ entries
+      - draft product/service package descriptions
+      - draft daily action plans
+      - register new repos in the fleet manifest
+      - propose workflows and automation playbooks
+    forbidden_actions:
+      - guarantee income, funding, legal results, investment returns, or medical outcomes
+      - commit secrets or credentials
+      - publish customer-facing financial or legal content without human review
+      - operate outside the lippytm GitHub account without explicit permission
+    risk_level: low
+    human_review_required_for:
+      - customer-facing publication
+      - funding or legal claims
+      - affiliate promotions before publishing
+    source_files:
+      manifest: fleet/clone/AI_CLONE_MANIFEST.md
+      readme: fleet/clone/AI_CLONE_README.md
+      persona: fleet/clone/AI_CLONE_PERSONA.md
+      copilot_instructions: fleet/clone/AI_CLONE_COPILOT_INSTRUCTIONS.md
+    sync_workflow: .github/workflows/sync-to-clone.yml
+    clone_repo: https://github.com/lippytm/AI-Clone-of-Charles-Earl-Lipshay-lippytm-lippytm.AI-lippytmai-
