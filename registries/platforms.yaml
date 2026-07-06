@@ -1,0 +1,82 @@
+platform_registry:
+  owner: "lippytm"
+  portfolio: "lippytm.AI AI Clone Engine"
+  control_tower_repo: "lippytm/lippytm-lippytm.ai-tower-control-ai"
+  identity_layer:
+    personal_original_email: "lippytimemachines@gmail.com"
+    business_development_email: "lippytmai.biz@gmail.com"
+
+  platforms:
+    - name: "ChatGPT"
+      type: "planning_documentation_repo_coordination"
+      primary_uses:
+        - "systems architecture"
+        - "GitHub documentation"
+        - "prompt packs"
+        - "business development plans"
+        - "AI Clone Engine registry work"
+      github_output_types:
+        - "markdown docs"
+        - "snippets"
+        - "registries"
+        - "issues"
+        - "repository setup files"
+
+    - name: "Claude"
+      type: "long_form_writing_artifact_drafting"
+      primary_uses:
+        - "ebooks"
+        - "sales pages"
+        - "long-form restructuring"
+        - "product documents"
+        - "campaign copy"
+      github_output_types:
+        - "draft documents"
+        - "product files"
+        - "campaign files"
+        - "handoff notes"
+
+    - name: "Hermes Agent"
+      type: "coordination_messenger_dispatch"
+      primary_uses:
+        - "task routing"
+        - "agent handoffs"
+        - "workflow updates"
+        - "cross-platform communication"
+        - "project dispatch"
+      github_output_types:
+        - "handoff logs"
+        - "dispatch notes"
+        - "agent routing files"
+        - "task issues"
+
+    - name: "Fable 5"
+      type: "story_universe_media_franchise_development"
+      primary_uses:
+        - "story universes"
+        - "fictional systems"
+        - "media concepts"
+        - "educational entertainment branches"
+        - "franchise planning"
+      github_output_types:
+        - "universe bibles"
+        - "character maps"
+        - "episode concepts"
+        - "creative branch files"
+        - "media campaign notes"
+
+    - name: "Grok"
+      type: "research_social_awareness_alternate_viewpoint"
+      primary_uses:
+        - "research scanning"
+        - "current-topic awareness"
+        - "social trend exploration"
+        - "alternate framing"
+        - "idea testing"
+      github_output_types:
+        - "research notes"
+        - "comparison notes"
+        - "dated summaries"
+        - "verification checklists"
+
+  operating_rule: "Each AI platform may generate work, but reusable outputs should be saved into GitHub as docs, issues, prompts, registries, product files, campaign files, or RiskGate notes."
