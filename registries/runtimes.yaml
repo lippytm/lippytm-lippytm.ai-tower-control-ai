@@ -1,0 +1,30 @@
+runtime_registry:
+  owner: "lippytm"
+  portfolio: "lippytm.AI AI Clone Engine"
+  control_tower_repo: "lippytm/lippytm-lippytm.ai-tower-control-ai"
+
+  runtimes:
+    - name: "lippytmai.zo.computer"
+      type: "flexible_runtime_workspace"
+      status: "active_growth_environment"
+      role: "AI Clone Engine creativity, prototyping, testing, workspace operations, dashboards, and business-development staging"
+      source_of_truth: "GitHub"
+      source_of_truth_repo: "lippytm/lippytm-lippytm.ai-tower-control-ai"
+      business_identity: "lippytmai.biz@gmail.com"
+      continuity_identity: "lippytimemachines@gmail.com"
+      primary_functions:
+        - "AI Clone Engine dashboard staging"
+        - "AgentBot workspace"
+        - "Hermes dispatch board"
+        - "cross-platform AI handoff staging"
+        - "Prompt #11 execution workspace"
+        - "ebook and audiobook factory staging"
+        - "campaign factory staging"
+        - "business funding workflow staging"
+        - "affiliate marketing workflow testing"
+        - "Learning-to-Earning workspace"
+        - "RiskGate and QA review staging"
+      sync_rule: "Useful Zo Computer outputs should be summarized, exported, or committed back into GitHub as docs, registries, prompts, issues, product files, campaign files, or handoff records."
+      security_rule: "Do not store passwords, private tokens, API keys, recovery codes, payment data, identity documents, or secret credentials in runtime notes or repositories."
+
+  operating_rule: "GitHub preserves durable memory; lippytmai.zo.computer provides flexible runtime creativity, prototyping, testing, and evolution."
