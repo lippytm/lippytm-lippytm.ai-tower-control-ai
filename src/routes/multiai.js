@@ -4,6 +4,7 @@ const router = require('express').Router();
 const { requireAuth } = require('../security/auth');
 const { sanitizeInput } = require('../security/rateLimiter');
 const { listProviders, runTask, compareTask } = require('../orchestration/providers');
+const { getProjects, validateHandoff } = require('../orchestration/handoff');
 
 router.use(requireAuth);
 
@@ -13,13 +14,16 @@ function cleanMessages(messages) {
     error.status = 400;
     throw error;
   }
-  return messages.map((message) => ({
-    role: message.role,
-    content: sanitizeInput(message.content),
-  }));
+  return messages.map((message) => ({ role: message.role, content: sanitizeInput(message.content) }));
 }
 
 router.get('/providers', (_req, res) => res.json({ providers: listProviders() }));
+router.get('/projects', (_req, res) => res.json({ projects: getProjects() }));
+
+router.post('/handoff/validate', (req, res) => {
+  const result = validateHandoff(req.body);
+  res.status(result.valid ? 200 : 400).json(result);
+});
 
 router.post('/run', async (req, res, next) => {
   try {
@@ -29,9 +33,7 @@ router.post('/run', async (req, res, next) => {
       model: req.body && req.body.model,
     });
     res.json(result);
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) { next(error); }
 });
 
 router.post('/compare', async (req, res, next) => {
@@ -42,9 +44,7 @@ router.post('/compare', async (req, res, next) => {
       models: (req.body && req.body.models) || {},
     });
     res.json({ results, humanApprovalRequired: true });
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) { next(error); }
 });
 
 module.exports = router;
