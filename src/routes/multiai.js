@@ -5,6 +5,7 @@ const { requireAuth } = require('../security/auth');
 const { sanitizeInput } = require('../security/rateLimiter');
 const { listProviders, runTask, compareTask } = require('../orchestration/providers');
 const { getProjects, validateHandoff } = require('../orchestration/handoff');
+const { getMemory, validateMemoryEntry } = require('../orchestration/memory');
 
 router.use(requireAuth);
 
@@ -19,6 +20,12 @@ function cleanMessages(messages) {
 
 router.get('/providers', (_req, res) => res.json({ providers: listProviders() }));
 router.get('/projects', (_req, res) => res.json({ projects: getProjects() }));
+router.get('/memory', (_req, res) => res.json(getMemory()));
+
+router.post('/memory/validate', (req, res) => {
+  const result = validateMemoryEntry(req.body);
+  res.status(result.valid ? 200 : 400).json(result);
+});
 
 router.post('/handoff/validate', (req, res) => {
   const result = validateHandoff(req.body);
