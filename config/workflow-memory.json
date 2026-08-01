@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-01T00:00:00Z",
+  "authority": {
+    "cognitiveCommand": "chatgpt-business",
+    "durableSourceOfTruth": "github",
+    "runtimeTelemetry": "lippytmai.zo.computer",
+    "contributors": ["gemini", "claude", "openai", "notebooklm", "hermes"]
+  },
+  "operatingLaw": ["AI proposes", "RiskGate evaluates", "human owner approves critical actions", "AgentBots execute", "QA verifies", "documentation updates", "telemetry improves"],
+  "activeCheckpoint": {
+    "id": "multiai-memory-2026-08-01",
+    "status": "draft-pr",
+    "pullRequest": "https://github.com/lippytm/lippytm-lippytm.ai-tower-control-ai/pull/82",
+    "completed": ["Gemini connector", "Claude connector", "provider comparison", "controlled GitHub publishing", "Crypto Oracle registration", "AI-DNF registration", "cross-AI handoff schema"],
+    "nextActions": ["pass CI and security checks", "install controlled workflow with Actions permission", "configure encrypted provider secrets", "attach Gemini project exports or repositories", "pilot rollout before fleet-wide adoption"]
+  },
+  "memoryPolicy": {
+    "preserveProviderSeparation": true,
+    "requireProvenance": true,
+    "requireHumanApprovalForCriticalActions": true,
+    "qaIsJobOne": true,
+    "blockSecretsAndPrivateCustomerData": true
+  }
+}
