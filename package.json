@@ -1,48 +1,21 @@
 {
   "name": "ai-tower-control",
-  "version": "1.0.0",
-  "description": "AI Control Tower – connects ChatGPT/OpenAI with AllBots.com.ai, Factory.ai, Replit and GitHub Copilot with cybersecurity and automated data management",
+  "version": "1.1.0",
+  "description": "Multi-AI Control Tower with OpenAI, Gemini, Claude, swarms and controlled GitHub publishing",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "jest --runInBand --forceExit",
     "test:coverage": "jest --coverage --runInBand --forceExit",
-    "lint": "eslint src tests"
+    "lint": "eslint src tests scripts",
+    "publish:controlled": "node scripts/github-publish.js",
+    "review:ai": "node scripts/ai-review.js"
   },
-  "keywords": [
-    "ai",
-    "control-tower",
-    "chatgpt",
-    "openai",
-    "allbots",
-    "factory-ai",
-    "replit",
-    "github-copilot",
-    "cybersecurity"
-  ],
+  "keywords": ["ai","control-tower","chatgpt","openai","gemini","claude","github-publishing","agents","swarms","cybersecurity"],
   "author": "lippytm",
   "license": "MIT",
-  "dependencies": {
-    "axios": "^1.6.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.18.3",
-    "express-rate-limit": "^7.2.0",
-    "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "uuid": "^9.0.1",
-    "winston": "^3.12.0"
-  },
-  "devDependencies": {
-    "jest": "^29.7.0",
-    "supertest": "^6.3.4",
-    "eslint": "^8.57.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/**/*.test.js"
-    ]
-  }
+  "dependencies": {"axios":"^1.6.7","cors":"^2.8.5","dotenv":"^16.4.5","express":"^4.18.3","express-rate-limit":"^7.2.0","helmet":"^7.1.0","jsonwebtoken":"^9.0.2","uuid":"^9.0.1","winston":"^3.12.0"},
+  "devDependencies": {"jest":"^29.7.0","supertest":"^6.3.4","eslint":"^8.57.0"},
+  "jest": {"testEnvironment":"node","testMatch":["**/tests/**/*.test.js"]}
 }
