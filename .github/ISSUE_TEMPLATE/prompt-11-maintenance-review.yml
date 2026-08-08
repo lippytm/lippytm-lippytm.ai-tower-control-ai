@@ -1,0 +1,91 @@
+name: Prompt 11 Maintenance Review
+about: Review a repo, workflow, document, or dashboard item that needs attention
+labels: prompt-11, maintenance, status:intake
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when a repo, workflow, document, task, or dashboard item needs maintenance review.
+
+  - type: input
+    id: affected_repo
+    attributes:
+      label: Affected repo
+      placeholder: lippytm/example-repo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: review_type
+    attributes:
+      label: Review type
+      options:
+        - workflow-check
+        - missing-file-check
+        - documentation-check
+        - qa-check
+        - riskgate-check
+        - repo-registry-check
+        - task-status-check
+        - general-maintenance
+    validations:
+      required: true
+
+  - type: textarea
+    id: observation
+    attributes:
+      label: Observation
+      description: What was noticed?
+      placeholder: Describe the item that needs review.
+    validations:
+      required: true
+
+  - type: textarea
+    id: supporting_notes
+    attributes:
+      label: Supporting notes
+      description: Add links, notes, or references that help review this item.
+      placeholder: |
+        - Note 1
+        - Note 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - low
+        - medium
+        - high
+        - blocked
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_next_step
+    attributes:
+      label: Proposed next step
+      description: What should happen next?
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation_plan
+    attributes:
+      label: Validation plan
+      description: How should the result be checked?
+      placeholder: |
+        - Check 1
+        - Check 2
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      placeholder: lippytm
+    validations:
+      required: true

@@ -1,0 +1,183 @@
+# Repo Language Rollout Status
+
+This file tracks the step-by-step rollout of the Computer Languages Library and Blockchain Languages Library across the repository fleet.
+
+## Rollout Law
+
+```text
+One repo -> language library entry -> stack profile -> review -> next repo.
+```
+
+## Separation Rule
+
+`lippytm/Chatlippytm.ai.Bots` is the active target. It must remain separate from all Claw/Clawlippytm/OpenClaw/ClawBase44 repositories. Do not merge this repo's profile, evidence trail, workflow plan, CRM path, or Prompt #11 review status with any Claw repo.
+
+## Status Values
+
+- missing
+- started
+- needs-review
+- active
+- blocked
+
+## Current Rollout
+
+| Repo | Language Library | Stack Profile | CRM Link | Next Action |
+|---|---|---|---|---|
+| lippytm/Web3AI | started | needs-review | planned | Validate backend, frontend, contracts, sandboxes, and security workflows |
+| lippytm/AllBots.com | started | needs-review | planned | Inspect full file tree before assigning concrete programming stack |
+| lippytm/Chatlippytm.ai.Bots | started | needs-review | planned | Continue Chatlippytm-only validation: CLI, tests, config, workflows, and automation safety boundaries |
+| lippytm/Clawlippytm.Bots | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
+| lippytm/Clawlippytm.ai.Bots | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
+| lippytm/Base44- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Factory.ai | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/lippytm.ai | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/AllBots.com.ai | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/OpenClaw-lippytm.AI- | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
+| lippytm/ClawBase44.ai.Bots | started | started | planned | Separate repo; do not treat as Chatlippytm.ai.Bots |
+| lippytm/AI-Time-Machines | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/balletcrypto.github.io | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/gatsby-starter-blog | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Transparency-Logic-Time-Machine-Bots- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Time-Machines-Builders- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/The-Encyclopedia-of-Everything-Applied-ChatAIBots | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/Evolutionary-Evolutions-Social-Multimedia-Networks-Agency- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration- | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/zenith-tasks | started | started | planned | Inspect actual repo stack and update profiles |
+| lippytm/superagent-app | started | started | planned | Inspect actual repo stack and update profiles |
+
+## Completed Starter Files
+
+### Web3AI
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- stack profile enriched from README evidence
+
+### AllBots.com
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- stack profile enriched from README evidence
+
+### Chatlippytm.ai.Bots
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- stack profile enriched from README and requirements evidence
+- active Chatlippytm-only validation target
+- must remain separate from Clawlippytm.Bots, Clawlippytm.ai.Bots, OpenClaw-lippytm.AI-, and ClawBase44.ai.Bots
+
+### Clawlippytm.Bots
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots
+
+### Clawlippytm.ai.Bots
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots and not Clawlippytm.Bots
+
+### Base44-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### Factory.ai
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### lippytm.ai
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### AllBots.com.ai
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### OpenClaw-lippytm.AI-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots
+
+### ClawBase44.ai.Bots
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+- separate repo; not Chatlippytm.ai.Bots
+
+### AI-Time-Machines
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### balletcrypto.github.io
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### gatsby-starter-blog
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### Transparency-Logic-Time-Machine-Bots-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### Time-Machines-Builders-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### AI-Full-Stack-AI-DevOps-Synthetic-Intelligence-Engines-AgentsBots-Web3-Websites-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### The-Encyclopedia-of-Everything-Applied-ChatAIBots
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### Evolutionary-Evolutions-Social-Multimedia-Networks-Agency-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### AI-Intergalactic-Zoological-Social-Multimedia-Agency-Networks-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### AI-Autonomous-Systems-for-all-of-my-lippytm.ai-Repositories-Research-and-Development-integration-
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### zenith-tasks
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+### superagent-app
+
+- `PROMPT_11_LANGUAGE_LIBRARY.md`
+- `PROMPT_11_STACK_PROFILE.md`
+
+## Next Target
+
+`lippytm/Chatlippytm.ai.Bots` validation and improvement only.
+
+## Principle
+
+Add the language and blockchain library one repo at a time, then inspect and improve each repo profile from evidence.

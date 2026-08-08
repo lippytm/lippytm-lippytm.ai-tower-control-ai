@@ -1,0 +1,84 @@
+# Prompt #11 Engine Profile Template
+# Attach this profile to AI systems, applications, agents, bots, swarms, workflows, repos, and runtimes.
+
+prompt_11_engine_profile:
+  attached: true
+  profile_version: 2.0
+  system_name: example-system
+  system_type: app|agent|bot|swarm|workflow|repo|assistant|runtime|dashboard
+  owner: lippytm
+  control_tower: lippytm/lippytm-lippytm.ai-tower-control-ai
+  target_repo: lippytm/example-repo
+  lane: control-tower|bots|web3|publishing|creative|infrastructure|qa|revenue|life-systems|education
+  status: planned|active|paused|blocked|archived
+  risk_level: low|medium|high|blocked
+  revenue_relevance: none|indirect|direct|urgent
+
+  active_engines:
+    intake_engine: true
+    classification_engine: true
+    planning_engine: true
+    code_generation_engine: false
+    swarm_coordination_engine: false
+    qa_engine: true
+    riskgate_engine: true
+    documentation_engine: true
+    improvement_engine: true
+    maintenance_engine: true
+    awareness_engine: true
+    revenue_priority_engine: false
+    repo_communication_engine: true
+    slack_command_engine: false
+    github_memory_engine: true
+    claude_code_engine: false
+    chatgpt_architecture_engine: true
+
+  allowed_work:
+    - planning
+    - documentation
+    - issue_drafting
+    - qa_checklists
+    - maintenance_review
+    - small_scoped_prs
+
+  restricted_work:
+    - production_deployment_without_review
+    - secrets_handling_without_review
+    - permissions_changes_without_review
+    - billing_or_payment_changes_without_review
+    - customer_data_changes_without_review
+    - irreversible_changes_without_review
+
+  human_approval_required_for:
+    - high_risk_changes
+    - deployment_changes
+    - permissions_changes
+    - secrets_handling
+    - billing_or_payment_changes
+    - customer_data_changes
+    - broad_multi_repo_changes
+
+  quality_requirements:
+    acceptance_criteria_required: true
+    qa_plan_required: true
+    risk_level_required: true
+    rollback_plan_required_for_medium_or_high_risk: true
+    docs_update_required_when_behavior_changes: true
+
+  awareness:
+    known_facts: []
+    assumptions: []
+    missing_information: []
+    blockers: []
+    owner_decisions_needed: []
+    confidence: low|medium|high
+
+  links:
+    github_issue: null
+    github_pr: null
+    slack_thread: null
+    claude_session: null
+    chatgpt_notes: null
+    dashboard: null
+
+  next_action: Define the next useful action.

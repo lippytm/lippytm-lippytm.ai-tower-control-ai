@@ -1,0 +1,38 @@
+name: Prompt 11 Node Quality Gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  node-quality-gate:
+    name: Node Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required Prompt 11 node files
+        run: |
+          set -e
+          test -f PROJECT.md
+          test -f QUALITY.md
+          test -f RISK_GATE.md
+          test -f AGENT_MODE.md
+          test -f PROMPT_11_NODE.md
+
+      - name: Check quality language
+        run: |
+          set -e
+          grep -q "Quality" QUALITY.md
+          grep -q "RiskGate" RISK_GATE.md
+          grep -q "AI proposes" AGENT_MODE.md
+          grep -q "node_status" PROMPT_11_NODE.md
+
+      - name: Quality summary
+        run: |
+          echo "Prompt #11 node quality gate completed."
+          echo "Manual review is still required before merge."

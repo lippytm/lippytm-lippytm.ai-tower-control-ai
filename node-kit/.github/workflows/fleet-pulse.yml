@@ -1,0 +1,30 @@
+name: Prompt 11 Node Fleet Pulse
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 15 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  fleet-pulse:
+    name: Node Fleet Pulse
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inspect node files
+        run: |
+          echo "Prompt #11 Node Fleet Pulse"
+          test -f PROJECT.md && echo "PROJECT.md: present" || echo "PROJECT.md: missing"
+          test -f QUALITY.md && echo "QUALITY.md: present" || echo "QUALITY.md: missing"
+          test -f RISK_GATE.md && echo "RISK_GATE.md: present" || echo "RISK_GATE.md: missing"
+          test -f AGENT_MODE.md && echo "AGENT_MODE.md: present" || echo "AGENT_MODE.md: missing"
+          test -f PROMPT_11_NODE.md && echo "PROMPT_11_NODE.md: present" || echo "PROMPT_11_NODE.md: missing"
+
+      - name: Next action reminder
+        run: |
+          echo "Review node status, update project docs, and report changes to the Control Tower."

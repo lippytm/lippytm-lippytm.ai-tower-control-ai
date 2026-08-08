@@ -1,0 +1,70 @@
+# Prompt #11 standard task object model
+# Use this shape for Slack intake, ChatGPT planning, Claude Code requests, GitHub issues, healing tasks, awareness reports, and fleet dashboards.
+
+task:
+  id: BOS-0001
+  source: slack|chatgpt|github|claude|manual|workflow|dashboard
+  target_repo: lippytm/example-repo
+  lane: control-tower|bots|web3|publishing|creative|infrastructure|qa|revenue|life-systems|education
+  work_type: feature|bug|docs|qa|deployment|research|refactor|automation|content|business-system|improvement|healing|awareness
+  risk_level: low|medium|high|blocked
+  revenue_relevance: none|indirect|direct|urgent
+  execution_tool: human|chatgpt|claude|github-actions|slack-bot|manual
+  owner: lippytm
+  requested_by: lippytm
+  status: intake|planned|in_progress|pr_open|qa|riskgate|approved|merged|blocked|archived
+  summary: Short task title
+  context: Why this task matters
+  known_facts:
+    - Observed fact 1
+  assumptions:
+    - Assumption 1
+  missing_information:
+    - Missing item 1
+  acceptance_criteria:
+    - Clear result 1
+    - Clear result 2
+  qa_plan:
+    - Validation step 1
+    - Validation step 2
+  riskgate:
+    required: true
+    reason: Explain approval requirement
+    approved_by: null
+    approved_at: null
+  self_improvement:
+    improvement_candidate: true
+    observed_problem: null
+    expected_benefit: null
+    priority_score:
+      revenue_impact: 0
+      risk_reduction: 0
+      time_saved: 0
+      reuse_value: 0
+      clarity_gain: 0
+      implementation_ease: 0
+  self_healing:
+    healing_candidate: false
+    failure_type: ci_failure|missing_file|stale_task|missing_qa|missing_riskgate|repo_drift|docs_gap|merge_conflict|unknown|null
+    severity: low|medium|high|blocked|null
+    containment_step: null
+    proposed_fix: null
+    rollback_plan: null
+    recurrence_prevention: null
+  awareness:
+    confidence: low|medium|high
+    current_state: null
+    blockers:
+      - null
+    owner_decisions_needed:
+      - null
+    smallest_safe_next_step: null
+  links:
+    issue: null
+    pull_request: null
+    slack_thread: null
+    claude_session: null
+    chatgpt_notes: null
+    workflow_run: null
+    dashboard: null
+  next_action: Define the next concrete step
