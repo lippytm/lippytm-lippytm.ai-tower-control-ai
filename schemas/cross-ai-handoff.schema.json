@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "lippytm Cross-AI Handoff",
+  "type": "object",
+  "required": ["projectId", "sourceProvider", "taskId", "createdAt", "content", "provenance", "requestedAction"],
+  "properties": {
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceProvider": { "enum": ["gemini", "claude", "openai", "notebooklm", "hermes", "other"] },
+    "taskId": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "content": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "required": ["authorType"],
+      "properties": {
+        "authorType": { "enum": ["human", "ai", "mixed"] },
+        "model": { "type": ["string", "null"] },
+        "sources": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "claims": { "type": "array", "items": { "type": "object" } },
+    "requestedAction": { "type": "string" },
+    "risk": { "enum": ["low", "medium", "high", "financial", "legal", "security"] },
+    "humanApproval": { "type": "boolean", "default": false }
+  },
+  "additionalProperties": true
+}
