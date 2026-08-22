@@ -1,0 +1,206 @@
+schema_version: "0.3"
+module: P-011-EEBDS-001
+status: architecture_only
+canonical_repository: lippytm/Prompt-11-
+
+claims:
+  routes_implemented: false
+  production_database_deployed: false
+  autonomous_release: false
+  autonomous_minting: false
+  autonomous_human_approval: false
+
+namespaces:
+  - characters
+  - ecosystems
+  - ceius
+  - learning_objects
+  - build_projects
+  - business_experiments
+  - model_line_editions
+  - media_products
+  - nft_provenance
+  - campaigns
+  - franchise_nodes
+  - quality
+  - incidents
+  - corrections
+  - retirements
+  - archives
+
+model_lines:
+  independent:
+    - chatgpt_business
+    - gemini_notebooklm
+    - claude_fabric_hermes
+  locked_until_independent_approval:
+    - comparison
+    - merged_premium
+
+state_machines:
+  ceiu:
+    - idea
+    - structured_draft
+    - evidence_mapped
+    - testable_pilot
+    - certified_product
+    - production_proven
+    - franchise_replicable
+    - continuum_stewarded
+    - quarantined
+    - suspended
+    - superseded
+    - retired
+  inventory:
+    - not_inventory
+    - conditional_pilot
+    - approved_inventory
+    - paused
+    - withdrawn
+    - superseded
+    - retired
+  campaign:
+    - draft
+    - review
+    - approved
+    - scheduled
+    - active
+    - paused
+    - corrected
+    - withdrawn
+    - archived
+  approval:
+    - not_requested
+    - pending
+    - approved
+    - rejected
+    - expired
+    - revoked
+
+inventory_policy:
+  minimum_certification: Q4
+  all_critical_gates_pass_required: true
+  red_risk_gate_prohibited: true
+  human_approval_required: true
+
+work_packet:
+  required_fields:
+    - packet_id
+    - source_object_id
+    - source_version
+    - task_type
+    - assignee
+    - model_line
+    - privacy_class
+    - permitted_inputs
+    - permitted_outputs
+    - destination
+    - prohibited_actions
+    - required_evidence
+    - expiration
+    - approval_dependency
+    - audit_event
+  default_dispatch: single_destination
+  least_privilege: true
+  public_broadcast_default: false
+
+privacy_routing:
+  public:
+    public_destinations_allowed: true
+  internal:
+    public_destinations_allowed: false
+  confidential:
+    public_destinations_allowed: false
+  restricted:
+    public_destinations_allowed: false
+    blockchain_allowed: false
+    nft_metadata_allowed: false
+    public_ai_prompt_allowed: false
+
+proposed_routes:
+  - POST /api/eebds/characters
+  - GET /api/eebds/characters/:id
+  - POST /api/eebds/ecosystems
+  - POST /api/eebds/ceius
+  - GET /api/eebds/ceius/:id
+  - POST /api/eebds/ceius/:id/work-packets
+  - POST /api/eebds/ceius/:id/model-lines/:line/editions
+  - POST /api/eebds/products
+  - POST /api/eebds/products/:id/gates/evaluate
+  - POST /api/eebds/products/:id/approval-request
+  - POST /api/eebds/campaigns
+  - POST /api/eebds/corrections
+  - POST /api/eebds/retirements
+  - GET /api/eebds/audit-events
+
+connector_isolation:
+  dimensions:
+    - provider
+    - account_workspace
+    - environment
+    - privacy_class
+    - model_line
+    - purpose
+    - permission_scope
+    - rate_limit
+    - spend_limit
+    - allowed_destinations
+    - expiration
+    - revocation
+  unrestricted_all_system_access_prohibited: true
+
+release_checklist:
+  - valid_entry_passport
+  - correct_product_and_version
+  - independent_model_line_requirements_complete
+  - critical_gates_pass
+  - rights_and_license_valid
+  - privacy_and_security_valid
+  - accessibility_and_environmental_review_complete
+  - business_and_affiliate_disclosures_complete
+  - nft_metadata_review_complete_when_applicable
+  - correction_and_withdrawal_procedure_present
+  - human_approval_valid_and_in_scope
+
+human_approval:
+  mandatory: true
+  ai_may_set_approved: false
+  required_for:
+    - publication
+    - commercial_launch
+    - minting
+    - identity_cloning
+    - voice_or_likeness_use
+    - legal_or_medical_claim
+    - financial_action
+    - franchise_certification
+
+pilot:
+  id: TOWER-CEIU-LK9-001
+  source_ceiu: CEIU-LK9-QUANTUM-INNOVATION-001
+  status: architecture_only
+  records:
+    characters: 1
+    ecosystems: 3
+    ceius: 1
+    learning_objects: 4
+    build_projects: 1
+    business_experiments: 1
+    independent_model_line_placeholders: 3
+    media_products_planned: 7
+    campaign_architectures: 1
+    quality_evidence_packets: 1
+    correction_examples: 1
+    retirement_examples: 1
+
+stop_work:
+  - identity_or_fiction_boundary_violation
+  - restricted_data_to_public_destination
+  - material_source_or_rights_evidence_missing
+  - copied_model_line_represented_as_independent
+  - unsupported_product_or_outcome_claim
+  - unsafe_intrusion_sabotage_evasion_coercion_weaponization_or_medical_action
+  - unresolved_critical_accessibility_privacy_security_safety_or_rights_defect
+  - unpropagated_material_correction
+  - missing_expired_or_revoked_human_approval
+  - red_risk_gate
