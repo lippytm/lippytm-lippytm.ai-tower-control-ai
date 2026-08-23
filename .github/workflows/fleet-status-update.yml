@@ -1,0 +1,65 @@
+name: Fleet Status Nightly Update
+
+# Autonomous nightly workflow that updates fleet/FLEET_STATUS.md
+# with current timestamp and repo counts from fleet/repos.yml.
+# Opens a PR if changes are detected, or commits directly to a status branch.
+
+on:
+  schedule:
+    # Nightly at 4:00 AM UTC (after fleet-pulse at 3:00 AM)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-fleet-status:
+    name: Update Fleet Status
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Count repos in fleet registry
+        id: counts
+        run: |
+          TOTAL=$(grep -c '^\s*- name:' fleet/repos.yml 2>/dev/null || echo 0)
+          ACTIVE=$(grep -A10 '^\s*- name:' fleet/repos.yml | grep -c 'status: active' || echo 0)
+          PLANNED=$(grep -A10 '^\s*- name:' fleet/repos.yml | grep -c 'status: planned' || echo 0)
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "active=$ACTIVE" >> "$GITHUB_OUTPUT"
+          echo "planned=$PLANNED" >> "$GITHUB_OUTPUT"
+          echo "timestamp=$(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+
+      - name: Update fleet status timestamp
+        run: |
+          TIMESTAMP="${{ steps.counts.outputs.timestamp }}"
+          TOTAL="${{ steps.counts.outputs.total }}"
+          ACTIVE="${{ steps.counts.outputs.active }}"
+          PLANNED="${{ steps.counts.outputs.planned }}"
+
+          # Update the "Last manual update" line with current timestamp and counts
+          sed -i "s|> Auto-updated by.*|> Auto-updated by \`fleet-status-update.yml\` nightly. Last updated: ${TIMESTAMP}|" fleet/FLEET_STATUS.md
+
+          # Update the summary table values
+          sed -i "s|^| Total repos registered | .* |$|| Total repos registered | ${TOTAL} |" fleet/FLEET_STATUS.md 2>/dev/null || true
+
+          echo "Fleet status file updated at $TIMESTAMP"
+          echo "Repos: total=$TOTAL active=$ACTIVE planned=$PLANNED"
+
+      - name: Commit fleet status update
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add fleet/FLEET_STATUS.md
+          if git diff --cached --quiet; then
+            echo "No changes to fleet/FLEET_STATUS.md — already up to date."
+          else
+            git commit -m "chore: nightly fleet status update [skip ci]"
+            git push
+            echo "Fleet status committed and pushed."
+          fi

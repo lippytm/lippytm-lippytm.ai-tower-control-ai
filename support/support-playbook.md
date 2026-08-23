@@ -152,3 +152,55 @@ Every repeated support issue should become:
 - workflow improvement
 - product/package improvement
 - dashboard note
+
+---
+
+## Hermes Agent – Skill failures and gateway reconnect
+
+### Symptom: Hermes skill returns error or times out
+
+**Checklist:**
+- [ ] Is the Hermes gateway process running? (`hermes gateway` or Docker container status)
+- [ ] Is `HERMES_API_URL` set correctly and reachable from the Tower?
+- [ ] Is `HERMES_API_KEY` valid? (Test: `GET /api/connectors/hermes/skills`)
+- [ ] Has the Hermes process run out of memory or crashed? Check process logs.
+- [ ] Is the skill name spelled correctly? (List available skills at `GET /api/connectors/hermes/skills`)
+- [ ] Is the Hermes model provider configured and reachable? (`hermes model`)
+- [ ] Did the model API key expire or hit rate limits?
+
+**Reconnect steps:**
+1. Restart the Hermes gateway: `hermes gateway` (or restart the Docker container)
+2. Verify it's live: `curl $HERMES_API_URL/api/skills -H "Authorization: Bearer ${HERMES_API_KEY}"`
+3. Retry the failing Tower request
+4. If still failing, fall back to direct OpenAI via `POST /api/connectors/openai/chat`
+
+### Symptom: Nightly scheduled workflow fails
+
+**Checklist:**
+- [ ] Check GitHub Actions run logs for the `hermes-scheduled.yml` workflow
+- [ ] Verify `TOWER_API_URL`, `TOWER_CLIENT_ID`, `TOWER_CLIENT_SECRET` are set as repo secrets
+- [ ] Verify the Tower is deployed and accessible from GitHub Actions runners
+- [ ] Verify the auth token step succeeded (check the `auth` step output)
+- [ ] Check if the Hermes gateway is up at the scheduled time
+
+**Reconnect steps:**
+1. Fix the failing secret or deployment
+2. Re-run the workflow manually: Actions → Hermes Scheduled Automations → Run workflow
+
+### Symptom: Memory search returns no results
+
+**Checklist:**
+- [ ] Has Hermes run at least one full session? Memory is built from past sessions.
+- [ ] Is the FTS5 index populated? (`hermes doctor` may show index status)
+- [ ] Is the query broad enough? Try a single-word query first.
+
+### Escalation
+
+Escalate when:
+- Customer data may be present in Hermes memory
+- The gateway has been running with an exposed `HERMES_API_KEY`
+- Hermes skill output is being published without human review
+
+**Fallback:** All Hermes functions can be replaced manually via `POST /api/connectors/openai/chat` or Twin agent workflows.
+
+**Reference:** `integrations/hermes-agent.md`

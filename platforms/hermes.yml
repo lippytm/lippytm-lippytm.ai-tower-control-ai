@@ -1,0 +1,103 @@
+# Hermes Agent Platform – lippytm.ai Control Tower
+# Reference: https://github.com/NousResearch/hermes-agent
+
+platform:
+  id: hermes_agent
+  name: Hermes Agent
+  vendor: NousResearch
+  license: MIT
+  homepage: https://hermes-agent.nousresearch.com/
+  docs: https://hermes-agent.nousresearch.com/docs/
+  source: https://github.com/NousResearch/hermes-agent
+  type: agent-runtime
+  status: active
+
+interfaces:
+  - cli
+  - telegram
+  - discord
+  - slack
+  - whatsapp
+  - signal
+  - gateway
+
+capabilities:
+  - learning-loop          # creates and refines skills from experience
+  - skill-creation         # autonomous skill generation after complex tasks
+  - cron-scheduler         # built-in unattended automations
+  - subagent-delegation    # spawn isolated subagents for parallel workstreams
+  - memory-search          # FTS5 cross-session search + LLM summarization
+  - user-modeling          # Honcho dialectic user model across sessions
+  - multi-model            # model-agnostic: OpenRouter, Nous Portal, OpenAI, etc.
+  - openclawmigration      # hermes claw migrate path from OpenClaw
+
+backends:
+  - local
+  - docker
+  - ssh
+  - singularity
+  - modal
+  - daytona
+
+model_providers:
+  - Nous Portal
+  - OpenRouter
+  - OpenAI
+  - NovitaAI
+  - NVIDIA NIM
+  - Hugging Face
+  - Kimi/Moonshot
+  - MiniMax
+  - z.ai/GLM
+  - Xiaomi MiMo
+  - custom endpoint
+
+connected_systems:
+  - GitHub Control Tower
+  - Twin
+  - GitHub Copilot
+  - OpenClaw (migration source)
+
+automation_boundaries:
+  safe_to_run:
+    - scheduled summary and audit tasks
+    - skill chain execution
+    - subagent delegation
+    - memory consolidation
+    - nightly reports
+    - cross-session search
+  human_review_required:
+    - customer-facing publication
+    - funding or legal claims
+    - payment workflows
+    - API credential handling
+    - customer data access
+
+env_vars:
+  - HERMES_API_URL    # Base URL of a running Hermes gateway/API (e.g. http://localhost:8000)
+  - HERMES_API_KEY    # API key for authenticating requests to the Hermes gateway
+
+security:
+  risk_level: medium
+  notes:
+    - Hermes is MIT-licensed and model-agnostic — low vendor lock-in risk.
+    - Store HERMES_API_KEY as a repository secret; never commit values.
+    - All customer-facing outputs require human review before publication.
+
+quality_rules:
+  - Quality is Job #1
+  - Do not commit secrets
+  - Require human review for high-risk actions
+  - Build manual workflow before API automation
+  - Prefer skill-chain patterns from agentskills.io open standard
+
+fallback:
+  - Direct OpenAI/Twin calls via existing Tower connectors
+  - Manual ChatGPT workflow via Control Tower prompts
+
+next_actions:
+  - Install Hermes locally or via Docker
+  - Run hermes setup and configure model provider
+  - Connect Hermes gateway to Tower via HERMES_API_URL
+  - Test POST /api/connectors/hermes/run with a sample skill
+  - Register first Hermes cron automation for nightly summary

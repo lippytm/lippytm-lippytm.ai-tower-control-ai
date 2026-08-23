@@ -1,0 +1,113 @@
+name: Sync to AI Clone Repo
+
+# Syncs the Clone identity files from fleet/clone/ in the Control Tower
+# to the AI-Clone-of-Charles-Earl-Lipshay-lippytm-lippytm.AI-lippytmai- repo.
+#
+# Required secret in this repo's Settings → Secrets:
+#   CLONE_REPO_PAT — a GitHub Personal Access Token (classic) with 'repo' scope
+#
+# Files synced:
+#   fleet/clone/AI_CLONE_README.md        → README.md
+#   fleet/clone/AI_CLONE_MANIFEST.md      → AI_CLONE_MANIFEST.md
+#   fleet/clone/AI_CLONE_PERSONA.md       → AI_CLONE_PERSONA.md
+#   fleet/clone/AI_CLONE_COPILOT_INSTRUCTIONS.md → .github/copilot-instructions.md
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fleet/clone/**'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (skip push to Clone repo)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  sync-to-clone:
+    name: Sync Clone content
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Control Tower
+        uses: actions/checkout@v4
+        with:
+          path: control-tower
+
+      - name: Validate source files exist
+        run: |
+          echo "Validating source files..."
+          files=(
+            "control-tower/fleet/clone/AI_CLONE_README.md"
+            "control-tower/fleet/clone/AI_CLONE_MANIFEST.md"
+            "control-tower/fleet/clone/AI_CLONE_PERSONA.md"
+            "control-tower/fleet/clone/AI_CLONE_COPILOT_INSTRUCTIONS.md"
+          )
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "ERROR: Missing source file: $f"
+              exit 1
+            fi
+            echo "  ✓ $f"
+          done
+          echo "All source files validated."
+
+      - name: Checkout Clone repo
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: actions/checkout@v4
+        with:
+          repository: lippytm/AI-Clone-of-Charles-Earl-Lipshay-lippytm-lippytm.AI-lippytmai-
+          token: ${{ secrets.CLONE_REPO_PAT }}
+          path: clone-repo
+
+      - name: Prepare .github directory in Clone repo
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: mkdir -p clone-repo/.github
+
+      - name: Copy files to Clone repo
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          echo "Copying files to Clone repo..."
+          cp control-tower/fleet/clone/AI_CLONE_README.md        clone-repo/README.md
+          cp control-tower/fleet/clone/AI_CLONE_MANIFEST.md      clone-repo/AI_CLONE_MANIFEST.md
+          cp control-tower/fleet/clone/AI_CLONE_PERSONA.md       clone-repo/AI_CLONE_PERSONA.md
+          cp control-tower/fleet/clone/AI_CLONE_COPILOT_INSTRUCTIONS.md  clone-repo/.github/copilot-instructions.md
+          echo "Files copied:"
+          ls -la clone-repo/
+          ls -la clone-repo/.github/
+
+      - name: Commit and push to Clone repo
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          cd clone-repo
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md AI_CLONE_MANIFEST.md AI_CLONE_PERSONA.md .github/copilot-instructions.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit — Clone repo is already up to date."
+          else
+            git commit -m "sync: update Clone identity files from Control Tower [skip ci]"
+            git push
+            echo "Changes pushed to Clone repo successfully."
+          fi
+
+      - name: Dry run summary
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        run: |
+          echo "=== DRY RUN — No changes pushed to Clone repo ==="
+          echo ""
+          echo "Files that would be synced:"
+          echo "  fleet/clone/AI_CLONE_README.md        → README.md"
+          echo "  fleet/clone/AI_CLONE_MANIFEST.md      → AI_CLONE_MANIFEST.md"
+          echo "  fleet/clone/AI_CLONE_PERSONA.md       → AI_CLONE_PERSONA.md"
+          echo "  fleet/clone/AI_CLONE_COPILOT_INSTRUCTIONS.md → .github/copilot-instructions.md"
+          echo ""
+          echo "To run for real, re-run with dry_run=false or push a change to fleet/clone/."

@@ -16,7 +16,7 @@ const syncJobs = new Map();
 /**
  * Supported connector names (used for validation).
  */
-const CONNECTORS = ['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'swarm'];
+const CONNECTORS = ['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'hermes', 'swarm'];
 
 /**
  * Schedule a new data sync job between a source and target connector.
@@ -113,7 +113,11 @@ function _updateJob(jobId, fields) {
 }
 
 function _simulateWork(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    const t = setTimeout(resolve, ms);
+    // Unref so this timer does not prevent the process from exiting naturally
+    t.unref();
+  });
 }
 
 module.exports = { scheduleSync, getSyncJob, listSyncJobs, CONNECTORS, _resetJobsForTests: () => syncJobs.clear() };

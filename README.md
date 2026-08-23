@@ -326,3 +326,56 @@ Configure the following repository secrets for the webhook workflow:
 4. Add route handlers in `src/routes/connectors.js`.
 5. Run `npm test` to validate everything still works.
 
+
+---
+
+## Command Center — Business of Businesses Network
+
+This repository is the **Control Tower** for the lippytm.ai Business of Businesses (BoB) operating network.
+
+### Operating Loop
+
+```
+Idea → GitHub issue → Zapier workflow → Dubb video follow-up → Revenue path → Safety gate → Next build step
+```
+
+| Stage | Tool | Description |
+|---|---|---|
+| **Idea** | GitHub issue | Every idea is a tracked issue |
+| **Audience** | ManyChat / BotBuilders | Front-line community engagement |
+| **Automation** | Zapier | Triggers follow-up, alerts, and downstream actions |
+| **Video follow-up** | Dubb.AI | Personalized video outreach to leads and collaborators |
+| **Revenue** | [lippytmai.getbizfunds.com](https://lippytmai.getbizfunds.com) | Lead capture, funding referrals, affiliates, SaaS |
+| **Safety gate** | [RISK_GATE.md](RISK_GATE.md) | Human approval for high/critical actions |
+
+### Fleet Overview
+
+| Fleet file | Description |
+|---|---|
+| [`fleet/repos.yml`](fleet/repos.yml) | Registry of all 30+ fleet repositories |
+| [`fleet/FLEET_STATUS.md`](fleet/FLEET_STATUS.md) | Live health dashboard (auto-updated nightly) |
+| [`fleet/REPO_MATRIX.md`](fleet/REPO_MATRIX.md) | Quick-reference matrix: lane, risk, Slack, automation |
+| [`fleet/RISKGATE_DASHBOARD.md`](fleet/RISKGATE_DASHBOARD.md) | Open risk items and approval status |
+| [`fleet/CLAUDE_TASKS.md`](fleet/CLAUDE_TASKS.md) | Active Claude Code / Copilot task queue |
+| [`fleet/SLACK_COMMANDS.md`](fleet/SLACK_COMMANDS.md) | `/bos` Slack command reference |
+
+### Automated Workflows
+
+| Workflow | Trigger | Description |
+|---|---|---|
+| [`fleet-pulse.yml`](.github/workflows/fleet-pulse.yml) | Nightly + push to `fleet/repos.yml` | Fleet health check |
+| [`quality-gate.yml`](.github/workflows/quality-gate.yml) | Every PR to `main` | Autonomous quality + compliance gate |
+| [`claude.yml`](.github/workflows/claude.yml) | Issues labeled `agent-task` | Claude Code loop — propose → approve → merge |
+| [`fleet-status-update.yml`](.github/workflows/fleet-status-update.yml) | Nightly | Autonomous fleet status commit |
+| [`hermes-scheduled.yml`](.github/workflows/hermes-scheduled.yml) | Nightly | Hermes AI summaries and repo audits |
+| [`sync-to-clone.yml`](.github/workflows/sync-to-clone.yml) | Push to `fleet/clone/` | Sync AI Clone identity to Clone repo |
+
+### Zo Space Proof Asset
+
+🔗 [Systems of Systems Brainstorming — Zo Space](https://lippytmai.zo.space/systems-of-systems-brainstorming)
+
+### Compliance Notice
+
+> Nothing in this repository constitutes a guarantee of funding approval, income, legal, tax, investment, or business outcomes. All tools and templates are for educational and automation assistance only.
+
+See [`BUSINESS_OF_BUSINESSES_SYSTEMS.md`](BUSINESS_OF_BUSINESSES_SYSTEMS.md) for the full BoB Systems guide.

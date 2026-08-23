@@ -55,6 +55,28 @@ integrations:
     risk_level: medium
     human_review_required: true
 
+  - id: control_tower_to_hermes
+    name: Control Tower to Hermes Agent
+    status: active
+    purpose: >
+      Route scheduled automations, skill executions, subagent workstreams, and memory
+      consolidation tasks through the Hermes Agent runtime. Hermes acts as the autonomous
+      execution and learning layer for Tower workflows.
+    source: GitHub Control Tower
+    destination: Hermes Agent
+    risk_level: medium
+    human_review_required: true
+    env_vars:
+      - HERMES_API_URL
+      - HERMES_API_KEY
+    endpoints:
+      - POST /api/connectors/hermes/run
+      - GET /api/connectors/hermes/skills
+      - POST /api/connectors/hermes/schedule
+      - GET /api/connectors/hermes/memory/search
+    fallback: Direct OpenAI/Twin calls via existing Tower connectors
+    reference: integrations/hermes-agent.md
+
 rules:
   - do_not_store_secret_values
   - document_required_secret_names_only

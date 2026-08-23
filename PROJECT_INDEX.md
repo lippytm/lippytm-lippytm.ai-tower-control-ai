@@ -40,3 +40,7 @@ This document tracks the current GitHub ecosystem structure for **lippytm.ai** a
 - Keep public narrative in `lippytm.ai`.
 - Keep internal automation and agent documentation in MyClaw-related repos.
 - Keep educational tracks modular so programming, blockchain, AI automation, and business systems can evolve independently.
+
+## Active Platform Integrations
+
+- **Hermes Agent** — self-improving agent runtime with learning loop, cron scheduler, multi-platform gateway, and subagent delegation. See `integrations/hermes-agent.md` and `platforms/hermes.yml`.

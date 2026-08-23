@@ -8,6 +8,7 @@ const allbots = require('../connectors/allbots');
 const factoryAi = require('../connectors/factory-ai');
 const replit = require('../connectors/replit');
 const githubCopilot = require('../connectors/github-copilot');
+const hermes = require('../connectors/hermes');
 
 // All connector routes require a valid JWT
 router.use(requireAuth);
@@ -222,6 +223,92 @@ router.get('/github-copilot/commit/:branch', async (req, res, next) => {
   }
 });
 
+
+// ── Hermes Agent ──────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/connectors/hermes/run
+ * Body: { skill: string, input?: string, options?: object }
+ */
+router.post('/hermes/run', async (req, res, next) => {
+  try {
+    const { skill, input, options } = req.body || {};
+    if (!skill) return res.status(400).json({ error: 'skill is required' });
+    const result = await hermes.runSkill(skill, input !== undefined ? sanitizeInput(input) : undefined, options);
+    return res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /api/connectors/hermes/skills
+ */
+router.get('/hermes/skills', async (_req, res, next) => {
+  try {
+    const skills = await hermes.listSkills();
+    return res.json({ skills });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/hermes/schedule
+ * Body: { name: string, cron: string, skill: string, input?: string, delivery?: string }
+ */
+router.post('/hermes/schedule', async (req, res, next) => {
+  try {
+    const { name, cron, skill } = req.body || {};
+    if (!name || !cron || !skill) {
+      return res.status(400).json({ error: 'name, cron, and skill are required' });
+    }
+    const automation = await hermes.scheduleAutomation(req.body);
+    return res.status(201).json(automation);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /api/connectors/hermes/memory/search
+ * Query params: q (required), limit (optional)
+ */
+router.get('/hermes/memory/search', async (req, res, next) => {
+  try {
+    const { q, ...rest } = req.query || {};
+    if (!q) return res.status(400).json({ error: 'q (query) is required' });
+    const results = await hermes.searchMemory(sanitizeInput(q), rest);
+    return res.json({ results });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/connectors/hermes/fleet/run
+ * Run a Hermes skill across a list of fleet repositories in parallel.
+ * Body: { skill: string, repos: string[], input?: string, options?: object }
+ */
+router.post('/hermes/fleet/run', async (req, res, next) => {
+  try {
+    const { skill, repos, input, options } = req.body || {};
+    if (!skill) return res.status(400).json({ error: 'skill is required' });
+    if (!Array.isArray(repos) || repos.length === 0) {
+      return res.status(400).json({ error: 'repos must be a non-empty array' });
+    }
+    const results = await hermes.runFleetSkill(
+      skill,
+      repos,
+      input !== undefined ? sanitizeInput(input) : undefined,
+      options
+    );
+    return res.json({ skill, results });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ── ChatGPT Broadcast ─────────────────────────────────────────────────────────
 
 /**
@@ -236,7 +323,8 @@ router.get('/github-copilot/commit/:branch', async (req, res, next) => {
  *     allbots?:      { botId: string },
  *     "factory-ai"?: { pipelineId: string },
  *     replit?:       { replId: string },
- *     "github-copilot"?: { workflowId: string, ref: string, inputs?: object }
+ *     "github-copilot"?: { workflowId: string, ref: string, inputs?: object },
+ *     hermes?:           { skill: string, options?: object }
  *   }
  * }
  *
@@ -247,7 +335,8 @@ router.get('/github-copilot/commit/:branch', async (req, res, next) => {
  *     allbots:        { status: "sent"|"skipped"|"error", result?, error? },
  *     "factory-ai":   { status: "sent"|"skipped"|"error", result?, error? },
  *     replit:         { status: "sent"|"skipped"|"error", result?, error? },
- *     "github-copilot": { status: "sent"|"skipped"|"error", result?, error? }
+ *     "github-copilot": { status: "sent"|"skipped"|"error", result?, error? },
+ *     hermes:           { status: "sent"|"skipped"|"error", result?, error? }
  *   }
  * }
  */
@@ -321,6 +410,19 @@ router.post('/chatgpt/broadcast', async (req, res, next) => {
       }
     } else {
       broadcastResults['github-copilot'] = { status: 'skipped' };
+    }
+
+    // Hermes Agent
+    const hermesTarget = targets.hermes;
+    if (hermesTarget && hermesTarget.skill) {
+      try {
+        const result = await hermes.runSkill(hermesTarget.skill, chatgptContent, hermesTarget.options);
+        broadcastResults.hermes = { status: 'sent', result };
+      } catch (err) {
+        broadcastResults.hermes = { status: 'error', error: err.message };
+      }
+    } else {
+      broadcastResults.hermes = { status: 'skipped' };
     }
 
     return res.json({ chatgpt: chatgptResult, broadcast: broadcastResults });

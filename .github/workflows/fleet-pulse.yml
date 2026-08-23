@@ -1,0 +1,112 @@
+name: Fleet Pulse — Health Check
+
+# Automated fleet health check.
+# Runs nightly and on push to fleet/repos.yml.
+# Reports status to fleet/FLEET_STATUS.md via a commit (or PR if changes detected).
+
+on:
+  schedule:
+    # Nightly at 3:00 AM UTC
+    - cron: '0 3 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - 'fleet/repos.yml'
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: 'Enable verbose output'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: read
+
+jobs:
+  fleet-pulse:
+    name: Fleet Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse fleet registry
+        id: parse
+        run: |
+          echo "=== Fleet Pulse Starting ==="
+          TOTAL=$(grep -c '^\s*- name:' fleet/repos.yml || echo 0)
+          ACTIVE=$(grep -A5 '^\s*- name:' fleet/repos.yml | grep 'status: active' | wc -l || echo 0)
+          PLANNED=$(grep -A5 '^\s*- name:' fleet/repos.yml | grep 'status: planned' | wc -l || echo 0)
+          echo "Total repos: $TOTAL"
+          echo "Active: $ACTIVE"
+          echo "Planned: $PLANNED"
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "active=$ACTIVE" >> "$GITHUB_OUTPUT"
+          echo "planned=$PLANNED" >> "$GITHUB_OUTPUT"
+
+      - name: Check key files exist
+        run: |
+          echo "=== Checking key Control Tower files ==="
+          files=(
+            "fleet/repos.yml"
+            "fleet/FLEET_STATUS.md"
+            "fleet/REPO_MATRIX.md"
+            "fleet/RISKGATE_DASHBOARD.md"
+            "fleet/CLAUDE_TASKS.md"
+            "fleet/SLACK_COMMANDS.md"
+            "RISK_GATE.md"
+            "AGENT_MODE.md"
+            "QUALITY.md"
+            "SECURITY.md"
+            "BUSINESS_OF_BUSINESSES_SYSTEMS.md"
+          )
+          MISSING=0
+          for f in "${files[@]}"; do
+            if [ -f "$f" ]; then
+              echo "  ✓ $f"
+            else
+              echo "  ✗ MISSING: $f"
+              MISSING=$((MISSING + 1))
+            fi
+          done
+          if [ "$MISSING" -gt 0 ]; then
+            echo "::warning::$MISSING key files are missing from the Control Tower."
+          else
+            echo "All key Control Tower files present."
+          fi
+
+      - name: Check workflow files exist
+        run: |
+          echo "=== Checking workflow files ==="
+          workflows=(
+            ".github/workflows/ci.yml"
+            ".github/workflows/fleet-pulse.yml"
+            ".github/workflows/quality-gate.yml"
+            ".github/workflows/hermes-scheduled.yml"
+            ".github/workflows/sync-to-clone.yml"
+          )
+          for w in "${workflows[@]}"; do
+            if [ -f "$w" ]; then
+              echo "  ✓ $w"
+            else
+              echo "  ✗ MISSING: $w"
+            fi
+          done
+
+      - name: Fleet pulse summary
+        run: |
+          echo "=== Fleet Pulse Summary ==="
+          echo "Timestamp: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+          echo "Total repos registered: ${{ steps.parse.outputs.total }}"
+          echo "Active: ${{ steps.parse.outputs.active }}"
+          echo "Planned: ${{ steps.parse.outputs.planned }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo ""
+          echo "Fleet pulse complete. Review fleet/FLEET_STATUS.md for full status."

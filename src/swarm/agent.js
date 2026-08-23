@@ -17,7 +17,7 @@ const AGENT_STATES = Object.freeze({
 /**
  * Supported communication channel types for AgentBots.
  */
-const CHANNEL_TYPES = Object.freeze(['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'internal']);
+const CHANNEL_TYPES = Object.freeze(['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'hermes', 'internal']);
 
 /**
  * In-memory store for all registered AgentBots.

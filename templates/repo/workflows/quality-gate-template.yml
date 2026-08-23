@@ -1,0 +1,97 @@
+name: Quality Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret scan (no hardcoded credentials)
+        run: |
+          echo "=== Secret Scan ==="
+          PATTERNS=(
+            'password\s*=\s*["\047][^"\047]{4,}'
+            'api_key\s*=\s*["\047][^"\047]{8,}'
+            'secret\s*=\s*["\047][^"\047]{8,}'
+            'token\s*=\s*["\047][^"\047]{8,}'
+            'sk-[a-zA-Z0-9]{20,}'
+            'ghp_[a-zA-Z0-9]{36}'
+          )
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            HITS=$(grep -rniE "$pattern" \
+              --include="*.js" --include="*.ts" --include="*.json" \
+              --include="*.yml" --include="*.yaml" --include="*.env" \
+              --exclude-dir=node_modules --exclude-dir=.git \
+              . 2>/dev/null || true)
+            if [ -n "$HITS" ]; then
+              echo "::error::Potential secret detected matching pattern: $pattern"
+              echo "$HITS"
+              FOUND=$((FOUND + 1))
+            fi
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            echo "✓ No hardcoded secrets detected."
+          else
+            echo "::error::$FOUND potential secret pattern(s) found. Remove before merging."
+            exit 1
+          fi
+
+      - name: Compliance language check
+        run: |
+          echo "=== Compliance Check ==="
+          PATTERNS=(
+            'guaranteed.*income'
+            'guaranteed.*funding'
+            'guaranteed.*approval'
+            'guaranteed.*profit'
+            'guaranteed.*return'
+            'guaranteed.*result'
+          )
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            HITS=$(grep -rniE "$pattern" --include="*.md" . 2>/dev/null | \
+              grep -v 'no guaranteed\|without.*guaranteed\|not.*guaranteed\|never.*guaranteed' || true)
+            if [ -n "$HITS" ]; then
+              echo "::warning::Compliance flag — review language matching: $pattern"
+              echo "$HITS"
+              FOUND=$((FOUND + 1))
+            fi
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            echo "✓ No unqualified guarantee language detected."
+          else
+            echo "::warning::$FOUND compliance pattern(s) flagged. Ensure disclaimer is present."
+          fi
+
+      - name: Check QUALITY.md exists
+        run: |
+          if [ -f "QUALITY.md" ]; then
+            echo "✓ QUALITY.md present."
+          else
+            echo "::warning::QUALITY.md is missing from this repository."
+          fi
+
+      - name: Quality gate summary
+        run: |
+          echo "=== Quality Gate Summary ==="
+          echo "PR: #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }}"
+          echo "Quality gate passed."

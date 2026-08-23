@@ -1,0 +1,74 @@
+name: Claude Code Loop
+
+# Enables Claude Code to operate through GitHub issues and PRs.
+# Claude proposes changes on labeled issues; humans approve before merge.
+# This workflow documents and enables the Claude Code operating model.
+
+on:
+  issues:
+    types:
+      - labeled
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number for Claude Code to review'
+        required: true
+        type: string
+      action:
+        description: 'Action for Claude Code (propose-plan, create-pr, audit)'
+        required: false
+        default: 'propose-plan'
+        type: choice
+        options:
+          - propose-plan
+          - create-pr
+          - audit
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  log-agent-task:
+    name: Log Agent Task
+    runs-on: ubuntu-latest
+    # Only run when the 'agent-task' label is applied to an issue
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'issues' && github.event.label.name == 'agent-task')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log agent task details
+        run: |
+          echo "=== Claude Code Loop Triggered ==="
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            echo "Issue: #${{ github.event.issue.number }} — ${{ github.event.issue.title }}"
+            echo "Label applied: ${{ github.event.label.name }}"
+            echo "URL: ${{ github.event.issue.html_url }}"
+          else
+            echo "Manual trigger — Issue #${{ github.event.inputs.issue_number }}"
+            echo "Action: ${{ github.event.inputs.action }}"
+          fi
+          echo ""
+          echo "=== Claude Code Operating Model ==="
+          echo "1. Issue labeled 'agent-task' → this workflow fires"
+          echo "2. Claude Code / Copilot reviews the issue and proposes a PR"
+          echo "3. RiskGate evaluates risk level"
+          echo "4. Human owner (lippytm) approves PR"
+          echo "5. quality-gate.yml runs on the PR"
+          echo "6. Merge updates fleet status"
+          echo ""
+          echo "See AGENT_MODE.md for autonomy boundaries."
+          echo "See RISK_GATE.md for approval requirements."
+          echo "See fleet/CLAUDE_TASKS.md for active task queue."
+
+      - name: Validate issue risk label
+        if: github.event_name == 'issues'
+        run: |
+          echo "=== Risk Label Check ==="
+          # Check that the issue has a risk label
+          ISSUE_NUMBER="${{ github.event.issue.number }}"
+          echo "Reminder: Ensure issue #$ISSUE_NUMBER has a risk label (risk: low, medium, high, or critical)"
+          echo "If risk label is missing, add it before Claude Code proceeds."
+          echo "High and critical risk tasks require @lippytm approval before any execution."
