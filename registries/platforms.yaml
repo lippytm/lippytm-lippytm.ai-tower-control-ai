@@ -38,17 +38,47 @@ platform_registry:
 
     - name: "Hermes Agent"
       type: "coordination_messenger_dispatch"
+      swarm_position: "Layer 0 Dispatcher — between Marvin Tower and specialist Marvins"
       primary_uses:
         - "task routing"
         - "agent handoffs"
         - "workflow updates"
         - "cross-platform communication"
         - "project dispatch"
+        - "risk flagging before high-risk routing"
       github_output_types:
         - "handoff logs"
         - "dispatch notes"
         - "agent routing files"
         - "task issues"
+      artifact_output_folder: "agents/hermes/logs/"
+      definition_folder: "agents/hermes/"
+      swarm_integration:
+        reports_to: "Marvin Tower"
+        dispatches_to:
+          - "Marvin Factory"
+          - "Marvin AllBots"
+          - "Marvin Web3"
+          - "Marvin DevOps"
+          - "Marvin Prime"
+          - "Marvin AdCopy"
+          - "Marvin Copyright"
+          - "Marvin Encyclopedia"
+          - "Marvin Affiliate"
+          - "Marvin Funding"
+          - "Marvin Support"
+          - "Marvin Cloner"
+      dispatch_protocol:
+        classify_task: true
+        produce_dispatch_note: true
+        flag_high_risk: true
+        log_to_github: true
+        human_review_required_for:
+          - "customer-facing publishing"
+          - "financial, legal, tax, investment, or funding claims"
+          - "production deployment"
+          - "customer or private data workflows"
+      integration_spec: "docs/ai-clone-engine/HERMES-SWARM-INTEGRATION.md"
 
     - name: "Fable 5"
       type: "story_universe_media_franchise_development"
