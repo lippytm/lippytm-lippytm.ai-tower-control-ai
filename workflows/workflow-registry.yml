@@ -1,6 +1,15 @@
 # lippytm.ai Workflow Registry
 
 workflows:
+  - id: hermes_fabric_problem_solving
+    name: Hermes + Fabric Problem Solving
+    file: workflows/hermes-fabric-problem-solving.md
+    status: active_draft
+    purpose: >
+      Use Hermes fine-tuned models and Fabric prompt patterns to decompose problems,
+      extract insights, and generate monetization strategies across any domain.
+    risk_level: medium
+
   - id: daily_money_actions
     name: Daily Money Actions
     file: workflows/daily-money-actions.md
