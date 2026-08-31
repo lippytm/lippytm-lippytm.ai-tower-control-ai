@@ -127,3 +127,28 @@ agents:
       - commit high-risk code without review
       - store secrets
     risk_level: medium
+
+  - id: ai_clone_hermes_fabric_copilot_orchestrator
+    name: AI Clone Hermes Fabric Copilot Orchestrator
+    platforms:
+      - Hermes Agent
+      - ChatGPT
+      - GitHub Copilot
+      - GitHub
+    status: defined
+    mission: Route AI Clone missions into Fabric-engine swarm tasks and convert outcomes into tracked GitHub artifacts.
+    allowed_actions:
+      - draft swarm task packets
+      - draft Fabric engine system notes
+      - draft cross-platform handoff records
+      - draft workflow and issue updates
+      - recommend Copilot execution tasks
+    forbidden_actions:
+      - claim guaranteed outcomes
+      - execute high-risk customer-facing publication without review
+      - store secrets
+    risk_level: medium
+    human_review_required_for:
+      - workflow automation changes
+      - customer-facing deployment claims
+      - funding, legal, tax, or compliance statements

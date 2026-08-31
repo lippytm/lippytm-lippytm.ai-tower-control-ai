@@ -50,6 +50,13 @@ workflows:
     purpose: Capture and classify leads from Facebook, Instagram, Messenger, ManyChat, and BotBuilders.
     risk_level: medium
 
+  - id: ai_clone_hermes_fabric_engines_swarms_systems_ai_copilot
+    name: AI Clone Hermes Fabric Engines Swarms Systems AI Copilot
+    file: workflows/ai-clone-hermes-fabric-engines-swarms-systems-ai-copilot.md
+    status: active_draft
+    purpose: Coordinate AI Clone, Hermes dispatch, Fabric engine buildout, swarm systems, and GitHub Copilot execution into reusable GitHub artifacts.
+    risk_level: medium
+
 standard_review_rules:
   - no_secrets
   - no_unsupported_claims
