@@ -117,17 +117,57 @@ Paste or import the final useful version into GitHub with a short note naming Cl
 
 ### Hermes Agent
 
-Use Hermes as the task router and messenger layer.
+Use Hermes as the task router and messenger layer for the lippytm.ai AI Clone Swarms.
 
-Hermes should route:
+Hermes is the **Layer 0 Dispatcher** — it sits between Marvin Tower (supreme coordinator)
+and all 12 specialist Marvin execution agents. Hermes does not execute tasks; it classifies,
+dispatches, confirms, and logs.
 
-- project updates
-- task assignments
-- agent handoffs
-- content production requests
-- cross-platform summaries
-- repository update requests
-- business-development next steps
+#### Input types Hermes accepts
+- Task dispatch from Marvin Tower
+- Raw task requests from human operator (Charles Earl Lipshay)
+- Cross-project update notices
+- Agent handoff requests
+- Content production requests
+- Cross-platform coordination summaries
+- Repository update requests
+- Business-development next steps
+
+#### Output types Hermes produces
+- Routing classification (task type + destination agent)
+- Dispatch note (instructions for the destination Marvin)
+- Risk flag (`[HERMES-HOLD: human-review-required]` when applicable)
+- Status return to Marvin Tower
+- GitHub dispatch log entry saved to `agents/hermes/logs/`
+
+#### Routing logic
+Hermes classifies every task into one of these categories and routes accordingly:
+
+| Classification | Destination |
+|---|---|
+| workflow-build / deployment | Marvin Factory |
+| bot / ManyChat / BotBuilders | Marvin AllBots |
+| Web3 / blockchain / crypto | Marvin Web3 |
+| DevOps / CI-CD / repo health | Marvin DevOps |
+| SciFi universe / lore / IP writing | Marvin Prime |
+| ad copy / marketing content | Marvin AdCopy |
+| IP protection / copyright | Marvin Copyright |
+| knowledge / Encyclopedia | Marvin Encyclopedia |
+| affiliate / revenue tracking | Marvin Affiliate |
+| funding / business development | Marvin Funding |
+| support / customer issues | Marvin Support |
+| GitHub / repo management | Marvin Cloner |
+| cross-swarm coordination / escalation | Marvin Tower |
+
+#### Swarm integration note
+Hermes connects the AI Clone Engine platforms (ChatGPT, Claude, Fable 5, Grok, Gemini) to
+the Marvin Swarm agents. When an AI platform produces output that requires swarm action,
+Hermes classifies and routes it rather than having each platform communicate directly with
+each Marvin. This keeps the swarm organized and auditable.
+
+Full integration spec: `docs/ai-clone-engine/HERMES-SWARM-INTEGRATION.md`
+Agent definition: `agents/hermes/`
+Dispatch log folder: `agents/hermes/logs/`
 
 ### Fable 5
 
