@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Jarvis Provider Receipt",
+  "type": "object",
+  "required": ["bundle_id","registry_version","dog_id","platform","received_payload_sha256","result_sha256","status","timestamp"],
+  "properties": {
+    "bundle_id": {"type":"string","format":"uuid"},
+    "registry_version": {"const":"0.3.0"},
+    "dog_id": {"pattern":"^DOG-00[1-4]$"},
+    "platform": {"enum":["Gemini AI","ChatGPT Business","GitHub","Claude"]},
+    "received_payload_sha256": {"pattern":"^[a-f0-9]{64}$"},
+    "result_sha256": {"pattern":"^[a-f0-9]{64}$"},
+    "status": {"enum":["acknowledged","completed","rejected"]},
+    "timestamp": {"type":"string","format":"date-time"}
+  },
+  "additionalProperties": false
+}
