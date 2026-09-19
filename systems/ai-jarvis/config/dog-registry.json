@@ -1,0 +1,21 @@
+{
+  "registry_version": "0.3.0",
+  "system_name": "AI Jarvis Assistant in Swarms Systems",
+  "assistant_name": "AI Jarvis Assistant",
+  "owner": "Charles Earl Lipshay",
+  "final_authority": "Charles Earl Lipshay",
+  "status": "provisional-user-defined-order",
+  "stations": [
+    {"dog_id":"DOG-001","platform":"Gemini AI","role":"independent-research-and-multimodal-analysis","connection_status":"unverified","authority":"advisory"},
+    {"dog_id":"DOG-002","platform":"ChatGPT Business","role":"orchestration-architecture-tutoring-synthesis","connection_status":"session-specific","authority":"advisory"},
+    {"dog_id":"DOG-003","platform":"GitHub","role":"approved-version-control-and-evidence","connection_status":"control-tower-branch","authority":"approved-record"},
+    {"dog_id":"DOG-004","platform":"Claude","role":"independent-red-team-and-implementation-critique","connection_status":"unverified","authority":"advisory"}
+  ],
+  "rules": [
+    "DOG numbers are station identifiers, not authority ranks.",
+    "Never silently renumber or reuse an identifier.",
+    "Connections require matching registry version, bundle ID, and SHA-256 receipt.",
+    "Material actions require RiskGate, QA, and Charles approval.",
+    "Secrets and sensitive personal or business data never enter public repositories."
+  ]
+}
