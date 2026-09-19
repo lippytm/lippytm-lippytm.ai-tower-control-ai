@@ -1,0 +1,14 @@
+{
+  "base": "main",
+  "branch": "agent/example-controlled-publication",
+  "title": "Example controlled publication",
+  "body": "Validated by CI and opened as a draft for human approval.",
+  "draft": true,
+  "files": [
+    {
+      "source": "publishing/example-output.md",
+      "path": "docs/published/example-output.md",
+      "message": "Publish reviewed example output"
+    }
+  ]
+}

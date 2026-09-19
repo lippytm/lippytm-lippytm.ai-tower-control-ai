@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "owner": "Charles Earl Lipshay / lippytm.AI",
+  "defaultWorkflow": "chatgpt-business-control-tower",
+  "projects": [
+    {
+      "id": "crypto-ecosystem-ai-oracle",
+      "name": "Crypto Ecosystem AI Oracle",
+      "status": "active-development",
+      "sourceProviders": ["gemini", "claude", "openai"],
+      "coordinator": "chatgpt-business",
+      "repository": null,
+      "classification": "financial-research-high-risk",
+      "allowed": ["research", "education", "source-comparison", "simulation", "risk-analysis", "documentation"],
+      "prohibitedWithoutExplicitHumanApproval": ["trading", "fund-transfer", "wallet-signing", "contract-deployment", "financial-recommendation", "customer-contact"]
+    },
+    {
+      "id": "ai-dnf",
+      "name": "AI-DNF",
+      "status": "active-development",
+      "sourceProviders": ["gemini", "claude", "openai"],
+      "coordinator": "chatgpt-business",
+      "repository": null,
+      "classification": "general-research-development",
+      "allowed": ["research", "design", "documentation", "code-review", "testing", "publishing-drafts"],
+      "prohibitedWithoutExplicitHumanApproval": ["production-deployment", "account-change", "payment", "external-message"]
+    },
+    {
+      "id": "business-of-businesses",
+      "name": "lippytm.AI Business of Businesses",
+      "status": "active",
+      "sourceProviders": ["gemini", "claude", "openai"],
+      "coordinator": "chatgpt-business",
+      "repository": "lippytm/lippytm-lippytm.ai-tower-control-ai",
+      "classification": "portfolio-control"
+    }
+  ]
+}

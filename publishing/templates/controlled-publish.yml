@@ -1,0 +1,61 @@
+name: Controlled AI Publishing
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: Repository path to a reviewed publishing manifest
+        required: true
+        default: publishing/manifest.example.json
+      run_ai_review:
+        description: Run configured AI reviewers before publishing
+        type: boolean
+        required: true
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: controlled-publish-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  validate-review-publish:
+    runs-on: ubuntu-latest
+    environment: controlled-publishing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - name: Validate manifest
+        env:
+          MANIFEST: ${{ inputs.manifest }}
+        run: node -e "const m=require('./'+process.env.MANIFEST); if(!m.branch?.startsWith('agent/')||!m.files?.length) throw Error('Invalid manifest')"
+      - name: AI review
+        if: inputs.run_ai_review
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AI_REVIEW_PROVIDERS: openai,gemini,claude
+        run: node scripts/ai-review.js "${{ inputs.manifest }}" > ai-review.json
+      - name: Upload review evidence
+        if: inputs.run_ai_review
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-evidence
+          path: ai-review.json
+          retention-days: 30
+      - name: Create branch and draft pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_MANIFEST: ${{ inputs.manifest }}
+        run: node scripts/github-publish.js

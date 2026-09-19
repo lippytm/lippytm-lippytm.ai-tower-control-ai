@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "lippytm Workflow Memory Entry",
+  "type": "object",
+  "required": ["projectId", "sourceProvider", "timestamp", "summary", "decisions", "evidence", "nextAction"],
+  "properties": {
+    "projectId": { "type": "string" },
+    "sourceProvider": { "enum": ["openai", "gemini", "claude", "notebooklm", "hermes", "human", "mixed"] },
+    "model": { "type": ["string", "null"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "summary": { "type": "string" },
+    "decisions": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "array", "items": { "type": "object" } },
+    "artifacts": { "type": "array", "items": { "type": "string" } },
+    "repositoryRefs": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" },
+    "risk": { "enum": ["low", "medium", "high", "financial", "legal", "security"] },
+    "approvalStatus": { "enum": ["not-required", "pending", "approved", "rejected"] }
+  }
+}
