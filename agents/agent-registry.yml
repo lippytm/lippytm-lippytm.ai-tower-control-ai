@@ -110,7 +110,48 @@ agents:
       - make unsupported income claims
     risk_level: low
 
-  - id: repository_growth_agent
+  - id: hermes_fabric_problem_solver
+    name: Hermes + Fabric Problem Solver Agent
+    platforms:
+      - Hermes (NousResearch)
+      - Fabric (danielmiessler/fabric)
+      - ChatGPT
+      - GitHub Copilot
+    status: defined
+    mission: >
+      Use Hermes fine-tuned models and Fabric prompt patterns to decompose complex problems,
+      extract monetization strategies, distill insights, and generate structured action plans
+      across leads, products, automation, and AI coding tasks.
+    allowed_actions:
+      - invoke Fabric patterns for analysis and extraction
+      - draft structured problem-solution maps
+      - generate monetization strategy notes
+      - distill long documents into actionable summaries
+      - draft multi-step reasoning chains for AI coding intake
+      - draft prompt pipeline templates
+    forbidden_actions:
+      - guarantee income or financial outcomes
+      - publish customer-facing content without review
+      - store secrets or API keys
+      - make unsupported legal or tax claims
+    risk_level: medium
+    human_review_required_for:
+      - customer-facing publication
+      - financial strategy outputs
+      - automation deployment decisions
+    fabric_pattern_examples:
+      - extract_wisdom
+      - create_summary
+      - analyze_claims
+      - create_formal_email
+      - create_idea_compass
+      - rate_content
+    notes: >
+      Hermes models offer strong instruction-following and reasoning. Fabric patterns provide
+      a reusable prompt library for common AI tasks. Together they increase problem-solving
+      diversity and reduce single-model dependency across the lippytm.ai fleet.
+
+
     name: Repository Growth Agent
     platforms:
       - Twin

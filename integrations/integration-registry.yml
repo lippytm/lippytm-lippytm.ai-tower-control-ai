@@ -55,6 +55,29 @@ integrations:
     risk_level: medium
     human_review_required: true
 
+  - id: hermes_fabric_to_control_tower
+    name: Hermes + Fabric to Control Tower
+    status: planned
+    purpose: >
+      Use Hermes fine-tuned models and Fabric prompt patterns as an advanced reasoning and
+      pattern-extraction layer. Outputs feed into GitHub as structured analysis docs,
+      monetization strategy notes, prompt pipeline templates, and insight summaries.
+    source: Hermes (NousResearch) + Fabric (danielmiessler/fabric)
+    destination: GitHub Control Tower
+    use_cases:
+      - problem decomposition for AI coding intake
+      - monetization strategy drafting
+      - content distillation and summarization
+      - reusable Fabric prompt pattern pipelines
+      - multi-step reasoning for lead classification or product planning
+    required_env_vars:
+      - HERMES_API_KEY_OR_ENDPOINT
+      - FABRIC_CLI_INSTALLED
+    risk_level: medium
+    human_review_required: true
+    fabric_reference: https://github.com/danielmiessler/fabric
+    hermes_reference: https://huggingface.co/NousResearch
+
 rules:
   - do_not_store_secret_values
   - document_required_secret_names_only

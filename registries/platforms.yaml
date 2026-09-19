@@ -79,4 +79,27 @@ platform_registry:
         - "dated summaries"
         - "verification checklists"
 
+    - name: "Hermes + Fabric"
+      type: "advanced_reasoning_pattern_extraction_problem_solving"
+      model_notes: "Hermes refers to NousResearch Hermes fine-tuned models (e.g., Hermes-3); Fabric is Daniel Miessler's open-source AI augmentation framework providing reusable prompt patterns."
+      primary_uses:
+        - "multi-step reasoning and analysis"
+        - "pattern extraction from text, data, or conversations"
+        - "structured problem decomposition"
+        - "AI-assisted monetization strategy generation"
+        - "Fabric pattern library integration for reusable prompt pipelines"
+        - "content distillation and summarization"
+        - "idea-to-action pipelines via Fabric patterns"
+      github_output_types:
+        - "structured analysis docs"
+        - "problem-solution maps"
+        - "Fabric pattern invocation logs"
+        - "monetization strategy notes"
+        - "distilled insight summaries"
+        - "prompt pipeline templates"
+      fabric_patterns_reference: "https://github.com/danielmiessler/fabric"
+      hermes_model_reference: "https://huggingface.co/NousResearch"
+      risk_level: medium
+      human_review_required: true
+
   operating_rule: "Each AI platform may generate work, but reusable outputs should be saved into GitHub as docs, issues, prompts, registries, product files, campaign files, or RiskGate notes."

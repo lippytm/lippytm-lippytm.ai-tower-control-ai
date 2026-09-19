@@ -1,6 +1,14 @@
 # lippytm.ai Platform Registry
 
 platforms:
+  - id: hermes_fabric
+    name: Hermes + Fabric
+    role: Advanced reasoning, pattern extraction, and monetization strategy layer using Hermes fine-tuned models and Fabric prompt patterns
+    status: planned
+    hermes_reference: https://huggingface.co/NousResearch
+    fabric_reference: https://github.com/danielmiessler/fabric
+    risk_level: medium
+
   - id: github_control_tower
     name: GitHub Control Tower
     role: Source of truth for repos, agents, workflows, dashboards, support, products, and quality
