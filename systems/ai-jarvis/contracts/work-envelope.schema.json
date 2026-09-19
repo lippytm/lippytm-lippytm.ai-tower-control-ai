@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Jarvis Work Envelope",
+  "type": "object",
+  "required": ["bundle_id","registry_version","source_dog_id","target_dog_id","task","risk_level","payload_sha256","approval_status"],
+  "properties": {
+    "bundle_id": {"type":"string","format":"uuid"},
+    "registry_version": {"const":"0.3.0"},
+    "source_dog_id": {"pattern":"^DOG-00[1-4]$"},
+    "target_dog_id": {"pattern":"^DOG-00[1-4]$"},
+    "task": {"type":"string","minLength":1},
+    "risk_level": {"enum":["green","yellow","red"]},
+    "payload_sha256": {"pattern":"^[a-f0-9]{64}$"},
+    "approval_status": {"enum":["not-required","pending","approved","rejected"]}
+  },
+  "additionalProperties": false
+}
