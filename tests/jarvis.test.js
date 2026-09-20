@@ -93,6 +93,7 @@ describe('Jarvis Assistant API', () => {
       expect(res.body.recommendedTools.length).toBeGreaterThan(0);
       const toolIds = res.body.recommendedTools.map((tool) => tool.id);
       expect(toolIds).toEqual(expect.arrayContaining(['stress-reset-bot', 'sleep-recovery-check']));
+      expect(toolIds).toContain('swarm-health-sync');
       expect(toolIds).not.toContain('journal-coach');
     });
   });

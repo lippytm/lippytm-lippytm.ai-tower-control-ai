@@ -45,6 +45,8 @@ const FREE_AI_TOOLS = Object.freeze([
   },
 ]);
 
+const HEALING_CATEGORIES = new Set(['self-healing', 'system self-healing']);
+
 function toSafeNumber(value, fallback) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -161,7 +163,12 @@ function getFreeToolsCatalog() {
   return FREE_AI_TOOLS.map((tool) => ({ ...tool }));
 }
 
+function isHealingTool(tool = {}) {
+  return HEALING_CATEGORIES.has(tool.category);
+}
+
 module.exports = {
   runJarvisCheckIn,
   getFreeToolsCatalog,
+  isHealingTool,
 };

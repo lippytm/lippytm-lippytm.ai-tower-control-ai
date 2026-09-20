@@ -44,7 +44,7 @@ router.post('/self-heal', (req, res) => {
     stabilityBand: enriched.stabilityBand,
     selfHealingProtocol: enriched.selfHealingProtocol,
     recommendedTools: enriched.freeTools
-      .filter((tool) => tool.category === 'self-healing')
+      .filter((tool) => jarvis.isHealingTool(tool))
       .map((tool) => ({
         id: tool.id,
         name: tool.name,
