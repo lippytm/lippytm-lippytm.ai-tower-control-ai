@@ -47,6 +47,16 @@ const FREE_AI_TOOLS = Object.freeze([
 
 const HEALING_CATEGORIES = new Set(['self-healing', 'system self-healing']);
 
+function formatToolForResponse(tool = {}) {
+  return {
+    id: tool.id,
+    name: tool.name,
+    category: tool.category,
+    cost: tool.cost,
+    value: tool.value,
+  };
+}
+
 function toSafeNumber(value, fallback) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -160,7 +170,7 @@ function runJarvisCheckIn(payload = {}) {
 }
 
 function getFreeToolsCatalog() {
-  return FREE_AI_TOOLS.map((tool) => ({ ...tool }));
+  return FREE_AI_TOOLS.map((tool) => formatToolForResponse(tool));
 }
 
 function isHealingTool(tool = {}) {
@@ -171,4 +181,5 @@ module.exports = {
   runJarvisCheckIn,
   getFreeToolsCatalog,
   isHealingTool,
+  formatToolForResponse,
 };

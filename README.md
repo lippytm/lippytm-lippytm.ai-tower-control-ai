@@ -190,6 +190,8 @@ Possible `status` values per platform: `"sent"`, `"skipped"`, `"error"` (with an
 
 ### AI Jarvis Assistant
 
+All `/api/jarvis/*` endpoints require a valid bearer token.
+
 | Method | Path | Description |
 |---|---|---|
 | `GET` | `/api/jarvis/tools` | List free AI enhancements and support tools |

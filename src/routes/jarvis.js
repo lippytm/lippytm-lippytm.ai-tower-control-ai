@@ -45,13 +45,7 @@ router.post('/self-heal', (req, res) => {
     selfHealingProtocol: enriched.selfHealingProtocol,
     recommendedTools: enriched.freeTools
       .filter((tool) => jarvis.isHealingTool(tool))
-      .map((tool) => ({
-        id: tool.id,
-        name: tool.name,
-        category: tool.category,
-        cost: tool.cost,
-        value: tool.value,
-      })),
+      .map((tool) => jarvis.formatToolForResponse(tool)),
   });
 });
 
