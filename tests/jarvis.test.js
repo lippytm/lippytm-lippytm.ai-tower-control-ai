@@ -6,7 +6,7 @@ const { generateToken } = require('../src/security/auth');
 
 process.env.JWT_SECRET = 'test-secret-1234';
 
-const auth = () => `****** clientId: 'test', role: 'api-consumer' })}`;
+const auth = () => ['Bearer', generateToken({ clientId: 'test', role: 'api-consumer' })].join(' ');
 
 describe('Jarvis Assistant API', () => {
   describe('GET /api/jarvis/tools', () => {
