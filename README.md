@@ -17,6 +17,7 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 | **Cybersecurity** | JWT authentication, Helmet security headers, per-route rate limiting, input sanitization |
 | **Data Management** | Schedule and track data-sync jobs between any pair of connectors |
 | **AgentsBots Swarms** | Create autonomous AgentBots, group them into swarms, broadcast messages, and self-heal stale agents |
+| **AI Jarvis Assistant** | Free enhancement layer for self-improvement check-ins, self-healing protocols, and free AI tool catalogs |
 
 ---
 
@@ -35,6 +36,8 @@ src/
 ├── swarm/
 │   ├── agent.js                 # AgentBot lifecycle, config, maintenance log
 │   └── orchestrator.js          # Swarm orchestrator, membership, self-healing health-checks
+├── jarvis/
+│   └── assistant.js             # Jarvis self-improvement + self-healing planner
 ├── security/
 │   ├── auth.js                  # JWT generation, verification, requireAuth middleware
 │   └── rateLimiter.js           # Strict rate limiter + input sanitization
@@ -45,7 +48,8 @@ src/
     ├── auth.js                  # POST /api/auth/token
     ├── connectors.js            # /api/connectors/* endpoints
     ├── data.js                  # /api/data/* endpoints
-    └── swarm.js                 # /api/swarm/* endpoints
+    ├── swarm.js                 # /api/swarm/* endpoints
+    └── jarvis.js                # /api/jarvis/* endpoints
 tests/                           # Jest unit + integration tests
 ```
 
@@ -183,6 +187,14 @@ Possible `status` values per platform: `"sent"`, `"skipped"`, `"error"` (with an
 | `POST` | `/api/data/sync` | Schedule sync job |
 | `GET` | `/api/data/sync` | List all sync jobs |
 | `GET` | `/api/data/sync/:jobId` | Get job status |
+
+### AI Jarvis Assistant
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/jarvis/tools` | List free AI enhancements and support tools |
+| `POST` | `/api/jarvis/check-in` | Analyze wellbeing/productivity signals and return a self-improvement + self-healing plan |
+| `POST` | `/api/jarvis/self-heal` | Return focused self-healing protocol and recommended free tools |
 
 ---
 
@@ -325,4 +337,3 @@ Configure the following repository secrets for the webhook workflow:
 3. Register the connector name in `src/data-management/sync.js` → `CONNECTORS` array.
 4. Add route handlers in `src/routes/connectors.js`.
 5. Run `npm test` to validate everything still works.
-
