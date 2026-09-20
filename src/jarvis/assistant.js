@@ -153,7 +153,7 @@ function runJarvisCheckIn(payload = {}) {
     },
     recommendations,
     selfHealingProtocol: protocol,
-    freeTools: FREE_AI_TOOLS,
+    freeTools: getFreeToolsCatalog(),
   };
 }
 

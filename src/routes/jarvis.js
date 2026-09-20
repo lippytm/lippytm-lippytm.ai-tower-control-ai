@@ -45,7 +45,13 @@ router.post('/self-heal', (req, res) => {
     selfHealingProtocol: enriched.selfHealingProtocol,
     recommendedTools: enriched.freeTools
       .filter((tool) => tool.category === 'self-healing')
-      .map((tool) => ({ id: tool.id, name: tool.name })),
+      .map((tool) => ({
+        id: tool.id,
+        name: tool.name,
+        category: tool.category,
+        cost: tool.cost,
+        value: tool.value,
+      })),
   });
 });
 
