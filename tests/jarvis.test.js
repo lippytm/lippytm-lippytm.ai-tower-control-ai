@@ -51,6 +51,24 @@ describe('Jarvis Assistant API', () => {
       expect(Array.isArray(res.body.recommendations)).toBe(true);
       expect(Array.isArray(res.body.selfHealingProtocol.immediate)).toBe(true);
     });
+
+    it('sanitizes goals, blockers, and symptoms', async () => {
+      const res = await request(app)
+        .post('/api/jarvis/check-in')
+        .set('Authorization', auth())
+        .send({
+          goals: ['  Ship feature \u0000  '],
+          checkIn: {
+            blockers: ['\u0007 noisy blocker \u0000'],
+            symptoms: [' panic\u0000 '],
+          },
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.recommendations.some((item) => item.includes('Ship feature'))).toBe(true);
+      expect(res.body.signals.blockers).toEqual(['noisy blocker']);
+      expect(res.body.signals.symptoms).toEqual(['panic']);
+    });
   });
 
   describe('POST /api/jarvis/self-heal', () => {
@@ -73,6 +91,9 @@ describe('Jarvis Assistant API', () => {
       expect(res.body).toHaveProperty('selfHealingProtocol');
       expect(Array.isArray(res.body.recommendedTools)).toBe(true);
       expect(res.body.recommendedTools.length).toBeGreaterThan(0);
+      const toolIds = res.body.recommendedTools.map((tool) => tool.id);
+      expect(toolIds).toEqual(expect.arrayContaining(['stress-reset-bot', 'sleep-recovery-check']));
+      expect(toolIds).not.toContain('journal-coach');
     });
   });
 });

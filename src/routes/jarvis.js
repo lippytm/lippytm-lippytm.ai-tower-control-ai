@@ -7,17 +7,8 @@ const jarvis = require('../jarvis/assistant');
 
 router.use(requireAuth);
 
-router.get('/tools', (_req, res) => {
-  return res.json({
-    assistant: 'Jarvis',
-    tier: 'free',
-    tools: jarvis.getFreeToolsCatalog(),
-  });
-});
-
-router.post('/check-in', (req, res) => {
-  const payload = req.body || {};
-  const sanitizedPayload = {
+function sanitizeJarvisPayload(payload = {}) {
+  return {
     ...payload,
     goals: Array.isArray(payload.goals) ? payload.goals.map(sanitizeInput) : [],
     checkIn: {
@@ -30,13 +21,24 @@ router.post('/check-in', (req, res) => {
         : [],
     },
   };
+}
+
+router.get('/tools', (_req, res) => {
+  return res.json({
+    assistant: 'Jarvis',
+    tier: 'free',
+    tools: jarvis.getFreeToolsCatalog(),
+  });
+});
+
+router.post('/check-in', (req, res) => {
+  const sanitizedPayload = sanitizeJarvisPayload(req.body || {});
 
   return res.json(jarvis.runJarvisCheckIn(sanitizedPayload));
 });
 
 router.post('/self-heal', (req, res) => {
-  const payload = req.body || {};
-  const enriched = jarvis.runJarvisCheckIn(payload);
+  const enriched = jarvis.runJarvisCheckIn(sanitizeJarvisPayload(req.body || {}));
   return res.json({
     assistant: enriched.assistant,
     stabilityBand: enriched.stabilityBand,
