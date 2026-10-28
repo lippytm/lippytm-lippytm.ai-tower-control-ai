@@ -121,8 +121,21 @@ or live account connectivity. The initial Dependency Review job failed with
 Dependency graph is enabled`. The owner must check repository Settings > Security
 and analysis (or Advanced Security, depending on the GitHub UI) and enable
 Dependency Graph if available, then rerun the check. If the feature is not
-available for the repository/plan, an approved alternative must be selected
-separately. Do not silently skip this quality gate. This session cannot inspect
+available for the repository/plan, an approved alternative is required.
+Following the operator's instruction to repair all three blockers, the dependency
+workflow now uses `npm ci --ignore-scripts` to validate manifest/lock consistency
+and `npm audit --package-lock-only --audit-level=high` on the entire lockfile,
+including development dependencies. It fails on high/critical advisories and
+registry/network errors; it does not depend on Dependency Graph or waive findings.
+This changes review semantics: it checks all locked dependencies against current
+npm advisories, not GitHub's PR dependency-diff or license database.
+Compatible lock updates remove the initial high/critical findings. Node's native
+`crypto.randomUUID` replaces the unnecessary UUID package, and a same-major `qs`
+override selects the patched parser because Express pins an older minor range.
+Remaining low-severity Jest/deepmerge advisories have no patched current deepmerge
+release; a forced Jest downgrade is not applied. Do not claim a zero-advisory audit.
+
+This session cannot inspect
 Actions administrative settings: the integration receives HTTP 403 for that API.
 
 Verification at main Jarvis revision

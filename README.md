@@ -304,6 +304,14 @@ and stops during graceful shutdown. Manual health checks remain available.
 
 ## Security
 
+**Dependency gate:** `npm audit --package-lock-only --audit-level=high` checks all
+locked runtime and development dependencies without requiring GitHub Dependency
+Graph. The workflow first runs `npm ci --ignore-scripts` to validate the lockfile;
+advisory/registry failures do not silently pass. Compatible package updates are
+locked, and `qs` is overridden to a patched same-major release because Express
+pins an older minor. Low-severity Jest/deepmerge findings remain tracked; there
+is no safe current patched deepmerge release and no forced Jest downgrade.
+
 **Production authentication:** startup rejects missing, short, or `CHANGEME`
 signing secrets. Development only warns about weak signing secrets. Token issuance
 requires an exact match against the server's `TOWER_CLIENT_ID` and
