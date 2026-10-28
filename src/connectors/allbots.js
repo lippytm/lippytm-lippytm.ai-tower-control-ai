@@ -6,7 +6,7 @@ const logger = require('../logger');
 function getClient() {
   const apiKey = process.env.ALLBOTS_API_KEY;
   const baseURL = process.env.ALLBOTS_BASE_URL || 'https://api.allbots.com.ai';
-  if (!apiKey) throw new Error('ALLBOTS_API_KEY is not configured');
+  if (!apiKey) throw Object.assign(new Error('ALLBOTS_API_KEY is not configured'), { status: 503 });
   return axios.create({
     baseURL,
     headers: {
@@ -37,7 +37,7 @@ async function listBots() {
 async function sendMessage(botId, message) {
   logger.debug('AllBots: sendMessage', { botId });
   const client = getClient();
-  const response = await client.post(`/bots/${botId}/messages`, { message });
+  const response = await client.post(`/bots/${encodeURIComponent(botId)}/messages`, { message });
   return response.data;
 }
 

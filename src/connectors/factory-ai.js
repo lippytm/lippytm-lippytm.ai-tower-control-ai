@@ -6,7 +6,7 @@ const logger = require('../logger');
 function getClient() {
   const apiKey = process.env.FACTORY_AI_API_KEY;
   const baseURL = process.env.FACTORY_AI_BASE_URL || 'https://api.factory.ai';
-  if (!apiKey) throw new Error('FACTORY_AI_API_KEY is not configured');
+  if (!apiKey) throw Object.assign(new Error('FACTORY_AI_API_KEY is not configured'), { status: 503 });
   return axios.create({
     baseURL,
     headers: {
@@ -37,7 +37,7 @@ async function listPipelines() {
 async function runPipeline(pipelineId, inputs) {
   logger.debug('Factory.ai: runPipeline', { pipelineId });
   const client = getClient();
-  const response = await client.post(`/pipelines/${pipelineId}/runs`, { inputs });
+  const response = await client.post(`/pipelines/${encodeURIComponent(pipelineId)}/runs`, { inputs });
   return response.data;
 }
 
@@ -50,7 +50,7 @@ async function runPipeline(pipelineId, inputs) {
 async function getPipelineRun(pipelineId, runId) {
   logger.debug('Factory.ai: getPipelineRun', { pipelineId, runId });
   const client = getClient();
-  const response = await client.get(`/pipelines/${pipelineId}/runs/${runId}`);
+  const response = await client.get(`/pipelines/${encodeURIComponent(pipelineId)}/runs/${encodeURIComponent(runId)}`);
   return response.data;
 }
 

@@ -2,6 +2,20 @@
 
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../logger');
+const { requireObject, requireText, invalid } = require('../validation');
+
+function validateConfig(config) {
+  requireObject(config, 'agent config');
+  for (const field of ['name', 'role']) {
+    if (config[field] !== undefined) requireText(config[field], field);
+  }
+  if (config.metadata !== undefined) requireObject(config.metadata, 'metadata');
+  if (config.channels !== undefined) {
+    if (!Array.isArray(config.channels)) throw invalid('channels must be an array');
+    const invalidChannels = config.channels.filter((channel) => !CHANNEL_TYPES.includes(channel));
+    if (invalidChannels.length) throw invalid(`Unknown channel type(s): ${invalidChannels.join(', ')}`);
+  }
+}
 
 /**
  * Valid lifecycle states for an AgentBot.
@@ -17,7 +31,7 @@ const AGENT_STATES = Object.freeze({
 /**
  * Supported communication channel types for AgentBots.
  */
-const CHANNEL_TYPES = Object.freeze(['openai', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'internal']);
+const CHANNEL_TYPES = Object.freeze(['openai', 'gemini', 'claude', 'allbots', 'factory-ai', 'replit', 'github-copilot', 'internal']);
 
 /**
  * In-memory store for all registered AgentBots.
@@ -41,8 +55,9 @@ const maintenanceLogs = new Map();
  * @returns {object}  Newly created agent descriptor.
  */
 function createAgent(config) {
+  validateConfig(config);
   const { name, role = 'worker', channels = [], metadata = {} } = config || {};
-  if (!name) throw new Error('Agent name is required');
+  requireText(name, 'Agent name');
 
   const invalidChannels = channels.filter((c) => !CHANNEL_TYPES.includes(c));
   if (invalidChannels.length > 0) {
@@ -58,7 +73,7 @@ function createAgent(config) {
     role,
     channels: [...channels],
     state: AGENT_STATES.IDLE,
-    metadata: { ...metadata },
+    metadata: structuredClone(metadata),
     createdAt: now,
     updatedAt: now,
     lastHeartbeat: now,
@@ -70,7 +85,7 @@ function createAgent(config) {
   _appendMaintenanceLog(agentId, 'created', { name, role, channels });
 
   logger.info('AgentBot created', { agentId, name, role });
-  return { ...agent };
+  return structuredClone(agent);
 }
 
 /**
@@ -81,7 +96,7 @@ function createAgent(config) {
 function getAgent(agentId) {
   const agent = agents.get(agentId);
   if (!agent) throw new Error(`AgentBot not found: ${agentId}`);
-  return { ...agent };
+  return structuredClone(agent);
 }
 
 /**
@@ -99,7 +114,7 @@ function listAgents(filters = {}) {
   if (filters.state) {
     result = result.filter((a) => a.state === filters.state);
   }
-  return result.map((a) => ({ ...a }));
+  return result.map((a) => structuredClone(a));
 }
 
 /**
@@ -133,7 +148,7 @@ function updateAgentState(agentId, newState, extra = {}) {
   _appendMaintenanceLog(agentId, 'state_change', { prevState, newState });
   logger.info('AgentBot state changed', { agentId, prevState, newState });
 
-  return { ...updated };
+  return structuredClone(updated);
 }
 
 /**
@@ -145,6 +160,7 @@ function updateAgentState(agentId, newState, extra = {}) {
 function updateAgentConfig(agentId, patch) {
   const agent = agents.get(agentId);
   if (!agent) throw new Error(`AgentBot not found: ${agentId}`);
+  validateConfig(patch);
 
   if (patch.channels) {
     const invalidChannels = patch.channels.filter((c) => !CHANNEL_TYPES.includes(c));
@@ -161,7 +177,7 @@ function updateAgentConfig(agentId, patch) {
 
   const updated = {
     ...agent,
-    ...safePatched,
+    ...structuredClone(safePatched),
     updatedAt: new Date().toISOString(),
   };
   agents.set(agentId, updated);
@@ -169,7 +185,7 @@ function updateAgentConfig(agentId, patch) {
   _appendMaintenanceLog(agentId, 'config_updated', safePatched);
   logger.info('AgentBot config updated', { agentId });
 
-  return { ...updated };
+  return structuredClone(updated);
 }
 
 /**
@@ -189,6 +205,9 @@ function heartbeat(agentId) {
  */
 function deleteAgent(agentId) {
   if (!agents.has(agentId)) throw new Error(`AgentBot not found: ${agentId}`);
+  if (agents.get(agentId).swarmId) {
+    throw Object.assign(new Error('Remove the agent from its swarm before deletion'), { status: 409 });
+  }
   agents.delete(agentId);
   maintenanceLogs.delete(agentId);
   logger.info('AgentBot deleted', { agentId });
@@ -201,14 +220,14 @@ function deleteAgent(agentId) {
  */
 function getMaintenanceLog(agentId) {
   if (!agents.has(agentId)) throw new Error(`AgentBot not found: ${agentId}`);
-  return maintenanceLogs.get(agentId) || [];
+  return structuredClone(maintenanceLogs.get(agentId) || []);
 }
 
 // ── Internal helpers ───────────────────────────────────────────────────────────
 
 function _appendMaintenanceLog(agentId, event, details = {}) {
   const log = maintenanceLogs.get(agentId) || [];
-  log.push({ timestamp: new Date().toISOString(), event, details });
+  log.push({ timestamp: new Date().toISOString(), event, details: structuredClone(details) });
   maintenanceLogs.set(agentId, log);
 }
 

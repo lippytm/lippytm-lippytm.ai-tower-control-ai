@@ -4,13 +4,21 @@ const request = require('supertest');
 const app = require('../src/server');
 const { generateToken } = require('../src/security/auth');
 
-process.env.JWT_SECRET = 'test-secret-1234';
-
 const validToken = () => generateToken({ clientId: 'test', role: 'api-consumer' });
 
 // ── /api/auth/token ───────────────────────────────────────────────────────────
 
 describe('POST /api/auth/token', () => {
+  beforeEach(() => {
+    process.env.TOWER_CLIENT_ID = 'myapp';
+    process.env.TOWER_CLIENT_SECRET = 'test-client-secret-at-least-32-characters';
+  });
+
+  afterEach(() => {
+    delete process.env.TOWER_CLIENT_ID;
+    delete process.env.TOWER_CLIENT_SECRET;
+  });
+
   it('returns 400 when body is missing', async () => {
     const res = await request(app).post('/api/auth/token').send({});
     expect(res.status).toBe(400);
@@ -26,10 +34,37 @@ describe('POST /api/auth/token', () => {
   it('returns a token for valid credentials', async () => {
     const res = await request(app)
       .post('/api/auth/token')
-      .send({ clientId: 'myapp', clientSecret: 'supersecretkey' });
+      .send({ clientId: 'myapp', clientSecret: process.env.TOWER_CLIENT_SECRET });
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('token');
     expect(res.body.tokenType).toBe('Bearer');
+  });
+
+  it('rejects an incorrect client ID even with the correct secret', async () => {
+    const res = await request(app).post('/api/auth/token')
+      .send({ clientId: 'unknown', clientSecret: process.env.TOWER_CLIENT_SECRET });
+    expect(res.status).toBe(401);
+  });
+
+  it('rejects an incorrect long secret', async () => {
+    const res = await request(app).post('/api/auth/token')
+      .send({ clientId: 'myapp', clientSecret: 'incorrect-secret-at-least-32-characters' });
+    expect(res.status).toBe(401);
+  });
+
+  it('rejects non-string credentials', async () => {
+    const res = await request(app).post('/api/auth/token')
+      .send({ clientId: ['myapp'], clientSecret: { length: 64 } });
+    expect(res.status).toBe(400);
+  });
+
+  it.each([undefined, 'too-short'])('fails closed with an unconfigured secret: %s', async (secret) => {
+    if (secret === undefined) delete process.env.TOWER_CLIENT_SECRET;
+    else process.env.TOWER_CLIENT_SECRET = secret;
+    const res = await request(app).post('/api/auth/token')
+      .send({ clientId: 'myapp', clientSecret: 'arbitrary-credentials' });
+    expect(res.status).toBe(503);
+    expect(res.body).not.toHaveProperty('token');
   });
 });
 
@@ -229,9 +264,10 @@ describe('POST /api/connectors/chatgpt/broadcast', () => {
         },
       });
 
-    expect(res.status).toBe(200);
     expect(res.body.broadcast.allbots.status).toBe('error');
-    expect(res.body.broadcast.allbots.error).toMatch(/AllBots API down/);
+    expect(res.status).toBe(207);
+    expect(res.body.broadcast.allbots.error).toMatch(/delivery failed/);
+    expect(res.body.broadcast.allbots.error).not.toContain('AllBots API down');
     expect(res.body.broadcast['factory-ai'].status).toBe('sent');
   });
 

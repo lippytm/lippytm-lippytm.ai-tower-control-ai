@@ -3,6 +3,16 @@
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../logger');
 const agentModule = require('./agent');
+const { requireObject, requireText } = require('../validation');
+
+function validateConfig(config) {
+  requireObject(config, 'swarm config');
+  if (config.name !== undefined) requireText(config.name, 'name');
+  if (config.description !== undefined && typeof config.description !== 'string') {
+    throw Object.assign(new Error('description must be a string'), { status: 400 });
+  }
+  if (config.scalingPolicy !== undefined) requireObject(config.scalingPolicy, 'scalingPolicy');
+}
 
 /**
  * Interval (ms) between orchestrator health-check cycles.
@@ -47,8 +57,9 @@ let _healthCheckTimer = null;
  * @returns {object}  Swarm descriptor.
  */
 function createSwarm(config) {
+  validateConfig(config);
   const { name, description = '', scalingPolicy = {} } = config || {};
-  if (!name) throw new Error('Swarm name is required');
+  requireText(name, 'Swarm name');
 
   const swarmId = uuidv4();
   const now = new Date().toISOString();
@@ -57,7 +68,7 @@ function createSwarm(config) {
     swarmId,
     name,
     description,
-    scalingPolicy: { ...scalingPolicy },
+    scalingPolicy: structuredClone(scalingPolicy),
     agentIds: [],
     state: 'active',
     createdAt: now,
@@ -66,7 +77,7 @@ function createSwarm(config) {
 
   swarms.set(swarmId, swarm);
   logger.info('Swarm created', { swarmId, name });
-  return { ...swarm };
+  return structuredClone(swarm);
 }
 
 /**
@@ -77,7 +88,7 @@ function createSwarm(config) {
 function getSwarm(swarmId) {
   const swarm = swarms.get(swarmId);
   if (!swarm) throw new Error(`Swarm not found: ${swarmId}`);
-  return { ...swarm };
+  return structuredClone(swarm);
 }
 
 /**
@@ -85,7 +96,7 @@ function getSwarm(swarmId) {
  * @returns {Array<object>}
  */
 function listSwarms() {
-  return Array.from(swarms.values()).map((s) => ({ ...s }));
+  return Array.from(swarms.values(), (swarm) => structuredClone(swarm));
 }
 
 /**
@@ -97,6 +108,7 @@ function listSwarms() {
 function updateSwarm(swarmId, patch) {
   const swarm = swarms.get(swarmId);
   if (!swarm) throw new Error(`Swarm not found: ${swarmId}`);
+  validateConfig(patch);
 
   const allowedFields = ['name', 'description', 'scalingPolicy'];
   const safePatched = {};
@@ -104,10 +116,10 @@ function updateSwarm(swarmId, patch) {
     if (patch[key] !== undefined) safePatched[key] = patch[key];
   }
 
-  const updated = { ...swarm, ...safePatched, updatedAt: new Date().toISOString() };
+  const updated = { ...swarm, ...structuredClone(safePatched), updatedAt: new Date().toISOString() };
   swarms.set(swarmId, updated);
   logger.info('Swarm updated', { swarmId });
-  return { ...updated };
+  return structuredClone(updated);
 }
 
 /**
@@ -118,12 +130,11 @@ function deleteSwarm(swarmId) {
   const swarm = swarms.get(swarmId);
   if (!swarm) throw new Error(`Swarm not found: ${swarmId}`);
 
+  const existing = new Set(agentModule.listAgents().map((agent) => agent.agentId));
   for (const agentId of swarm.agentIds) {
-    try {
-      agentModule.updateAgentState(agentId, agentModule.AGENT_STATES.TERMINATED);
-    } catch {
-      // Agent may have already been removed; continue cleanup.
-    }
+    if (!existing.has(agentId)) continue;
+    agentModule.updateAgentState(agentId, agentModule.AGENT_STATES.TERMINATED);
+    agentModule._setAgentSwarmId(agentId, null);
   }
 
   swarms.delete(swarmId);
@@ -139,6 +150,7 @@ function deleteSwarm(swarmId) {
  * @returns {object}  Updated swarm descriptor.
  */
 function addAgentToSwarm(swarmId, agentId) {
+  requireText(agentId, 'agentId');
   const swarm = swarms.get(swarmId);
   if (!swarm) throw new Error(`Swarm not found: ${swarmId}`);
 
@@ -158,7 +170,7 @@ function addAgentToSwarm(swarmId, agentId) {
   agentModule._setAgentSwarmId(agentId, swarmId);
 
   logger.info('Agent added to swarm', { swarmId, agentId });
-  return { ...swarm };
+  return structuredClone(swarm);
 }
 
 /**
@@ -179,14 +191,10 @@ function removeAgentFromSwarm(swarmId, agentId) {
   swarms.set(swarmId, swarm);
 
   // Disassociate the agent from this swarm
-  try {
-    agentModule._setAgentSwarmId(agentId, null);
-  } catch {
-    // Agent may have been deleted separately.
-  }
+  agentModule._setAgentSwarmId(agentId, null);
 
   logger.info('Agent removed from swarm', { swarmId, agentId });
-  return { ...swarm };
+  return structuredClone(swarm);
 }
 
 // ── Swarm-level operations ─────────────────────────────────────────────────────
@@ -200,6 +208,7 @@ function removeAgentFromSwarm(swarmId, agentId) {
  * @returns {{ swarmId: string, delivered: string[], skipped: string[] }}
  */
 function broadcastToSwarm(swarmId, message) {
+  requireObject(message, 'message');
   const swarm = swarms.get(swarmId);
   if (!swarm) throw new Error(`Swarm not found: ${swarmId}`);
 
@@ -220,8 +229,8 @@ function broadcastToSwarm(swarmId, message) {
     }
   }
 
-  logger.info('Swarm broadcast', { swarmId, delivered: delivered.length, skipped: skipped.length, message });
-  return { swarmId, delivered, skipped };
+  logger.info('Swarm broadcast simulation', { swarmId, delivered: delivered.length, skipped: skipped.length });
+  return { swarmId, mode: 'simulation', delivered, skipped };
 }
 
 /**

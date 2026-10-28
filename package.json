@@ -8,7 +8,7 @@
     "dev": "nodemon src/server.js",
     "test": "jest --runInBand --forceExit",
     "test:coverage": "jest --coverage --runInBand --forceExit",
-    "lint": "eslint src tests"
+    "lint": "eslint src tests scripts"
   },
   "keywords": [
     "ai",
@@ -41,6 +41,7 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "setupFiles": ["<rootDir>/tests/setup-env.js"],
     "testMatch": [
       "**/tests/**/*.test.js"
     ]

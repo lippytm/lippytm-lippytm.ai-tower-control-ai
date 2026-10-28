@@ -2,9 +2,6 @@
 
 const { generateToken, verifyToken, requireAuth } = require('../src/security/auth');
 
-// Override JWT_SECRET for deterministic tests
-process.env.JWT_SECRET = 'test-secret-1234';
-
 describe('generateToken / verifyToken', () => {
   it('generates a token that can be verified', () => {
     const token = generateToken({ clientId: 'test-client', role: 'api-consumer' });
@@ -12,6 +9,41 @@ describe('generateToken / verifyToken', () => {
     const decoded = verifyToken(token);
     expect(decoded.clientId).toBe('test-client');
     expect(decoded.role).toBe('api-consumer');
+  });
+
+  describe('production signing configuration', () => {
+    const originalEnvironment = { ...process.env };
+
+    afterEach(() => {
+      process.env = { ...originalEnvironment };
+    });
+
+    it.each([undefined, 'short', 'CHANGEME_REPLACE_WITH_32_PLUS_RANDOM_CHARS'])(
+      'refuses to load with an unsafe production signing secret: %s',
+      (secret) => {
+        process.env.NODE_ENV = 'production';
+        if (secret === undefined) delete process.env.JWT_SECRET;
+        else process.env.JWT_SECRET = secret;
+        expect(() => jest.isolateModules(() => require('../src/security/auth')))
+          .toThrow(/Production requires/);
+      }
+    );
+
+    it('loads with a configured production signing secret', () => {
+      process.env.NODE_ENV = 'production';
+      process.env.JWT_SECRET = 'production-test-only-signing-secret-123456789';
+      expect(() => jest.isolateModules(() => require('../src/security/auth'))).not.toThrow();
+    });
+
+    it('refuses token issuance and verification with development defaults', () => {
+      process.env.NODE_ENV = 'development';
+      delete process.env.JWT_SECRET;
+      jest.isolateModules(() => {
+        const auth = require('../src/security/auth');
+        expect(() => auth.generateToken({ clientId: 'test' })).toThrow(/not configured/);
+        expect(() => auth.verifyToken('any-token')).toThrow(/not configured/);
+      });
+    });
   });
 
   it('throws on tampered token', () => {

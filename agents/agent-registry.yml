@@ -2,6 +2,28 @@
 # Quality is Job #1. High-risk actions require human review.
 
 agents:
+  - id: jarvis_build_review_coordinator
+    name: Jarvis AI Builder and Review Coordinator
+    platforms: [Control Tower, OpenAI API, Gemini API, Claude API, Hostinger VPS]
+    status: defined_not_running
+    owner: Control Tower operator
+    mission: Coordinate human-triggered draft and review requests without executing generated outputs.
+    workflow: workflows/jarvis-ai-build-review.md
+    allowed_actions:
+      - request a draft from an explicitly selected provider
+      - request a review from an explicitly selected provider
+      - return an approval checklist
+    forbidden_actions:
+      - execute generated code
+      - deploy changes
+      - send external agent commands or customer messages
+      - collect account passwords or secrets in prompts
+    risk_level: medium
+    human_review_required_for:
+      - sharing prompts across providers
+      - applying any generated output
+      - connecting external accounts
+
   - id: business_of_businesses_lead_connector
     name: Business-of-Businesses Lead Connector
     platforms:
