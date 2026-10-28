@@ -100,6 +100,19 @@ The website repair also replaces its destructive, inactive deployment template
 with an explicit refusal stub. These prevent another broken reinstall; they do
 not reconnect an account or deploy a missing website application.
 
+Both installer repair branches now include six offline regression tests and
+`.github/workflows/install-preflight.yml`. Tests cover valid source paths containing
+spaces, invalid syntax, missing arguments/source, and preservation of existing
+files without installing packages or executing the application. Review requests:
+
+- Control Tower: https://github.com/lippytm/lippytm-lippytm.ai-tower-control-ai/pull/94
+- Hostinger installer: https://github.com/lippytm/Hostinger.com-with-my-AI-Jarvis-Assistant-ChatGPT-ChatGPT-Business-Gemini-AI-Claude/pull/3
+- Website installer: https://github.com/lippytm/aievolutionaryevolutions.com-Hermes-Fabric-MemPalace-/pull/5
+
+These are draft reviews, not merged repairs or deployed releases. The Tower also
+accepts the existing Jarvis `ANTHROPIC_MODEL` variable; conflicting model settings
+are rejected instead of silently routing to a different model.
+
 Verification at main Jarvis revision
 `b1b15992e8c08f1e77e4de178981e55c70346026`: 296 Python tests and 34 Node
 runtime tests passed locally; Node syntax checks passed. Both replacement

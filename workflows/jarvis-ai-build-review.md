@@ -32,6 +32,12 @@ Consumer subscriptions do not automatically include API access or credits.
 Set explicit model IDs available to your API project; Gemini and Claude have no
 guessed default models. Choose text models supporting these APIs and output budgets.
 
+For compatibility with the existing Jarvis runtime, `ANTHROPIC_MODEL` is accepted
+when `CLAUDE_MODEL` is unset. If both are present they must match, unless the request
+explicitly selects a model. Conflicting inherited settings fail before inference
+rather than silently choosing a different model. This does not share credentials,
+tokens, sessions, or state between runtimes.
+
 ## Trigger, inputs, and outputs
 
 Trigger: a manual authenticated request or the manually dispatched

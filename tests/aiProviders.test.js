@@ -12,6 +12,7 @@ beforeEach(() => {
   process.env.GEMINI_MODEL = 'test-gemini-model';
   process.env.ANTHROPIC_API_KEY = 'test-claude-key';
   process.env.CLAUDE_MODEL = 'test-claude-model';
+  delete process.env.ANTHROPIC_MODEL;
 });
 afterEach(() => { process.env = { ...originalEnv }; });
 
@@ -75,6 +76,20 @@ it('requires credentials and a configured model before calling a provider', asyn
   delete process.env.GEMINI_API_KEY;
   await expect(generation.generate('gemini', 'Draft', 'test-model')).rejects.toMatchObject({ status: 503 });
   expect(axios.post).not.toHaveBeenCalled();
+});
+
+it('reuses the existing Jarvis ANTHROPIC_MODEL setting without requiring a second model variable', () => {
+  delete process.env.CLAUDE_MODEL;
+  process.env.ANTHROPIC_MODEL = 'existing-jarvis-model';
+  expect(generation.validateRequest('claude', 'Draft')).toBe('existing-jarvis-model');
+});
+
+it('refuses conflicting inherited model settings unless the request explicitly chooses a model', () => {
+  process.env.ANTHROPIC_MODEL = 'different-model';
+  expect(() => generation.validateRequest('claude', 'Draft')).toThrow(/conflict/);
+  expect(generation.validateRequest('claude', 'Draft', 'explicit-model')).toBe('explicit-model');
+  process.env.ANTHROPIC_MODEL = process.env.CLAUDE_MODEL;
+  expect(generation.validateRequest('claude', 'Draft')).toBe(process.env.CLAUDE_MODEL);
 });
 
 it.each([

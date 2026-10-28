@@ -31,7 +31,12 @@ function validateRequest(provider, prompt, model) {
     throw failure(400, 'model must be a non-empty string');
   }
   const config = providers[provider];
-  const selectedModel = model || process.env[config.model] || (provider === 'openai' ? 'gpt-4o' : '');
+  const configuredModel = process.env[config.model];
+  const existingJarvisModel = provider === 'claude' ? process.env.ANTHROPIC_MODEL : undefined;
+  if (!model && configuredModel && existingJarvisModel && configuredModel !== existingJarvisModel) {
+    throw failure(503, 'CLAUDE_MODEL and ANTHROPIC_MODEL conflict; configure one model or matching values');
+  }
+  const selectedModel = model || configuredModel || existingJarvisModel || (provider === 'openai' ? 'gpt-4o' : '');
   if (!process.env[config.key] || !selectedModel) {
     throw failure(503, `${provider} requires ${config.key} and ${config.model} (or a request model)`);
   }
