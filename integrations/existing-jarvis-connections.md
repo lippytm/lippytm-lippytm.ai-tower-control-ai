@@ -113,6 +113,18 @@ These are draft reviews, not merged repairs or deployed releases. The Tower also
 accepts the existing Jarvis `ANTHROPIC_MODEL` variable; conflicting model settings
 are rejected instead of silently routing to a different model.
 
+The installer preflight jobs passed in GitHub Actions on the updated repair
+branches. Tower CI passed on Node 22 and 24 and its docs check passed at the initial
+reviewed head. These results cover their exact tested revisions, not later changes
+or live account connectivity. The initial Dependency Review job failed with
+`Dependency review is not supported on this repository. Please ensure that
+Dependency graph is enabled`. The owner must check repository Settings > Security
+and analysis (or Advanced Security, depending on the GitHub UI) and enable
+Dependency Graph if available, then rerun the check. If the feature is not
+available for the repository/plan, an approved alternative must be selected
+separately. Do not silently skip this quality gate. This session cannot inspect
+Actions administrative settings: the integration receives HTTP 403 for that API.
+
 Verification at main Jarvis revision
 `b1b15992e8c08f1e77e4de178981e55c70346026`: 296 Python tests and 34 Node
 runtime tests passed locally; Node syntax checks passed. Both replacement
