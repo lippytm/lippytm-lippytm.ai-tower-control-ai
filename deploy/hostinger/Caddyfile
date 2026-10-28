@@ -1,0 +1,4 @@
+# Replace tower.example.com with a verified subdomain pointing to this VPS.
+tower.example.com {
+	reverse_proxy 127.0.0.1:3000
+}

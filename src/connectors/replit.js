@@ -6,7 +6,7 @@ const logger = require('../logger');
 function getClient() {
   const apiKey = process.env.REPLIT_API_KEY;
   const baseURL = process.env.REPLIT_BASE_URL || 'https://replit.com/api/v1';
-  if (!apiKey) throw new Error('REPLIT_API_KEY is not configured');
+  if (!apiKey) throw Object.assign(new Error('REPLIT_API_KEY is not configured'), { status: 503 });
   return axios.create({
     baseURL,
     headers: {
@@ -50,7 +50,7 @@ async function runRepl(replId, content) {
   logger.debug('Replit: runRepl', { replId });
   const client = getClient();
   const body = content !== undefined ? { content } : undefined;
-  const response = await client.post(`/repls/${replId}/run`, body);
+  const response = await client.post(`/repls/${encodeURIComponent(replId)}/run`, body);
   return response.data;
 }
 

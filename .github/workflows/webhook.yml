@@ -1,16 +1,15 @@
-name: Webhook Dispatcher
+name: Webhook Dispatcher (Sync Simulation)
 
 on:
   workflow_dispatch:
     inputs:
       event_type:
-        description: 'Webhook event type to dispatch (e.g. openai-sync, allbots-sync)'
+        description: Source connector followed by -sync (for example openai-sync)
         required: true
         type: string
       payload:
-        description: 'JSON payload to include with the dispatch (optional)'
-        required: false
-        default: '{}'
+        description: JSON with source, target, and optional options; simulation only
+        required: true
         type: string
 
 permissions:
@@ -18,48 +17,20 @@ permissions:
 
 jobs:
   dispatch:
-    name: Dispatch webhook event
+    name: Dispatch simulated sync job
     runs-on: ubuntu-latest
-
+    environment: ai-pilot
+    timeout-minutes: 5
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Validate JSON payload
-        run: |
-          node -e "JSON.parse(process.argv[1])" "${{ inputs.payload }}" \
-            || (echo "::error::payload is not valid JSON" && exit 1)
-
-      - name: Dispatch event to AI Control Tower
+          node-version: '22.x'
+      - name: Validate and dispatch JSON without shell interpolation
         env:
           TOWER_API_URL: ${{ secrets.TOWER_API_URL }}
           TOWER_CLIENT_ID: ${{ secrets.TOWER_CLIENT_ID }}
           TOWER_CLIENT_SECRET: ${{ secrets.TOWER_CLIENT_SECRET }}
-        run: |
-          # Obtain a short-lived token
-          TOKEN=$(curl -s -X POST "${TOWER_API_URL}/api/auth/token" \
-            -H 'Content-Type: application/json' \
-            -d "{\"clientId\":\"${TOWER_CLIENT_ID}\",\"clientSecret\":\"${TOWER_CLIENT_SECRET}\"}" \
-            | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(0,'utf-8')).token)")
-
-          # Post the webhook event
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            -X POST "${TOWER_API_URL}/api/data/sync" \
-            -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${TOKEN}" \
-            -d '${{ inputs.payload }}')
-
-          echo "Response HTTP status: ${HTTP_STATUS}"
-          if [ "${HTTP_STATUS}" -lt 200 ] || [ "${HTTP_STATUS}" -ge 300 ]; then
-            echo "::error::Dispatch failed with HTTP ${HTTP_STATUS}"
-            exit 1
-          fi
+          SYNC_EVENT_TYPE: ${{ inputs.event_type }}
+          SYNC_PAYLOAD: ${{ inputs.payload }}
+        run: node scripts/dispatch-sync.js

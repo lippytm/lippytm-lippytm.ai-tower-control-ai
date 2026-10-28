@@ -1,6 +1,20 @@
 # lippytm.ai Workflow Registry
 
 workflows:
+  - id: jarvis_ai_build_review
+    name: Jarvis Multi-provider AI Build and Review
+    file: workflows/jarvis-ai-build-review.md
+    implementation: .github/workflows/ai-build-review.yml
+    status: implemented_pending_account_validation
+    owner: Control Tower operator
+    trigger: Manual authenticated API call or approved workflow dispatch
+    input: Non-sensitive prompt and configured builder/reviewer providers
+    output: Draft and review awaiting human approval
+    purpose: Coordinate OpenAI, Gemini, and Claude drafting on the Hostinger-hosted Tower without executing outputs.
+    risk_level: medium
+    human_review_required: true
+    fallback: Manual draft and review in approved chat workspaces.
+
   - id: daily_money_actions
     name: Daily Money Actions
     file: workflows/daily-money-actions.md

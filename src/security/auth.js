@@ -5,8 +5,13 @@ const logger = require('../logger');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
+if (process.env.NODE_ENV === 'production' &&
+    (JWT_SECRET.length < 32 || JWT_SECRET.startsWith('CHANGEME'))) {
+  throw new Error('Production requires a configured JWT_SECRET of at least 32 characters');
+}
+
 /* istanbul ignore next */
-if (JWT_SECRET === 'changeme' || JWT_SECRET.length < 32) {
+if (JWT_SECRET === 'changeme' || JWT_SECRET.length < 32 || JWT_SECRET.startsWith('CHANGEME')) {
   logger.warn(
     'JWT_SECRET is weak or using the default value. ' +
       'Set a strong secret (≥32 random characters) via the JWT_SECRET environment variable.'
@@ -20,6 +25,7 @@ if (JWT_SECRET === 'changeme' || JWT_SECRET.length < 32) {
  * @returns {string}
  */
 function generateToken(payload, expiresIn = '1h') {
+  requireSigningSecret();
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 }
 
@@ -30,7 +36,14 @@ function generateToken(payload, expiresIn = '1h') {
  * @throws {Error}  If the token is invalid or expired.
  */
 function verifyToken(token) {
-  return jwt.verify(token, JWT_SECRET);
+  requireSigningSecret();
+  return jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
+}
+
+function requireSigningSecret() {
+  if (JWT_SECRET.length < 32 || JWT_SECRET.startsWith('CHANGEME')) {
+    throw Object.assign(new Error('JWT signing is not configured'), { status: 503 });
+  }
 }
 
 /**
@@ -46,7 +59,10 @@ function requireAuth(req, res, next) {
   try {
     req.user = verifyToken(token);
     next();
-  } catch {
+  } catch (error) {
+    if (error.status === 503) {
+      return res.status(503).json({ error: error.message });
+    }
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 }

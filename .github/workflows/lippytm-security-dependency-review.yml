@@ -2,22 +2,25 @@ name: Dependency Review
 
 on:
   pull_request:
-    branches: ["main", "master"]
+    branches: [main, master]
+  push:
+    branches: [main, master]
+  workflow_dispatch:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   dependency-review:
-    name: Review dependency changes
+    name: Audit locked dependencies
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          fail-on-severity: high
-          comment-summary-in-pr: always
+          node-version: '22.x'
+      - name: Validate lockfile against the manifest without install scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Block high and critical dependency advisories
+        run: npm audit --package-lock-only --audit-level=high

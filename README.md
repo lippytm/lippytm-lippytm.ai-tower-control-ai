@@ -9,14 +9,16 @@ An AI Control Tower that connects **ChatGPT / OpenAI** with **AllBots.com.ai**, 
 | Feature | Description |
 |---|---|
 | **ChatGPT / OpenAI** | Chat completions and model listing via the OpenAI API |
+| **Gemini / Claude APIs** | JWT-protected single-prompt generation with explicit model configuration |
+| **Jarvis build-review workflow** | Manual two-provider drafting and review; no generated code execution or deployment |
 | **ChatGPT Broadcast** | Send a ChatGPT prompt and distribute the response to all connected platforms in one request |
 | **AllBots.com.ai** | List, create, and message bots on AllBots.com.ai |
 | **Factory.ai** | List pipelines, trigger runs, and monitor results |
 | **Replit** | List, create, and run Repls via the Replit API |
 | **GitHub Copilot** | Trigger and monitor GitHub Actions workflows; query commits |
 | **Cybersecurity** | JWT authentication, Helmet security headers, per-route rate limiting, input sanitization |
-| **Data Management** | Schedule and track data-sync jobs between any pair of connectors |
-| **AgentsBots Swarms** | Create autonomous AgentBots, group them into swarms, broadcast messages, and self-heal stale agents |
+| **Data Management pilot** | Track explicit sync simulations; no real records are transferred |
+| **AgentsBots Swarms pilot** | Register in-memory descriptors and simulate lifecycle/communication; not a remote worker runtime |
 
 ---
 
@@ -63,7 +65,8 @@ npm install
 
 ```bash
 cp .env.example .env
-# Edit .env and fill in your API keys
+# Set JWT_SECRET and TOWER_CLIENT_SECRET to separate random values (32+ characters).
+# Set TOWER_CLIENT_ID and only the API keys for connectors you intend to use.
 ```
 
 ### 3. Start the server
@@ -89,7 +92,7 @@ All `/api/connectors/*` and `/api/data/*` endpoints require a Bearer token.
 
 ```
 POST /api/auth/token
-Body: { "clientId": "myapp", "clientSecret": "supersecretkey" }
+Body: { "clientId": "<configured TOWER_CLIENT_ID>", "clientSecret": "<configured TOWER_CLIENT_SECRET>" }
 -> { "token": "<jwt>", "tokenType": "Bearer", "expiresIn": "1h" }
 ```
 
@@ -102,6 +105,11 @@ Authorization: Bearer <jwt>
 ---
 
 ### ChatGPT / OpenAI
+
+For Gemini/Claude endpoints and the multi-provider Jarvis workflow, see
+[Jarvis AI build and review](workflows/jarvis-ai-build-review.md).
+API connectors do not automatically connect consumer ChatGPT, Business, Gemini,
+or Claude chat accounts.
 
 | Method | Path | Description |
 |---|---|---|
@@ -142,6 +150,10 @@ Response:
 
 Possible `status` values per platform: `"sent"`, `"skipped"`, `"error"` (with an `"error"` field).
 
+Malformed targets are rejected before paid inference. Partial delivery failure
+returns HTTP 207 with per-target results; never retry the entire broadcast
+blindly, because successful targets may already have executed side effects.
+Provider errors are redacted; use private service logs and request IDs for support.
 
 ### AllBots.com.ai
 
@@ -177,10 +189,17 @@ Possible `status` values per platform: `"sent"`, `"skipped"`, `"error"` (with an
 
 ### Data Management
 
+The generic sync worker is a simulation, not a real cross-platform transfer.
+Production dispatch returns HTTP 501 unless `ENABLE_SYNC_SIMULATION=true` is
+explicitly set for a disposable pilot. Accepted jobs include `mode: simulation`
+and transition from `pending` to `running` to `simulated`, never to real completion.
+The Webhook Dispatcher validates `event_type` against the source connector and
+requires the same `ai-pilot` environment/secrets as the build-review workflow.
+
 | Method | Path | Description |
 |---|---|---|
 | `GET` | `/api/data/connectors` | List connector names |
-| `POST` | `/api/data/sync` | Schedule sync job |
+| `POST` | `/api/data/sync` | Schedule an explicitly enabled simulation |
 | `GET` | `/api/data/sync` | List all sync jobs |
 | `GET` | `/api/data/sync/:jobId` | Get job status |
 
@@ -202,7 +221,11 @@ All `/api/swarm/*` endpoints require a Bearer token.
 | `POST` | `/api/swarm/agents/:agentId/state` | Transition lifecycle state (`idle`\|`running`\|`paused`\|`failed`\|`terminated`) |
 | `GET` | `/api/swarm/agents/:agentId/maintenance-log` | View timestamped event log for the agent |
 
-**Supported channel types:** `openai`, `allbots`, `factory-ai`, `replit`, `github-copilot`, `internal`
+**Supported channel types:** `openai`, `gemini`, `claude`, `allbots`, `factory-ai`, `replit`, `github-copilot`, `internal`
+
+These are descriptive channels, not live subscriptions. Internal swarm broadcast
+returns `mode: simulation` and does not send network messages. Deleting an agent
+cleans up membership; dissolving a swarm terminates and detaches its descriptors.
 
 **Example – create a worker AgentBot:**
 
@@ -260,9 +283,14 @@ curl -X POST /api/swarm/swarms/$SWARM_ID/start \
 |---|---|---|
 | `POST` | `/api/swarm/health-check` | Manually trigger a health-check cycle |
 
-The orchestrator automatically restarts agents whose heartbeat has gone stale (exceeds `SWARM_STALE_THRESHOLD_MS`, default 60 s). After `SWARM_MAX_AUTO_RESTARTS` (default 3) consecutive failures the agent is marked `failed` and requires manual intervention.
+The orchestrator updates descriptor state when its heartbeat is stale (exceeds
+`SWARM_STALE_THRESHOLD_MS`, default 60 s). It does not restart a remote process.
+After `SWARM_MAX_AUTO_RESTARTS` (default 3) attempts the descriptor is marked
+`failed` and requires manual intervention.
 
-The background loop fires every `SWARM_HEALTH_CHECK_INTERVAL_MS` (default 30 s) and is configurable via environment variables.
+The background loop is disabled unless `SWARM_HEALTH_CHECK_ENABLED=true`.
+When enabled it runs every `SWARM_HEALTH_CHECK_INTERVAL_MS` (default 30 s)
+and stops during graceful shutdown. Manual health checks remain available.
 
 #### Adding / removing AgentsBots – developer guide
 
@@ -276,6 +304,23 @@ The background loop fires every `SWARM_HEALTH_CHECK_INTERVAL_MS` (default 30 s) 
 
 ## Security
 
+**Dependency gate:** `npm audit --package-lock-only --audit-level=high` checks all
+locked runtime and development dependencies without requiring GitHub Dependency
+Graph. The workflow first runs `npm ci --ignore-scripts` to validate the lockfile;
+advisory/registry failures do not silently pass. Compatible package updates are
+locked, and `qs` is overridden to a patched same-major release because Express
+pins an older minor. Low-severity Jest/deepmerge findings remain tracked; there
+is no safe current patched deepmerge release and no forced Jest downgrade.
+
+**Production authentication:** startup rejects missing, short, or `CHANGEME`
+signing secrets. Development only warns about weak signing secrets. Token issuance
+requires an exact match against the server's `TOWER_CLIENT_ID` and
+`TOWER_CLIENT_SECRET`; missing configuration or a configured client secret shorter
+than 32 characters returns HTTP 503. There is no demo-login bypass.
+
+Token signing and verification also refuse weak/default signing secrets outside
+production. CI uses an isolated test-only secret configured before module loading.
+
 * **JWT** - all protected endpoints require a signed Bearer token (HS256, configurable expiry). Set `JWT_SECRET` to a randomly-generated string of at least 32 characters; the server will log a warning if it detects the default value.
 * **Helmet** - HTTP security headers (CSP, HSTS, etc.) on every response.
 * **Rate limiting** - global limiter (default 100 req/min) + strict limiter (10 req/min) on `/api/auth/token`.
@@ -287,18 +332,28 @@ The background loop fires every `SWARM_HEALTH_CHECK_INTERVAL_MS` (default 30 s) 
 
 ## Deployment
 
+### Hostinger VPS + Jarvis + ChatGPT
+
+Start by reviewing [existing cross-repository integrations](integrations/existing-jarvis-connections.md).
+They must not be overwritten merely because this checkout lacks live credentials.
+
+Follow [the staged connection guide](integrations/hostinger-jarvis-chatgpt.md).
+Systemd and HTTPS reverse-proxy templates are in `deploy/hostinger/`.
+These prepare deployment; they do not connect or authorize external accounts.
+The server binds to `127.0.0.1` by default; use a local HTTPS proxy for public access.
+
 ### Replit
 
 1. Fork or import this repository on [Replit](https://replit.com).
 2. Open the **Secrets** tab and add all variables from `.env.example`.
-3. Set `NODE_ENV=production`.
+3. Set `NODE_ENV=production` and `HOST=0.0.0.0` so the platform proxy can reach the app.
 4. Click **Run**. The server auto-scales with Replit's infrastructure.
 
 ### Docker / any container platform
 
 ```bash
 docker build -t ai-tower-control .
-docker run -p 3000:3000 --env-file .env ai-tower-control
+docker run -p 127.0.0.1:3000:3000 --env-file .env -e HOST=0.0.0.0 ai-tower-control
 ```
 
 ### GitHub Actions CI/CD
@@ -316,7 +371,7 @@ Configure the following repository secrets for the webhook workflow:
 |---|---|
 | `TOWER_API_URL` | Base URL of your deployed AI Control Tower |
 | `TOWER_CLIENT_ID` | `clientId` used to obtain an auth token |
-| `TOWER_CLIENT_SECRET` | `clientSecret` for the above client (≥ 8 chars) |
+| `TOWER_CLIENT_SECRET` | Must match the server's configured client secret (at least 32 random characters) |
 
 ### Onboarding a new integration
 
@@ -325,4 +380,3 @@ Configure the following repository secrets for the webhook workflow:
 3. Register the connector name in `src/data-management/sync.js` → `CONNECTORS` array.
 4. Add route handlers in `src/routes/connectors.js`.
 5. Run `npm test` to validate everything still works.
-

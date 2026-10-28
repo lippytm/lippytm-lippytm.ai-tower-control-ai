@@ -2,15 +2,49 @@
 
 const router = require('express').Router();
 const { requireAuth } = require('../security/auth');
-const { sanitizeInput } = require('../security/rateLimiter');
+const { sanitizeInput, createStrictLimiter } = require('../security/rateLimiter');
 const openai = require('../connectors/openai');
 const allbots = require('../connectors/allbots');
 const factoryAi = require('../connectors/factory-ai');
 const replit = require('../connectors/replit');
 const githubCopilot = require('../connectors/github-copilot');
+const generation = require('../connectors/text-generation');
+const { validateMessages, requireObject, requireText, invalid } = require('../validation');
+const logger = require('../logger');
+
+function validateTargets(targets) {
+  requireObject(targets, 'targets');
+  const required = {
+    allbots: ['botId'], 'factory-ai': ['pipelineId'],
+    replit: ['replId'], 'github-copilot': ['workflowId', 'ref'],
+  };
+  for (const [name, target] of Object.entries(targets)) {
+    if (!Object.hasOwn(required, name)) throw invalid(`Unknown broadcast target: ${name}`);
+    requireObject(target, `${name} target`);
+    for (const field of required[name]) requireText(target[field], `${name}.${field}`);
+    if (target.inputs !== undefined) requireObject(target.inputs, `${name}.inputs`);
+  }
+}
+
+function targetError(target, error) {
+  logger.error('Broadcast target failed', { target, upstreamStatus: error.response?.status });
+  return { status: 'error', error: `${target} delivery failed; check configuration and provider access` };
+}
 
 // All connector routes require a valid JWT
 router.use(requireAuth);
+const aiLimiter = createStrictLimiter();
+
+for (const provider of ['gemini', 'claude']) {
+  router.post(`/${provider}/generate`, aiLimiter, async (req, res, next) => {
+    try {
+      const { prompt, model } = req.body || {};
+      return res.json(await generation.generate(provider, prompt, model));
+    } catch (error) {
+      next(error);
+    }
+  });
+}
 
 // ── OpenAI / ChatGPT ──────────────────────────────────────────────────────────
 
@@ -21,9 +55,8 @@ router.use(requireAuth);
 router.post('/openai/chat', async (req, res, next) => {
   try {
     const { messages, model } = req.body || {};
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ error: 'messages array is required' });
-    }
+    validateMessages(messages);
+    if (model !== undefined) requireText(model, 'model');
     const sanitizedMessages = messages.map((m) => ({
       role: m.role,
       content: sanitizeInput(m.content),
@@ -69,7 +102,7 @@ router.post('/allbots/bots/:botId/messages', async (req, res, next) => {
   try {
     const { botId } = req.params;
     const { message } = req.body || {};
-    if (!message) return res.status(400).json({ error: 'message is required' });
+    requireText(sanitizeInput(message), 'message');
     const result = await allbots.sendMessage(botId, sanitizeInput(message));
     return res.json(result);
   } catch (err) {
@@ -84,7 +117,8 @@ router.post('/allbots/bots/:botId/messages', async (req, res, next) => {
 router.post('/allbots/bots', async (req, res, next) => {
   try {
     const config = req.body;
-    if (!config || !config.name) return res.status(400).json({ error: 'name is required' });
+    requireObject(config, 'bot config');
+    requireText(config.name, 'name');
     const bot = await allbots.createBot(config);
     return res.status(201).json(bot);
   } catch (err) {
@@ -114,6 +148,7 @@ router.post('/factory-ai/pipelines/:pipelineId/runs', async (req, res, next) => 
   try {
     const { pipelineId } = req.params;
     const { inputs = {} } = req.body || {};
+    requireObject(inputs, 'inputs');
     const run = await factoryAi.runPipeline(pipelineId, inputs);
     return res.status(202).json(run);
   } catch (err) {
@@ -158,6 +193,8 @@ router.post('/replit/repls', async (req, res, next) => {
     if (!title || !language) {
       return res.status(400).json({ error: 'title and language are required' });
     }
+    requireText(title, 'title');
+    requireText(language, 'language');
     const repl = await replit.createRepl(req.body);
     return res.status(201).json(repl);
   } catch (err) {
@@ -203,6 +240,9 @@ router.post('/github-copilot/dispatch', async (req, res, next) => {
     if (!workflowId || !ref) {
       return res.status(400).json({ error: 'workflowId and ref are required' });
     }
+    requireText(workflowId, 'workflowId');
+    requireText(ref, 'ref');
+    if (inputs !== undefined) requireObject(inputs, 'inputs');
     await githubCopilot.dispatchWorkflow(workflowId, ref, inputs);
     return res.status(204).end();
   } catch (err) {
@@ -254,9 +294,9 @@ router.get('/github-copilot/commit/:branch', async (req, res, next) => {
 router.post('/chatgpt/broadcast', async (req, res, next) => {
   try {
     const { messages, model, targets = {} } = req.body || {};
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ error: 'messages array is required' });
-    }
+    validateMessages(messages);
+    validateTargets(targets);
+    if (model !== undefined) requireText(model, 'model');
 
     const sanitizedMessages = messages.map((m) => ({
       role: m.role,
@@ -266,6 +306,12 @@ router.post('/chatgpt/broadcast', async (req, res, next) => {
     // 1. Get ChatGPT response
     const chatgptResult = await openai.chat(sanitizedMessages, model ? { model } : {});
     const chatgptContent = chatgptResult.content;
+    if (typeof chatgptContent !== 'string' || !chatgptContent.trim()) {
+      throw Object.assign(new Error('OpenAI returned no text for broadcast'), { status: 502 });
+    }
+    if (chatgptResult.finishReason && chatgptResult.finishReason !== 'stop') {
+      throw Object.assign(new Error('OpenAI broadcast response is incomplete'), { status: 502 });
+    }
 
     // 2. Broadcast to each configured target platform
     const broadcastResults = {};
@@ -277,7 +323,7 @@ router.post('/chatgpt/broadcast', async (req, res, next) => {
         const result = await allbots.sendMessage(allbotsTarget.botId, chatgptContent);
         broadcastResults.allbots = { status: 'sent', result };
       } catch (err) {
-        broadcastResults.allbots = { status: 'error', error: err.message };
+        broadcastResults.allbots = targetError('allbots', err);
       }
     } else {
       broadcastResults.allbots = { status: 'skipped' };
@@ -290,7 +336,7 @@ router.post('/chatgpt/broadcast', async (req, res, next) => {
         const result = await factoryAi.runPipeline(factoryTarget.pipelineId, { prompt: chatgptContent });
         broadcastResults['factory-ai'] = { status: 'sent', result };
       } catch (err) {
-        broadcastResults['factory-ai'] = { status: 'error', error: err.message };
+        broadcastResults['factory-ai'] = targetError('factory-ai', err);
       }
     } else {
       broadcastResults['factory-ai'] = { status: 'skipped' };
@@ -303,7 +349,7 @@ router.post('/chatgpt/broadcast', async (req, res, next) => {
         const result = await replit.runRepl(replitTarget.replId, chatgptContent);
         broadcastResults.replit = { status: 'sent', result };
       } catch (err) {
-        broadcastResults.replit = { status: 'error', error: err.message };
+        broadcastResults.replit = targetError('replit', err);
       }
     } else {
       broadcastResults.replit = { status: 'skipped' };
@@ -317,13 +363,14 @@ router.post('/chatgpt/broadcast', async (req, res, next) => {
         await githubCopilot.dispatchWorkflow(copilotTarget.workflowId, copilotTarget.ref, inputs);
         broadcastResults['github-copilot'] = { status: 'sent' };
       } catch (err) {
-        broadcastResults['github-copilot'] = { status: 'error', error: err.message };
+        broadcastResults['github-copilot'] = targetError('github-copilot', err);
       }
     } else {
       broadcastResults['github-copilot'] = { status: 'skipped' };
     }
 
-    return res.json({ chatgpt: chatgptResult, broadcast: broadcastResults });
+    const failed = Object.values(broadcastResults).some((result) => result.status === 'error');
+    return res.status(failed ? 207 : 200).json({ chatgpt: chatgptResult, broadcast: broadcastResults });
   } catch (err) {
     next(err);
   }

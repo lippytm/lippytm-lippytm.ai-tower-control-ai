@@ -6,8 +6,6 @@ const { generateToken } = require('../src/security/auth');
 const agentModule = require('../src/swarm/agent');
 const orchestrator = require('../src/swarm/orchestrator');
 
-process.env.JWT_SECRET = 'test-secret-1234';
-
 const auth = () => `Bearer ${generateToken({ clientId: 'test', role: 'api-consumer' })}`;
 
 beforeEach(() => {

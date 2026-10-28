@@ -1,0 +1,49 @@
+name: AI Builder and Jarvis Draft Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Non-sensitive task to draft and review (maximum 12000 characters)
+        required: true
+        type: string
+      builder:
+        description: Builder API provider (model configured on the VPS)
+        required: true
+        type: choice
+        options: [openai, gemini, claude]
+      reviewer:
+        description: Reviewer API provider (receives the original prompt and draft)
+        required: true
+        type: choice
+        options: [claude, gemini, openai]
+
+permissions:
+  contents: read
+
+jobs:
+  draft-review:
+    runs-on: ubuntu-latest
+    environment: ai-pilot
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Request draft and independent review
+        env:
+          TOWER_API_URL: ${{ secrets.TOWER_API_URL }}
+          TOWER_CLIENT_ID: ${{ secrets.TOWER_CLIENT_ID }}
+          TOWER_CLIENT_SECRET: ${{ secrets.TOWER_CLIENT_SECRET }}
+          AI_PROMPT: ${{ inputs.prompt }}
+          BUILDER_PROVIDER: ${{ inputs.builder }}
+          REVIEWER_PROVIDER: ${{ inputs.reviewer }}
+        run: node scripts/ai-build-review.js
+      - name: Save draft for human approval (not executable)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-build-review
+          path: ai-build-review.json
+          retention-days: 1
+          if-no-files-found: error

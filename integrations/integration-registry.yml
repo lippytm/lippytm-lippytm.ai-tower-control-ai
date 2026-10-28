@@ -1,6 +1,103 @@
 # lippytm.ai Integration Registry
 
 integrations:
+  - id: existing_jarvis_hostinger_assets
+    name: Existing cross-repository Jarvis and Hostinger integration assets
+    status: source_verified_live_health_unverified
+    purpose: Reuse established Hostinger inventory, Hermes stages, and verified bundle handoffs.
+    source: lippytm/AI-Jarvis-Assistant-ChatGPT-Gemini-AI-GitHub-Claude-and-all-of-my-Repositories-DOG-Dog-dog-
+    destination: Existing Hostinger and Jarvis runtimes
+    owner: Existing runtime operator
+    trigger: Owner-approved reconciliation or read-only health verification
+    input: Existing runtime identity and documented API or bundle contract
+    output: Scoped round-trip evidence without secret values
+    guide: integrations/existing-jarvis-connections.md
+    required_secret_names: [HOSTINGER_API_TOKEN]
+    risk_level: high
+    human_review_required: true
+    fallback: Preserve existing deployments and use verified manual handoffs.
+
+  - id: jarvis_to_gemini
+    name: Jarvis draft-review workflow to Gemini API
+    status: implemented_pending_account_validation
+    purpose: Generate or review text through the Gemini API.
+    source: Authenticated Control Tower
+    destination: Google Gemini API
+    owner: Control Tower operator
+    trigger: Manual generation request or build-review workflow
+    input: Non-sensitive prompt and accessible model ID
+    output: Text draft or review with usage metadata
+    guide: workflows/jarvis-ai-build-review.md
+    required_secret_names: [GEMINI_API_KEY]
+    risk_level: medium
+    human_review_required: true
+    fallback: Manual review in an approved workspace.
+
+  - id: jarvis_to_claude
+    name: Jarvis draft-review workflow to Claude API
+    status: implemented_pending_account_validation
+    purpose: Generate or review text through the Anthropic Messages API.
+    source: Authenticated Control Tower
+    destination: Anthropic Claude API
+    owner: Control Tower operator
+    trigger: Manual generation request or build-review workflow
+    input: Non-sensitive prompt and accessible model ID
+    output: Text draft or review with usage metadata
+    guide: workflows/jarvis-ai-build-review.md
+    required_secret_names: [ANTHROPIC_API_KEY]
+    risk_level: medium
+    human_review_required: true
+    fallback: Manual review in an approved workspace.
+
+  - id: hostinger_control_tower_jarvis
+    name: Hostinger VPS to Control Tower and Jarvis pilot
+    status: prepared_not_connected
+    scope: this_control_tower_only
+    purpose: Host an authenticated private pilot before enabling external agent communications.
+    source: GitHub Control Tower
+    destination: Hostinger VPS
+    owner: VPS operator
+    trigger: Human-approved deployment
+    input: Reviewed revision and private server environment configuration
+    output: Verified health and authenticated agent listing
+    guide: integrations/hostinger-jarvis-chatgpt.md
+    required_secret_names: [JWT_SECRET, TOWER_CLIENT_SECRET]
+    risk_level: high
+    human_review_required: true
+    fallback: Stop the pilot service and retain existing website agents.
+
+  - id: chatgpt_business_to_jarvis
+    name: ChatGPT and ChatGPT Business to Jarvis
+    status: planned_adapter_required
+    scope: this_control_tower_only
+    purpose: Provide a narrow approved assistant interface to the Control Tower.
+    source: ChatGPT or ChatGPT Business
+    destination: Authenticated Control Tower adapter
+    owner: Workspace administrator
+    trigger: Approved assistant request
+    input: Workspace-approved schema and authentication
+    output: Scoped agent query or explicitly approved action
+    guide: integrations/hostinger-jarvis-chatgpt.md
+    risk_level: high
+    human_review_required: true
+    fallback: Manual ChatGPT use without automated actions.
+
+  - id: aievolutionaryevolutions_agents
+    name: Existing AI Evolutionary Evolutions website agents
+    status: blocked_endpoint_verification
+    scope: this_control_tower_only
+    purpose: Connect user-reported existing agents after confirming their actual API.
+    source: aievolutionaryevolutions.com
+    destination: Control Tower
+    owner: Website operator
+    trigger: Human-approved sandbox connection test
+    input: Verified working URL and documented agent API authentication
+    output: Confirmed sandbox request and response
+    guide: integrations/hostinger-jarvis-chatgpt.md
+    risk_level: high
+    human_review_required: true
+    fallback: Keep using existing agents directly; do not change website DNS.
+
   - id: github_to_copilot
     name: GitHub to GitHub Copilot
     status: active_guided

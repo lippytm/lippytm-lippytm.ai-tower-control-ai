@@ -1,6 +1,6 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('crypto');
 const logger = require('../logger');
 
 /** Simulated processing delay (ms) used by the stub sync worker. */
@@ -32,14 +32,22 @@ function scheduleSync(source, target, options = {}) {
   if (!CONNECTORS.includes(target)) {
     throw new Error(`Unknown target connector: ${target}. Valid options: ${CONNECTORS.join(', ')}`);
   }
+  if (!options || typeof options !== 'object' || Array.isArray(options)) {
+    throw Object.assign(new Error('options must be an object'), { status: 400 });
+  }
+  if (process.env.NODE_ENV === 'production' && process.env.ENABLE_SYNC_SIMULATION !== 'true') {
+    logger.error('Sync dispatch rejected: real data transfer is not implemented');
+    throw Object.assign(new Error('Real data sync is not implemented; simulation is disabled'), { status: 501 });
+  }
 
   const jobId = uuidv4();
   const job = {
     jobId,
     status: 'pending',
+    mode: 'simulation',
     source,
     target,
-    options,
+    options: structuredClone(options),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     result: null,
@@ -52,7 +60,7 @@ function scheduleSync(source, target, options = {}) {
   // Simulate async processing (replace with real logic per connector pair)
   setImmediate(() => _processSync(jobId));
 
-  return { jobId, status: job.status, source, target, createdAt: job.createdAt };
+  return { jobId, status: job.status, mode: job.mode, source, target, createdAt: job.createdAt };
 }
 
 /**
@@ -63,7 +71,7 @@ function scheduleSync(source, target, options = {}) {
 function getSyncJob(jobId) {
   const job = syncJobs.get(jobId);
   if (!job) throw new Error(`Sync job not found: ${jobId}`);
-  return job;
+  return structuredClone(job);
 }
 
 /**
@@ -71,7 +79,7 @@ function getSyncJob(jobId) {
  * @returns {Array<object>}
  */
 function listSyncJobs() {
-  return Array.from(syncJobs.values());
+  return Array.from(syncJobs.values(), (job) => structuredClone(job));
 }
 
 /**
@@ -92,11 +100,11 @@ async function _processSync(jobId) {
     await _simulateWork(SIMULATED_SYNC_DELAY_MS);
 
     _updateJob(jobId, {
-      status: 'completed',
+      status: 'simulated',
       updatedAt: new Date().toISOString(),
-      result: { recordsSynced: 0, message: 'Sync completed successfully' },
+      result: { recordsSynced: 0, message: 'Simulation only; no records were transferred' },
     });
-    logger.info('Data sync job completed', { jobId });
+    logger.info('Data sync simulation finished', { jobId });
   } catch (err) {
     _updateJob(jobId, {
       status: 'failed',

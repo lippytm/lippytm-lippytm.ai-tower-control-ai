@@ -86,6 +86,8 @@ router.patch('/agents/:agentId', (req, res, next) => {
  */
 router.delete('/agents/:agentId', (req, res, next) => {
   try {
+    const agent = agentModule.getAgent(req.params.agentId);
+    if (agent.swarmId) orchestrator.removeAgentFromSwarm(agent.swarmId, agent.agentId);
     agentModule.deleteAgent(req.params.agentId);
     return res.status(204).end();
   } catch (err) {
