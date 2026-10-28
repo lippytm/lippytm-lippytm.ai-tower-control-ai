@@ -57,7 +57,8 @@ npm ci
 npm test
 npm run lint
 npm prune --omit=dev
-sudo chown -R root:control-tower /opt/control-tower
+sudo chown -R "$USER":control-tower /opt/control-tower
+sudo chmod -R g+rX,g-w /opt/control-tower
 sudo chmod -R o-rwx /opt/control-tower
 sudo install -m 600 -o root -g root .env.example /etc/control-tower.env
 sudoedit /etc/control-tower.env
@@ -65,6 +66,8 @@ sudoedit /etc/control-tower.env
 
 Skip account/directory creation if already provisioned; do not overwrite a deployment.
 Deploy a reviewed revision containing these starter files.
+The operator retains checkout access for updates; the service group has read/search
+access but no write access. Keep the environment file root-owned and private.
 
 Set these values in `/etc/control-tower.env`, not in GitHub or chat:
 
