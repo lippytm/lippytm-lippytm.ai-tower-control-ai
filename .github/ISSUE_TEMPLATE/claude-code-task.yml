@@ -1,0 +1,96 @@
+name: Claude Code Task
+about: Route a scoped implementation request through Prompt #11
+labels: agent-task, claude, status:intake
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for small, reviewable Claude Code implementation tasks.
+
+  - type: input
+    id: target_repo
+    attributes:
+      label: Target repo
+      description: Repository that should receive the work.
+      placeholder: lippytm/example-repo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Lane
+      options:
+        - control-tower
+        - bots
+        - web3
+        - publishing
+        - creative
+        - infrastructure
+        - qa
+        - revenue
+        - life-systems
+        - education
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_level
+    attributes:
+      label: Risk level
+      options:
+        - low
+        - medium
+        - high
+        - blocked
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Keep the request small and reviewable.
+      placeholder: Add only the files needed for this task. Avoid unrelated changes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: What must be true for this to be done?
+      placeholder: |
+        - Criteria 1
+        - Criteria 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: qa_plan
+    attributes:
+      label: QA plan
+      description: How should this be validated?
+      placeholder: |
+        - Run tests if available
+        - Confirm docs render
+        - Confirm no secrets or deployment settings changed
+    validations:
+      required: true
+
+  - type: textarea
+    id: claude_prompt
+    attributes:
+      label: Claude Code request
+      description: Suggested request for Claude Code.
+      value: |
+        @claude Please implement this as a small PR.
+
+        Scope:
+        - Add only the files listed in this issue.
+        - Do not change secrets or production deployment settings.
+        - Include tests or validation steps where practical.
+        - Update documentation.
+        - Leave a summary of risks and assumptions.
+    validations:
+      required: true

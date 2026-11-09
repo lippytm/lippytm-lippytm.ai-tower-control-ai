@@ -1,0 +1,79 @@
+# Prompt #11 Swarm Attachment Template
+# Use this to attach Prompt #11 Engines to AI swarms, AgentsBots, workflow groups, and multi-agent systems.
+
+prompt_11_swarm:
+  attached: true
+  swarm_version: 2.0
+  swarm_name: example-swarm
+  swarm_type: coding|business|qa|publishing|creative|support|research|automation|mixed
+  owner: lippytm
+  control_tower: lippytm/lippytm-lippytm.ai-tower-control-ai
+  primary_repo: lippytm/example-repo
+  lane: control-tower|bots|web3|publishing|creative|infrastructure|qa|revenue|life-systems|education
+  status: planned|active|paused|blocked|archived
+  risk_level: low|medium|high|blocked
+
+  purpose: Explain what this swarm is for.
+
+  participating_agents:
+    - name: planning-agent
+      role: planning
+      engine_profile: chatgpt_architecture_engine
+      allowed_work:
+        - planning
+        - documentation
+        - issue_design
+    - name: coding-agent
+      role: scoped_implementation
+      engine_profile: claude_code_engine
+      allowed_work:
+        - small_prs
+        - tests
+        - docs_updates
+    - name: qa-agent
+      role: quality_review
+      engine_profile: qa_engine
+      allowed_work:
+        - qa_checklists
+        - validation_notes
+        - review_comments
+
+  active_engines:
+    - intake_engine
+    - classification_engine
+    - planning_engine
+    - swarm_coordination_engine
+    - qa_engine
+    - riskgate_engine
+    - documentation_engine
+    - improvement_engine
+    - maintenance_engine
+    - awareness_engine
+    - github_memory_engine
+
+  handoff_rules:
+    - Slack or ChatGPT intake creates a GitHub issue.
+    - Planning engine adds acceptance criteria.
+    - Coding engine works through branch and PR.
+    - QA engine checks validation.
+    - RiskGate engine reviews meaningful changes.
+    - Human owner approves medium or high impact work.
+    - Documentation engine updates durable records.
+
+  restricted_work:
+    - deployment_without_owner_review
+    - secrets_changes_without_owner_review
+    - billing_changes_without_owner_review
+    - permissions_changes_without_owner_review
+    - broad_multi_repo_changes_without_plan
+    - category_confusion_between_business_creative_education_experimental
+
+  dashboard_fields:
+    health: unknown|poor|fair|good
+    open_tasks: 0
+    open_prs: 0
+    blockers: []
+    next_action: null
+    confidence: low|medium|high
+
+  next_action: Define the next useful swarm action.

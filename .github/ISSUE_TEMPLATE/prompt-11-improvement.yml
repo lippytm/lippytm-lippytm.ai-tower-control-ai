@@ -1,0 +1,112 @@
+name: Prompt 11 Improvement Proposal
+about: Propose a controlled improvement to Prompt #11, the Control Tower, or the repo fleet
+labels: prompt-11, improvement, status:intake
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when Prompt #11 observes a problem, friction point, repeated task, blocked workflow, missing doc, or revenue opportunity that should become an improvement proposal.
+
+  - type: textarea
+    id: observed_problem
+    attributes:
+      label: Observed problem
+      description: What problem, friction, blocker, or repeated manual task was observed?
+      placeholder: Describe the problem clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link issues, PRs, workflows, Slack notes, docs, or examples that show the problem.
+      placeholder: |
+        - Evidence 1
+        - Evidence 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Proposed improvement
+      description: What should be improved?
+      placeholder: Describe the proposed change.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target_layer
+    attributes:
+      label: Target layer
+      options:
+        - intake
+        - classification
+        - routing
+        - execution
+        - qa
+        - riskgate
+        - dashboard
+        - docs
+        - revenue
+        - fleet
+    validations:
+      required: true
+
+  - type: input
+    id: target_repo
+    attributes:
+      label: Target repo
+      description: Which repository is affected?
+      placeholder: lippytm/lippytm-lippytm.ai-tower-control-ai
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_benefit
+    attributes:
+      label: Expected benefit
+      description: How does this make the system clearer, safer, faster, more useful, or more revenue-focused?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_level
+    attributes:
+      label: Risk level
+      options:
+        - low
+        - medium
+        - high
+        - blocked
+    validations:
+      required: true
+
+  - type: textarea
+    id: qa_plan
+    attributes:
+      label: QA plan
+      description: How should this improvement be checked?
+      placeholder: |
+        - Validation step 1
+        - Validation step 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback_plan
+    attributes:
+      label: Rollback plan
+      description: How can this be reversed or corrected if it is wrong?
+    validations:
+      required: true
+
+  - type: input
+    id: next_action
+    attributes:
+      label: Next action
+      description: What is the next concrete step?
+      placeholder: Create a small PR that updates the relevant docs.
+    validations:
+      required: true

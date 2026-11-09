@@ -1,0 +1,87 @@
+# Workspace GitHub Repo Communication Map
+# Machine-readable map for Prompt #11 repo communication and rollout status.
+
+workspace:
+  name: lippytm-ai-workspace
+  control_tower: lippytm/lippytm-lippytm.ai-tower-control-ai
+  prompt_11_version: 2.0
+
+communication_channels:
+  github_issues: task memory
+  github_pull_requests: reviewable changes
+  github_actions: checks and reporting
+  markdown_docs: human-readable operating system
+  yaml_registries: structured workspace state
+  slack_commands: planned command interface
+  claude_code: planned implementation interface
+  chatgpt: architecture and review interface
+
+repo_nodes:
+  - repo: lippytm/lippytm-lippytm.ai-tower-control-ai
+    lane: control-tower
+    priority: critical
+    node_status: active
+    prompt_11_engines: active
+    node_kit_status: source
+    slack_status: planned
+    claude_code_status: planned
+    next_action: Review PR 65 and continue rollout planning.
+
+  - repo: lippytm/Web3AI
+    lane: web3
+    priority: high
+    node_status: planned
+    prompt_11_engines: planned
+    node_kit_status: pending
+    slack_status: planned
+    claude_code_status: planned
+    next_action: Apply node kit through a small PR.
+
+  - repo: lippytm/AllBots.com
+    lane: bots
+    priority: high
+    node_status: planned
+    prompt_11_engines: planned
+    node_kit_status: pending
+    slack_status: planned
+    claude_code_status: planned
+    next_action: Apply node kit and define bot product pathway.
+
+  - repo: lippytm/Chatlippytm.ai.Bots
+    lane: bots
+    priority: high
+    node_status: planned
+    prompt_11_engines: planned
+    node_kit_status: pending
+    slack_status: planned
+    claude_code_status: planned
+    next_action: Apply node kit and define chatbot workflow.
+
+  - repo: lippytm/Clawlippytm.Bots
+    lane: claude-bots
+    priority: high
+    node_status: planned
+    prompt_11_engines: planned
+    node_kit_status: pending
+    slack_status: planned
+    claude_code_status: planned
+    next_action: Apply node kit and define Claude coding assistant role.
+
+  - repo: lippytm/MyClaw.lippytm.AI-
+    lane: claude-bots
+    priority: high
+    node_status: planned
+    prompt_11_engines: planned
+    node_kit_status: pending
+    slack_status: planned
+    claude_code_status: planned
+    next_action: Apply node kit and project profile.
+
+rollout_status:
+  current_phase: control_tower_pr
+  active_pr: 65
+  next_rollout_target: lippytm/Web3AI
+  rollout_method: one_repo_one_pr
+  dashboard_required: true
+
+principle: GitHub stores the durable truth. Repos communicate through issues, PRs, docs, workflows, and dashboards.

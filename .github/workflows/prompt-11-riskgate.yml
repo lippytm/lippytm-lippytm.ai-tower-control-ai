@@ -1,0 +1,30 @@
+name: Prompt 11 RiskGate
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  riskgate:
+    name: RiskGate Review Skeleton
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify RiskGate protocol exists
+        run: |
+          set -e
+          test -f prompt-11/RISKGATE_PROTOCOL.md
+          grep -q "High-risk work requires explicit human approval" prompt-11/RISKGATE_PROTOCOL.md
+
+      - name: RiskGate reminder
+        run: |
+          echo "RiskGate skeleton complete."
+          echo "Reviewer must confirm scope, risk level, QA plan, rollback path, and human approval needs."

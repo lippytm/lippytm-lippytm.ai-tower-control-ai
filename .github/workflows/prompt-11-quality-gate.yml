@@ -1,0 +1,40 @@
+name: Prompt 11 Quality Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Prompt 11 core files
+        run: |
+          set -e
+          test -f PROMPT_11.md
+          test -f prompt-11/TASK_LIFECYCLE.md
+          test -f prompt-11/TOOL_ROLES.md
+          test -f prompt-11/RISKGATE_PROTOCOL.md
+          test -f communications/TASK_OBJECT_MODEL.yml
+          test -f fleet/PROMPT_11_STATUS.md
+
+      - name: Check for task object fields
+        run: |
+          set -e
+          grep -q "risk_level" communications/TASK_OBJECT_MODEL.yml
+          grep -q "acceptance_criteria" communications/TASK_OBJECT_MODEL.yml
+          grep -q "next_action" communications/TASK_OBJECT_MODEL.yml
+
+      - name: Quality summary
+        run: |
+          echo "Prompt #11 Quality Gate completed."
+          echo "Manual review is still required before merge."
