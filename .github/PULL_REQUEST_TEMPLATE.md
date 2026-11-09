@@ -2,13 +2,13 @@
 
 ## Summary
 
-Describe what this PR changes.
+Describe what this PR changes and why.
 
-## Connected issue or workflow
+## Connected Issue or Workflow
 
 Link related issue, workflow, dashboard, registry, product, support doc, or automation.
 
-## Change type
+## Type of Change
 
 - [ ] Documentation
 - [ ] Workflow/playbook
@@ -20,29 +20,42 @@ Link related issue, workflow, dashboard, registry, product, support doc, or auto
 - [ ] Product/marketing/support
 - [ ] Code/config
 - [ ] Security/quality
+- [ ] Agent Mode / automation update
 
-## Risk level
-
-- [ ] Low — docs, prompts, checklists, internal notes
-- [ ] Medium — customer-facing drafts, support replies, chatbot copy, integration planning
-- [ ] High — funding, finance, legal, tax, investment, trading, customer data, deployments
-- [ ] Critical — secrets exposure, unauthorized access, payment credentials, unsafe physical actions
-
-## Quality checklist
+## Quality Gate
 
 - [ ] Purpose is clear
+- [ ] Audience or user is clear
 - [ ] Inputs/outputs are clear where relevant
+- [ ] `npm ci` reviewed or run locally when dependencies changed
+- [ ] `npm run lint` reviewed or run locally when code changed
+- [ ] `npm run spellcheck` reviewed or run locally when docs, comments, prompts, workflows, JSON, YAML, or Markdown changed
+- [ ] `npm test` reviewed or run locally when code changed
+- [ ] `npm run test:coverage` reviewed or run locally when code changed
+- [ ] Documentation updated if setup, routes, environment variables, spellcheck dictionary, or workflows changed
+- [ ] Dashboard or registry updated if relevant
+
+## RiskGate
+
+- [ ] Risk level identified: Low / Medium / High / Critical
 - [ ] No secrets, keys, tokens, passwords, private customer data, or payment credentials are included
 - [ ] No unsupported income, funding, legal, tax, investment, trading, or medical guarantees are included
-- [ ] Human review boundary is clear for high-risk work
-- [ ] Support or fallback path is considered
-- [ ] Dashboard or registry updated if relevant
-- [ ] Documentation updated if relevant
+- [ ] Customer, funding, legal, tax, investment, trading, payment, deployment, or physical-world risks reviewed if relevant
+- [ ] Rollback path documented if relevant
+- [ ] Human owner approval required before merge for high or critical risk
 
-## Testing / validation
+## Device Workflow Check
+
+This repo should remain usable from the owner's iPhone, iPad, and laptop workflows.
+
+- [ ] Instructions are clear enough for mobile review
+- [ ] Laptop/developer steps are clear when code execution is needed
+- [ ] No hidden setup assumptions
+
+## Testing / Validation
 
 Describe how this was checked.
 
-## Notes for Copilot / agents
+## Notes for Copilot / Agents
 
 Mention any follow-up autocomplete, agent, workflow, or repo-modernization work that should happen next.

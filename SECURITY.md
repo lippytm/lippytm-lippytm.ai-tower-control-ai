@@ -1,12 +1,24 @@
-# Security
+# Security Policy
 
 This repository must protect credentials, customer data, platform access, and public-facing claims.
 
-## Core rule
+## Supported Scope
+
+Security review applies to:
+
+- Express routes and middleware.
+- Authentication and JWT handling.
+- Connector integrations.
+- Environment variables and secrets.
+- GitHub Actions workflows.
+- AgentBots, swarms, and automation features.
+- Any user, customer, business, funding, or credential-related data.
+
+## Core Rule
 
 Do not commit real secrets, API keys, passwords, tokens, OAuth credentials, private keys, seed phrases, payment credentials, customer private data, or sensitive records.
 
-## Use secret managers
+## Use Secret Managers
 
 Store secrets only in approved platform secret managers, such as:
 
@@ -16,7 +28,7 @@ Store secrets only in approved platform secret managers, such as:
 - Vercel/Render/Fly.io environment variables
 - approved password manager or vault
 
-## Safe placeholders
+## Safe Placeholders
 
 Use placeholder names only:
 
@@ -33,7 +45,7 @@ WEBHOOK_SECRET
 
 Never write the actual value.
 
-## AI prompt security
+## AI Prompt Security
 
 Do not paste secrets into ChatGPT, Twin, Copilot Chat, public issues, documentation, or comments.
 
@@ -43,11 +55,11 @@ When asking AI for help, describe secrets by name only:
 Use MANYCHAT_API_KEY from the environment.
 ```
 
-## Customer data
+## Customer Data
 
 Minimize customer data. Do not store sensitive customer data in public repos. Use proper access control and only collect the minimum information required.
 
-## High-risk areas
+## High-Risk Areas
 
 Human review required for:
 
@@ -59,7 +71,33 @@ Human review required for:
 - public-facing support or marketing claims
 - robotics or physical-world actions
 
-## If a secret is exposed
+## Risk Levels
+
+### Low
+Documentation, non-sensitive setup, internal notes, and general workflow clarity.
+
+### Medium
+External API configuration, customer-facing chatbot behavior, automation routing, and public documentation.
+
+### High
+Authentication, authorization, secrets, production deployment, customer data, payments, business funding, legal/tax/investment content, and outbound automations.
+
+### Critical
+Confirmed secret exposure, unauthorized access, private data leakage, payment credential exposure, unsafe physical-world actions, or automation that can cause real-world harm.
+
+## Reporting a Vulnerability
+
+Open a private security advisory if available, or create a minimal issue that does not disclose exploitable details. Include:
+
+- Affected area.
+- Expected behavior.
+- Observed behavior.
+- Risk level.
+- Suggested mitigation.
+
+Do not post secrets, tokens, private data, exploit chains, or customer information in public issues.
+
+## If a Secret Is Exposed
 
 1. Stop using the exposed credential.
 2. Rotate or revoke it immediately.
@@ -68,7 +106,20 @@ Human review required for:
 5. Replace with a placeholder.
 6. Add a prevention issue.
 
-## Related docs
+## Deployment Gate
+
+Before production deployment:
+
+- [ ] Run lint and tests.
+- [ ] Review environment variables.
+- [ ] Replace all default secrets.
+- [ ] Restrict CORS.
+- [ ] Review rate limits.
+- [ ] Confirm no secrets are in git history.
+- [ ] Confirm rollback plan.
+- [ ] Document owner approval.
+
+## Related Docs
 
 - `security/SECRETS_POLICY.md`
 - `quality/definition-of-done.md`

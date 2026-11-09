@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   lint-test:
-    name: Lint & Test (Node ${{ matrix.node-version }})
+    name: Lint, Spellcheck & Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -33,6 +33,9 @@ jobs:
 
       - name: Run linter
         run: npm run lint
+
+      - name: Run spellcheck
+        run: npm run spellcheck
 
       - name: Run tests with coverage
         run: npm run test:coverage
